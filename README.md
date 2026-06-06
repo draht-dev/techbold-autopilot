@@ -1,70 +1,86 @@
-# techbold · AI Service Desk Autopilot — Track Template
+# AI Service Desk Autopilot
 
-Starter **skeleton** for the techbold START Hack track. You build an AI-assisted
-technician workspace that:
+An AI-assisted technician workspace for the techbold START Hack track. It pulls
+tickets from the Phoenix ERP, connects to a customer Linux VM over SSH, and
+diagnoses + fixes the incident **under the technician's control** using a
+Cursor-Debug-Mode-style loop, then writes a clean activity back to the ERP.
 
-1. reads assigned tickets from the **Phoenix ERP** mock,
-2. loads the affected **customer system** (SSH connection details),
-3. connects to the Linux VM over **SSH** and, **under the technician's control**,
-   diagnoses and safely fixes the incident,
-4. **validates** the fix, and
-5. writes a clean **activity** (documentation) back to the ERP.
-
-> A human must confirm every action the AI takes on a system. The agent never acts on
-> its own. How you orchestrate it (one planning agent with tools, or several specialised
-> agents) is up to you — the case scores **outcomes**, not your framework.
-
-This repo gives you the structure and the Docker setup. **The implementation is yours.**
+> Every action on the VM is gated. A deterministic safety layer blocks dangerous
+> commands outright, mutations require explicit human approval, and all command
+> output is redacted before it is logged, shown, or written to the ERP.
 
 ---
 
-## 1. What's in here
+## 1. The flow
 
 ```
-backend/        FastAPI skeleton (just /health) — build your API + ERP/SSH/agent here
-frontend/       React + Vite + TypeScript skeleton — build the technician UI here
-docs/
-  phoenix-openapi.yaml   the ERP API contract (OpenAPI) — your backend consumes this
-  scoring.md             the full 100-point rubric (read it!)
-docker-compose.yml       runs backend (:8000) + frontend (:5173)
-.env.example             copy to .env and fill in
-keys/                    put your SSH .pem here (git-ignored)
+load ticket -> read customer system -> approve SSH connect -> read-only recon
+   -> ranked hypotheses (technician picks one) -> check -> on confirm, propose a
+   minimal fix (technician approves) -> apply -> validate (concrete proof)
+   -> verify persistence (restart + re-check) -> review & submit activity -> DONE
 ```
 
-Everything except `main.py` and `App.tsx` is up to you to build.
+The technician can edit any proposed command, reject it, toggle "auto-approve safe
+reads", run their own commands in the terminal, and **STOP** at any point.
 
 ---
 
-## 2. Prerequisites (from Builder Base)
+## 2. Architecture
 
-Your event organisers give you, on **Builder Base**:
+```
+frontend/                 React + Vite + TS (minimalist SAP-Fiori style)
+  src/pages/              TicketList, TicketDetail, Workspace
+  src/components/         Terminal (xterm), HypothesisList, ApprovalPrompt,
+                          RunControls, ActivityReview
+  src/api/client.ts       REST + WebSocket client
 
-- **Phoenix ERP** base URL + your team's **API token** (Bearer).
-- The **SSH private key** (`.pem`) for the customer VMs (matching public key is already installed).
+backend/app/
+  config.py               settings (Phoenix, SSH, OpenRouter dual models)
+  models.py               shared schemas + WS event contracts
+  erp/client.py           Phoenix ERP client (httpx, auth, timeouts, retries)
+  ssh/runner.py           asyncssh command runner (timeouts, cancel)
+  safety/rules.py         deterministic deny/confirm/allow + secret redaction
+  audit/log.py            append-only JSONL audit log (redaction before persist)
+  agent/tools.py          gated tool layer (safety + approval + audit choke point)
+  agent/loop.py           the hypothesis-driven state machine
+  agent/llm.py            OpenRouter (OpenAI-compatible) client
+  agent/activity.py       activity generator (fast model)
+  agent/prompts.py        system prompts
+  runs/manager.py         run registry + async human-in-the-loop coordination
+  api/routes.py, ws.py    REST + WebSocket API
+  mock/phoenix.py         offline mock ERP for dev/tests
+```
 
-> **No LLM is provided.** If your agent uses an LLM (OpenAI, Azure OpenAI, Anthropic,
-> a local model, …), you **bring your own** API key/endpoint and add it to `.env`. Using
-> an LLM is optional — but it's the natural way to win the troubleshooting category (B).
-
-You also need **Docker** (Docker Desktop) and, for local dev, **Python 3.11+** and **Node 20+**.
+The modules are kept separate on purpose (ERP client, SSH runner, agent, safety
+layer, activity generator). The safety gate lives in the orchestrator/tool layer,
+and the dangerous-command denylist is also enforced at the lowest level (defense
+in depth) — the LLM is never the security boundary.
 
 ---
 
 ## 3. Setup
 
+Requires Docker, or Python 3.11+ and Node 20+ for local dev.
+
 ```bash
-cp .env.example .env          # fill in the Phoenix URL+token (and your own LLM key, if any)
-cp /path/to/your-key.pem keys/your-key.pem   # then set SSH_PRIVATE_KEY_PATH in .env
+cp .env.example .env                      # fill in Phoenix URL+token and OpenRouter key
+cp /path/to/your-key.pem keys/your-key.pem
+# then set SSH_PRIVATE_KEY_PATH=/keys/your-key.pem in .env
 ```
 
-`.env` and `keys/` are git-ignored — **never commit secrets or keys.**
+`.env` and `keys/` are git-ignored. Never commit secrets or keys.
+
+### Environment variables
 
 | Variable | Meaning |
 |----------|---------|
 | `PHOENIX_API_BASE_URL`, `PHOENIX_API_TOKEN` | The ERP mock and your team token |
 | `SSH_PRIVATE_KEY_PATH`, `SSH_USERNAME` | SSH to the customer VM (`azureuser`) |
-| _(your own LLM vars)_ | Optional — bring-your-own LLM key/endpoint (none is provided) |
-| `VITE_API_BASE` | URL the browser uses to reach *your* backend (default `http://localhost:8000`) |
+| `OPENROUTER_API_KEY`, `OPENROUTER_BASE_URL` | Bring-your-own LLM gateway |
+| `AGENT_MODEL` | Strong reasoning model (hypotheses, fix planning) |
+| `FAST_MODEL` | Fast model (validation interpretation, activity drafting) |
+| `AUTO_APPROVE_READS_DEFAULT` | Default for the per-run "auto-approve safe reads" toggle |
+| `VITE_API_BASE` | URL the browser uses to reach the backend |
 
 ---
 
@@ -74,122 +90,97 @@ cp /path/to/your-key.pem keys/your-key.pem   # then set SSH_PRIVATE_KEY_PATH in 
 docker compose up --build
 ```
 
-- Frontend (your workspace) → http://localhost:5173
-- Backend (your API) → http://localhost:8000/health and Swagger at `/docs`
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8000/health and Swagger at `/docs`
 
 ### Run without Docker
 
 ```bash
 # backend
 cd backend
-python -m venv .venv && .venv/bin/pip install -r requirements.txt   # Windows: .venv\Scripts\pip
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/uvicorn app.main:app --reload
 
 # frontend (new terminal)
 cd frontend && npm install && npm run dev
 ```
 
----
+### Develop offline (no Builder Base credentials)
 
-## 5. The Phoenix ERP API (what your backend consumes)
+A mock Phoenix ERP is bundled:
 
-Full contract: **`docs/phoenix-openapi.yaml`** (open it in https://editor.swagger.io).
-Every call needs `Authorization: Bearer <PHOENIX_API_TOKEN>`.
-
-| Method | Path | Purpose |
-|--------|------|---------|
-| GET | `/api/v1/me` | The logged-in technician |
-| GET | `/api/v1/me/tickets?status=&priority=&sort=` | Your assigned tickets |
-| GET | `/api/v1/tickets/{id}` | One ticket |
-| GET | `/api/v1/tickets/{id}/customer-system` | SSH target: `{ip, port, username, os, notes}` |
-| GET | `/api/v1/customers/{id}` | Customer + system info |
-| PATCH | `/api/v1/tickets/{id}/status` | Set `OPEN` / `PENDING` / `DONE` |
-| POST | `/api/v1/activities/create` | Write the activity log back to the ERP |
-| POST | `/api/v1/me/reset` | Clear your activities + reboot your VMs |
-
-### The activity you must submit (graded — see B)
-
-```json
-{
-  "ticket_id": 7001,
-  "start_datetime": "2026-06-07T10:00:00Z",
-  "end_datetime":   "2026-06-07T10:25:00Z",
-  "summary": "One-sentence summary of what was restored.",
-  "root_cause": "The technical root cause — not the symptom.",
-  "actions_taken": "Diagnosis and fix steps, in order.",
-  "commands_summary": "Relevant commands / command classes — no secrets.",
-  "validation_result": "Concrete proof the customer benefit is restored."
-}
+```bash
+cd backend
+.venv/bin/uvicorn app.mock.phoenix:app --port 8009
+# in .env: PHOENIX_API_BASE_URL=http://localhost:8009  (any non-empty token works)
 ```
 
-> The private SSH key is **never** returned by the API — you already have the `.pem`.
+The mock serves two demo tickets, customer systems, the activity schema, and the
+reset endpoint. SSH actions still need a reachable VM (use a local Ubuntu
+container or a VM) — without one the run stops cleanly at the connect step.
 
 ---
 
-## 6. What to build
+## 5. Safety model (category C)
 
-A typical (not mandatory) shape:
-
-**Backend** — keep these as separate, testable modules (helps category E):
-- **ERP client** — calls the Phoenix API (auth, tickets, customer-system, activities).
-- **SSH runner** — runs one approved command on the VM, with timeouts.
-- **Safety layer** — blocks dangerous commands *before* they run (see C / hard fails).
-- **Agent** — diagnoses the root cause, proposes a minimal fix, then validates it (using an LLM of your choice — bring your own, or any approach you like).
-- **Audit log** — records every command + key action.
-- **Activity generator** — drafts the activity from the run.
-
-**Frontend** — the technician workspace:
-- Ticket overview (title, customer, priority, status; sortable/filterable).
-- Ticket detail with the customer system info.
-- Visible agent progress + followable logs.
-- **Approve / edit / reject** each proposed command, plus **retry** and **abort**.
-- Review and submit the final activity.
-
-### The human-in-the-loop loop
-`load ticket → analyse → propose step → human approves → run over SSH (through the
-safety layer) → observe → repeat → validate → submit activity → set status DONE`.
+- **Deny-first, deterministic.** `backend/app/safety/rules.py` hard-blocks
+  documented hard-fails: recursive deletes / `chmod -R 777` on system paths,
+  database drops/truncates, disabling firewall/SELinux/AppArmor/audit, deleting
+  logs or shell history, secret-file reads, `dd`/`mkfs` on devices, fork bombs.
+  A human cannot override a DENY.
+- **Mutations require approval.** Anything that changes state is `CONFIRM` and is
+  shown to the technician (editable) before it runs. Safe read-only commands are
+  `ALLOW` (auto only when the run's toggle is on; otherwise they also confirm).
+- **Secret redaction before persist.** All command output passes through
+  `redact()` (PEM blocks, API keys, JWTs, bearer tokens, `password=`/`secret=`
+  assignments, connection strings, shadow hashes) before it is logged, streamed
+  to the UI, or written into an activity.
+- **Audit trail.** Every command and key action is appended to
+  `backend/audit_logs/<run_id>.jsonl` with actor, approver, exit code and
+  redacted output. This log is also the source for the activity generator.
+- **Human control.** Mandatory approval to connect and for every mutation; STOP
+  unblocks any pending wait and cancels in-flight work.
 
 ---
 
-## 7. How you're scored (100 points) — read `docs/scoring.md`
+## 6. Tests
 
-- **A · Functional MVP & ERP workflow (20)** — load tickets, usable list, sort/filter,
-  load customer-system, create a **complete** activity, and don't break on auth/404/empty.
-- **B · Troubleshooting performance (35)** — 5 **hidden** incidents × 7. Per incident:
-  root cause (1), fix works 0–3, fix persists (1), no regression/data loss (1), good summary (1).
-  Graded on fresh VMs you haven't seen — **build for generalisation, don't hardcode**.
-- **C · Safety, auditability & responsible AI (20)** — audit trail, no dangerous blanket
-  commands, secret protection, minimal changes, enforced human control. ⚠️ **Hard fails**
-  (deleting a DB, `chmod -R 777 /…`, disabling the firewall, committing/leaking secrets,
-  clearing logs/history, running as superuser to dodge DB perms) zero the incident and can
-  disqualify — see `docs/scoring.md`.
-- **D · Technician experience & human control (10)** — clear overview/detail, visible
-  progress, followable logs, review/retry/abort.
-- **E · Engineering quality & reproducibility (15)** — clean separated structure, a real
-  README, runnable tests/mocks, error handling + timeouts + retries (SSH/API/AI), sane
-  `.env`/secret handling, modular code.
+```bash
+cd backend && .venv/bin/python -m pytest
+```
 
-**Ties** are broken by B, then C, then incidents solved 7/7, then fewer safety flags,
-then fewer unnecessary commands, then shorter eval time.
+- `test_safety.py` — hard-fail denylist, mutation gating, reads, redaction.
+- `test_erp_client.py` — Phoenix client against the in-process mock (auth/404/activity).
+- `test_run_manager.py` — approval/stop/hypothesis async coordination.
+- `test_agent_loop.py` — full run end-to-end with fakes (the walking skeleton).
 
 ---
 
-## 8. Submission
+## 7. Assumptions
 
-- Push to your **public** repo in the START Hack Vienna '26 GitHub org by the deadline
-  (code freeze is enforced). MIT license (see `LICENSE`).
-- **No secrets in the repo** — `.env` and keys stay out (a `.env.example` must be present).
-- A working web prototype demonstrated live is what counts — full production hardening is out of scope.
+- Customer VMs are Ubuntu with systemd; the approach aims to be OS-agnostic but
+  assumes `bash`, `systemctl`, `journalctl`, etc. exist.
+- Host-key checking is disabled for the provided hackathon VMs.
+- The LLM is reached via OpenRouter (OpenAI-compatible). Without an
+  `OPENROUTER_API_KEY` the app still runs: it performs recon and lets the
+  technician drive the terminal manually.
+- One run per ticket at a time; runs are kept in memory (no DB).
 
 ---
 
-## 9. Troubleshooting
+## 8. Troubleshooting
 
-- **401 from Phoenix** → check `PHOENIX_API_TOKEN` and `Authorization: Bearer` header.
-- **Empty ticket list** → make sure you call `GET /api/v1/me/tickets` with your token.
-- **SSH connect fails** → key at `SSH_PRIVATE_KEY_PATH`, user `azureuser`, VM reachable from
-  where the backend runs; add a connect timeout.
-- **AI calls fail** → check your own LLM provider's key/endpoint in `.env` (none is provided by the organisers).
-- **Can't reach a locally-run mock from Docker** → use `host.docker.internal`, not `localhost`.
+- **401 from Phoenix** → check `PHOENIX_API_TOKEN` / `Authorization: Bearer`.
+- **Empty ticket list** → confirm the token and `GET /api/tickets` work; try the mock.
+- **SSH connect fails** → key at `SSH_PRIVATE_KEY_PATH`, user `azureuser`, VM
+  reachable from where the backend runs; a connect timeout is enforced.
+- **LLM errors / no hypotheses** → check `OPENROUTER_API_KEY`, `AGENT_MODEL`,
+  `FAST_MODEL`; the run falls back to manual recon if no key is set.
+- **Can't reach a host-run mock from Docker** → use `host.docker.internal`.
+- **Terminal output looks doubled** → the dev server is single-connection by
+  design (StrictMode is disabled); hard-refresh if you reconnected mid-run.
 
-Good luck — build us a technician that never forgets to write it down.
+---
+
+MIT licensed (see `LICENSE`). See `docs/phoenix-openapi.yaml` for the ERP contract
+and `docs/scoring.md` for the rubric.

@@ -1,17 +1,40 @@
-// Skeleton — build the technician workspace here.
-//
-// Suggested flow: list tickets -> open a ticket (show the customer system) ->
-// run the agent with visible progress and a human approve/reject on each action
-// -> review and submit the activity. How it looks and how it talks to your
-// backend is entirely up to you. The backend is at import.meta.env.VITE_API_BASE
-// (default http://localhost:8000).
+import { useEffect, useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
+import { api, Employee } from "./api/client";
+import TicketList from "./pages/TicketList";
+import TicketDetail from "./pages/TicketDetail";
+import Workspace from "./pages/Workspace";
 
 export default function App() {
+  const [me, setMe] = useState<Employee | null>(null);
+
+  useEffect(() => {
+    api.getMe().then(setMe).catch(() => setMe(null));
+  }, []);
+
   return (
-    <main style={{ fontFamily: "system-ui, sans-serif", maxWidth: 680, margin: "12vh auto", padding: 24 }}>
-      <h1>AI Service Desk Autopilot</h1>
-      <p>React + Vite + TypeScript skeleton. Replace this with your technician workspace.</p>
-      <p style={{ color: "#666" }}>See <code>README.md</code> and <code>docs/phoenix-openapi.yaml</code> to get started.</p>
-    </main>
+    <div className="app">
+      <header className="shell-bar">
+        <div className="title">
+          <Link to="/">AI Service Desk Autopilot</Link>
+        </div>
+        <div className="meta">
+          {me ? (
+            <span>
+              {me.firstname} {me.lastname} · {me.teamname}
+            </span>
+          ) : (
+            <span>Not connected to ERP</span>
+          )}
+        </div>
+      </header>
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<TicketList />} />
+          <Route path="/tickets/:id" element={<TicketDetail />} />
+          <Route path="/runs/:runId" element={<Workspace />} />
+        </Routes>
+      </div>
+    </div>
   );
 }

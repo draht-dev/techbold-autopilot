@@ -1,0 +1,332 @@
+/* Minimalist SAP Fiori-inspired theme. Neutral, dense, functional.
+   No decorative colour — semantic colour only for status. */
+:root {
+  --bg: #ffffff;
+  --bg-shell: #354a5f; /* Fiori shell bar */
+  --bg-page: #f5f6f7;
+  --bg-panel: #ffffff;
+  --bg-subtle: #fafafa;
+  --bg-hover: #ebf5fe;
+  --bg-selected: #e3f0fd;
+
+  --border: #d9d9d9;
+  --border-strong: #b3b3b3;
+
+  --text: #32363a;
+  --text-secondary: #6a6d70;
+  --text-inverse: #ffffff;
+
+  --accent: #0a6ed1; /* Fiori action blue */
+  --accent-hover: #085caf;
+
+  --success: #107e3e;
+  --warning: #e9730c;
+  --error: #bb0000;
+  --neutral: #6a6d70;
+
+  --font: "72", "72full", -apple-system, "Segoe UI", Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --radius: 4px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+h1 {
+  font-size: 18px;
+}
+h2 {
+  font-size: 15px;
+}
+h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+/* ---- Shell bar ---- */
+.shell-bar {
+  background: var(--bg-shell);
+  color: var(--text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 44px;
+  flex: 0 0 auto;
+}
+.shell-bar .title {
+  font-size: 15px;
+  font-weight: 600;
+}
+.shell-bar .title a {
+  color: var(--text-inverse);
+}
+.shell-bar .meta {
+  font-size: 12px;
+  color: #cdd6df;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.content {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 16px;
+}
+
+/* ---- Panels ---- */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.panel-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-body {
+  padding: 14px;
+}
+
+/* ---- Tables ---- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th,
+td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+th {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+tbody tr:hover {
+  background: var(--bg-hover);
+  cursor: pointer;
+}
+
+/* ---- Buttons ---- */
+button {
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+button:hover {
+  background: var(--bg-subtle);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-inverse);
+}
+button.primary:hover {
+  background: var(--accent-hover);
+}
+button.danger {
+  background: var(--bg);
+  border-color: var(--error);
+  color: var(--error);
+}
+button.danger:hover {
+  background: #fdf0f0;
+}
+button.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---- Status badges (the only colour) ---- */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 10px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.badge.open {
+  color: var(--accent);
+}
+.badge.pending {
+  color: var(--warning);
+}
+.badge.done {
+  color: var(--success);
+}
+.prio-high {
+  color: var(--error);
+  font-weight: 600;
+}
+.prio-medium {
+  color: var(--warning);
+}
+.prio-low {
+  color: var(--text-secondary);
+}
+
+/* ---- Forms ---- */
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+input[type="text"],
+input[type="search"],
+textarea,
+select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+}
+textarea {
+  font-family: var(--font-mono);
+  resize: vertical;
+}
+.field {
+  margin-bottom: 12px;
+}
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+/* ---- Layout helpers ---- */
+.muted {
+  color: var(--text-secondary);
+}
+.mono {
+  font-family: var(--font-mono);
+}
+.row {
+  display: flex;
+  gap: 16px;
+}
+.col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.kv {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 6px 12px;
+  font-size: 13px;
+}
+.kv dt {
+  color: var(--text-secondary);
+}
+.kv dd {
+  margin: 0;
+}
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 1100px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notice {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.notice.error {
+  border-color: var(--error);
+  background: #fdf0f0;
+  color: var(--error);
+}
+.notice.warning {
+  border-color: var(--warning);
+  background: #fef7ef;
+}
+.notice.success {
+  border-color: var(--success);
+  background: #f1faf4;
+}
