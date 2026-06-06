@@ -76,6 +76,11 @@ export default function ApprovalPrompt({ approval, onDecide }: Props) {
                 validation: {payload.validation_command}
               </div>
             )}
+            {payload.rollback && (
+              <div className="muted" style={{ marginTop: 6, fontSize: 12 }}>
+                rollback: {payload.rollback}
+              </div>
+            )}
           </div>
         )}
 

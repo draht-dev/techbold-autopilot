@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field
 # The tool names the model will emit (kept in one place for the dispatcher).
 RUN_COMMAND = "RunCommand"
 PRESENT_HYPOTHESES = "PresentHypotheses"
+PROPOSE_FIX = "ProposeFix"
 REQUEST_DECISION = "RequestDecision"
 FINISH = "Finish"
 
@@ -68,6 +69,29 @@ class PresentHypotheses(BaseModel):
     )
 
 
+class ProposeFix(BaseModel):
+    """Apply the remediation as ONE reviewable plan, instead of ad-hoc commands.
+
+    Use this once you have confirmed the root cause. The technician sees the whole
+    plan at once (explanation, commands, validation, rollback) and approves, edits,
+    or rejects it. On approval the commands run in order, the validation command is
+    checked, and the service (if given) is restarted to confirm the fix persists.
+    Keep the change minimal and prefer editing configuration over program source.
+    """
+
+    explanation: str = Field(description="What the fix does and why it is minimal and persistent.")
+    commands: list[str] = Field(description="The exact shell commands to apply, in order.")
+    validation_command: Optional[str] = Field(
+        default=None, description="A command that proves the customer benefit is restored."
+    )
+    service: Optional[str] = Field(
+        default=None, description="systemd unit to restart to verify persistence, if any."
+    )
+    rollback: str = Field(
+        default="", description="How to undo this change if it does not work."
+    )
+
+
 class RequestDecision(BaseModel):
     """Ask the technician to make a decision when you are blocked or uncertain.
 
@@ -100,4 +124,4 @@ class Finish(BaseModel):
     )
 
 
-AGENT_TOOLS = [RunCommand, PresentHypotheses, RequestDecision, Finish]
+AGENT_TOOLS = [RunCommand, PresentHypotheses, ProposeFix, RequestDecision, Finish]

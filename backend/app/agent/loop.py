@@ -2,13 +2,15 @@
 
 One troubleshooting run is ONE continuous agent conversation. After connecting and
 a cheap deterministic recon seed, the agent drives itself with tools: it runs as
-many commands as it wants, decides when to present hypotheses (a blocking human
-pick), asks the technician to decide when blocked, and finishes when the issue is
-resolved (or closed). Every command still flows through the gated/audited/redacted
-``execute_command`` choke point, so human approval and secret filtering are intact.
+many commands as it wants, presents hypotheses early for a blocking human pick,
+applies remediation as one reviewable plan via ProposeFix, asks the technician to
+decide when blocked, and finishes when the issue is resolved (or closed). Every
+command still flows through the gated/audited/redacted ``execute_command`` choke
+point, so human approval and secret filtering are intact.
 """
 from __future__ import annotations
 
+import shlex
 from typing import Any, Optional
 
 from langchain_core.messages import AIMessage
@@ -19,6 +21,7 @@ from app.agent.agent_tools import (
     AGENT_TOOLS,
     FINISH,
     PRESENT_HYPOTHESES,
+    PROPOSE_FIX,
     REQUEST_DECISION,
     RUN_COMMAND,
 )
@@ -215,6 +218,9 @@ async def _dispatch(run: Run, llm: LLM, call: dict[str, Any]) -> tuple[str, bool
     if name == PRESENT_HYPOTHESES:
         return await _present_hypotheses(run, args), False
 
+    if name == PROPOSE_FIX:
+        return await _propose_fix(run, args), False
+
     if name == REQUEST_DECISION:
         return await _request_decision(run, args), False
 
@@ -267,6 +273,12 @@ async def _present_hypotheses(run: Run, args: dict[str, Any]) -> str:
         )
     if not hyps:
         return "No hypotheses were provided; gather more evidence and try again."
+    if len(hyps) < 2:
+        return (
+            f"You provided {len(hyps)} hypothesis. Present at least two distinct candidate "
+            "root causes (ranked by likelihood) so the technician has a real choice to "
+            "steer - include genuine alternatives even if one seems most likely."
+        )
 
     _normalize_likelihoods(hyps)
     run.hypotheses = hyps
@@ -362,6 +374,85 @@ def _resolve_selection(run: Run, selection: Any) -> Optional[Hypothesis]:
         _emit_hypotheses(run)
         return hyp
     return next((h for h in run.hypotheses if h.id == selection.get("id")), None)
+
+
+# --------------------------------------------------------------------------- #
+# Tool: propose + apply a fix as one reviewable plan (human approval)
+# --------------------------------------------------------------------------- #
+async def _propose_fix(run: Run, args: dict[str, Any]) -> str:
+    commands = [str(c).strip() for c in (args.get("commands") or []) if c and str(c).strip()]
+    if not commands:
+        return "ProposeFix needs at least one command. Describe the fix as a concrete command list."
+
+    explanation = str(args.get("explanation", ""))
+    validation_command = (args.get("validation_command") or "") or None
+    service = (args.get("service") or "") or None
+    rollback = str(args.get("rollback", ""))
+
+    run.set_phase(RunPhase.FIX_PROPOSE)
+    decision = await run.request_approval(
+        "fix",
+        {
+            "explanation": explanation,
+            "commands": commands,
+            "service": service,
+            "validation_command": validation_command,
+            "rollback": rollback,
+        },
+        "Apply the proposed fix",
+    )
+    if not decision.approved:
+        run.info("Fix rejected by technician.")
+        run.set_phase(RunPhase.INVESTIGATING)
+        return (
+            "The technician rejected the proposed fix. Reconsider the root cause or "
+            "propose a different, more minimal plan."
+        )
+    if decision.edited:
+        commands = [c.strip() for c in decision.edited.splitlines() if c.strip()]
+
+    run.audit.record("fix_approved", text=explanation, commands=commands)
+    results: list[str] = []
+
+    run.set_phase(RunPhase.APPLY)
+    for cmd in commands:
+        res = await execute_command(run, cmd, actor="agent", purpose="apply fix", require_confirm=False)
+        results.append(_format_exec(res))
+        if res.blocked:
+            run.set_phase(RunPhase.INVESTIGATING)
+            return (
+                "A fix command was blocked by the safety layer; the fix was not fully "
+                "applied:\n\n" + "\n\n".join(results)
+            )
+
+    if validation_command:
+        run.set_phase(RunPhase.VALIDATE)
+        res = await execute_command(
+            run, validation_command, actor="agent", purpose="validate fix", require_confirm=False
+        )
+        results.append("VALIDATION:\n" + _format_exec(res))
+
+    if service:
+        run.set_phase(RunPhase.PERSIST_VERIFY)
+        restart = await execute_command(
+            run, f"systemctl restart {shlex.quote(str(service))}",
+            actor="agent", purpose="persistence restart", require_confirm=False,
+        )
+        results.append("PERSISTENCE RESTART:\n" + _format_exec(restart))
+        if validation_command:
+            reval = await execute_command(
+                run, validation_command, actor="agent",
+                purpose="re-validate after restart", require_confirm=False,
+            )
+            results.append("RE-VALIDATION AFTER RESTART:\n" + _format_exec(reval))
+
+    run.set_phase(RunPhase.INVESTIGATING)
+    return (
+        "The fix plan was approved and applied. Results:\n\n"
+        + "\n\n".join(results)
+        + "\n\nReview the validation output. If the customer benefit is genuinely "
+        "restored, call Finish with outcome 'fixed'; otherwise keep investigating."
+    )
 
 
 # --------------------------------------------------------------------------- #

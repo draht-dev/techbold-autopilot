@@ -22,11 +22,12 @@ load ticket -> read customer system -> approve SSH connect -> read-only recon se
    -> the agent (one continuous conversation) runs as many tools as it needs:
         1. REPRODUCE the reported problem first (it sometimes doesn't exist ->
            the agent asks the technician how to proceed)
-        2. present ranked hypotheses (% likelihood) -> technician picks one,
-           comments, or writes their own  [blocking gate]
+        2. present ranked hypotheses EARLY (>=2 candidates, % likelihood) ->
+           technician picks one, comments, or writes their own  [blocking gate]
         3. investigate with arbitrarily many commands; decide confirm/reject and
            loop back to new hypotheses whenever it wants
-        4. apply the minimal, persistent fix (each mutation approved by the human)
+        4. ProposeFix: apply the minimal, persistent fix as ONE reviewable plan
+           (explanation + commands + validation + rollback)  [blocking gate]
         5. validate (concrete proof) + verify persistence
    -> review & submit activity -> DONE  (or PENDING if not reproducible / escalated)
 ```
@@ -62,7 +63,8 @@ backend/app/
   safety/rules.py         deterministic deny/confirm/allow + secret redaction
   audit/log.py            append-only JSONL audit log (redaction before persist)
   agent/tools.py          gated tool layer (safety + approval + audit choke point)
-  agent/agent_tools.py    tool schemas the agent calls (run command, hypotheses, …)
+  agent/agent_tools.py    tool schemas the agent calls (run command, hypotheses,
+                          propose fix, request decision, finish)
   agent/session.py        continuous conversation + token-based auto-compaction
   agent/loop.py           the autonomous tool-calling orchestration loop
   agent/llm.py            OpenRouter (OpenAI-compatible) client (tool calls + reasoning)

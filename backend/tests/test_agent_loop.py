@@ -1,10 +1,10 @@
 """End-to-end autonomous agent loop with fakes (the walking skeleton).
 
 The agent is one continuous tool-calling conversation. A scripted ``FakeLLM``
-returns tool calls (RunCommand -> PresentHypotheses -> RunCommand -> Finish) and
-we drive every human gate (connect/command approvals, hypothesis selection,
-decision, activity submission), asserting the run reaches DONE, writes the
-activity, and that the agent's stream is emitted.
+returns tool calls (RunCommand -> PresentHypotheses -> RunCommand -> ProposeFix ->
+Finish) and we drive every human gate (connect/command approvals, hypothesis
+selection, fix approval, decision, activity submission), asserting the run reaches
+DONE, writes the activity, and that the agent's stream is emitted.
 """
 import asyncio
 
@@ -120,16 +120,34 @@ _HAPPY_PATH = [
     [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
     [(
         "PresentHypotheses",
-        {"hypotheses": [{
-            "title": "nginx service is down",
-            "reasoning": "failed unit in recon",
-            "evidence": "systemctl --failed",
-            "proposed_checks": ["systemctl is-active nginx"],
-            "likelihood": 0.9,
-        }]},
+        {"hypotheses": [
+            {
+                "title": "nginx service is down",
+                "reasoning": "failed unit in recon",
+                "evidence": "systemctl --failed",
+                "proposed_checks": ["systemctl is-active nginx"],
+                "likelihood": 0.9,
+            },
+            {
+                "title": "upstream app not listening",
+                "reasoning": "502 could be a dead upstream",
+                "evidence": "ss -ltnp",
+                "proposed_checks": ["ss -ltnp"],
+                "likelihood": 0.3,
+            },
+        ]},
     )],
-    [("RunCommand", {"command": "systemctl enable --now nginx", "purpose": "apply fix"})],
-    [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "validate"})],
+    [("RunCommand", {"command": "systemctl is-active nginx", "purpose": "confirm hypothesis"})],
+    [(
+        "ProposeFix",
+        {
+            "explanation": "Re-enable and start the nginx unit so it survives reboot.",
+            "commands": ["systemctl enable --now nginx"],
+            "service": "nginx",
+            "validation_command": "curl -fsS http://localhost/health",
+            "rollback": "systemctl disable --now nginx",
+        },
+    )],
     [("Finish", {"outcome": "fixed", "note": "nginx restored and validated"})],
 ]
 
@@ -148,6 +166,8 @@ async def test_full_run_reaches_done(monkeypatch, tmp_path):
     assert erp.statuses.get(7001) == TicketStatus.DONE
     # recon seed + reproduce + fix + validate commands were audited.
     assert len(run.audit.commands()) >= 8
+    # The fix was applied through the ProposeFix checkpoint.
+    assert "systemctl enable --now nginx" in [c.get("command") for c in run.audit.commands()]
     # The continuous agent streamed its thinking / tool flow to the dev window.
     assert any(e["type"] == "agent.message" for e in run.events)
 

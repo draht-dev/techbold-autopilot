@@ -135,16 +135,28 @@ _ONE_HYP = {
     "likelihood": 0.8,
 }
 
+_SECOND_HYP = {
+    "title": "upstream port closed",
+    "reasoning": "app not listening",
+    "evidence": "ss -ltnp",
+    "proposed_checks": ["ss -ltnp"],
+    "likelihood": 0.4,
+}
+
+# PresentHypotheses enforces at least two distinct candidates.
+_TWO_HYPS = [_ONE_HYP, _SECOND_HYP]
+
 
 async def test_agent_runs_each_of_its_commands(monkeypatch, tmp_path):
     monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
     run, _ = _make_run(tmp_path)
     script = [
         [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
-        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],
+        [("PresentHypotheses", {"hypotheses": _TWO_HYPS})],
         [("RunCommand", {"command": "systemctl is-active nginx", "purpose": "check"})],
         [("RunCommand", {"command": "journalctl -u nginx -n 5", "purpose": "check"})],
-        [("RunCommand", {"command": "systemctl enable --now nginx", "purpose": "fix"})],
+        [("ProposeFix", {"explanation": "enable nginx", "commands": ["systemctl enable --now nginx"],
+                         "service": "nginx", "validation_command": "curl -fsS http://localhost/health"})],
         [("Finish", {"outcome": "fixed"})],
     ]
     run.task = asyncio.create_task(run_agent(run, ScriptLLM(script)))
@@ -155,6 +167,7 @@ async def test_agent_runs_each_of_its_commands(monkeypatch, tmp_path):
     executed = [c.get("command") for c in run.audit.commands()]
     assert "systemctl is-active nginx" in executed
     assert "journalctl -u nginx -n 5" in executed
+    assert "systemctl enable --now nginx" in executed  # fix applied via ProposeFix
     assert run.phase == RunPhase.DONE
 
 
@@ -168,7 +181,7 @@ async def test_own_hypothesis_drives_the_loop(monkeypatch, tmp_path):
 
     script = [
         [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
-        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],
+        [("PresentHypotheses", {"hypotheses": _TWO_HYPS})],
         [("RunCommand", {"command": "cat /etc/nginx/nginx.conf", "purpose": "check own theory"})],
         [("Finish", {"outcome": "fixed"})],
     ]
@@ -180,13 +193,33 @@ async def test_own_hypothesis_drives_the_loop(monkeypatch, tmp_path):
     assert "cat /etc/nginx/nginx.conf" in executed  # the agent acted on the own theory
 
 
+async def test_present_hypotheses_requires_at_least_two(monkeypatch, tmp_path):
+    """A single hypothesis is rejected; the agent must re-present alternatives."""
+    monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
+    run, _ = _make_run(tmp_path)
+    script = [
+        [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
+        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],  # too few -> guidance, no gate
+        [("PresentHypotheses", {"hypotheses": _TWO_HYPS})],   # now the technician can choose
+        [("Finish", {"outcome": "fixed"})],
+    ]
+    run.task = asyncio.create_task(run_agent(run, ScriptLLM(script)))
+    await asyncio.wait_for(
+        asyncio.gather(_drive_selecting(run, lambda r: r.select_hypothesis(r.hypotheses[0].id)), run.task),
+        timeout=15,
+    )
+    assert len(run.hypotheses) >= 2
+    assert run.phase == RunPhase.DONE
+
+
 async def test_no_hidden_cells_every_command_is_echoed(monkeypatch, tmp_path):
     monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
     run, _ = _make_run(tmp_path)
     script = [
         [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
-        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],
+        [("PresentHypotheses", {"hypotheses": _TWO_HYPS})],
         [("RunCommand", {"command": "systemctl is-active nginx", "purpose": "check"})],
+        [("ProposeFix", {"explanation": "enable nginx", "commands": ["systemctl enable --now nginx"]})],
         [("Finish", {"outcome": "fixed"})],
     ]
     run.task = asyncio.create_task(run_agent(run, ScriptLLM(script)))
