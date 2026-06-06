@@ -39,8 +39,36 @@ logger = logging.getLogger("app.agent.llm")
 # Maximum tokens the model may emit per call.
 _DEFAULT_MAX_TOKENS = 4096
 
+# Responses API budget — reasoning models (e.g. gpt-5.x) spend output tokens on
+# internal reasoning, so give the call generous headroom for thinking + JSON.
+_DEFAULT_RESPONSES_MAX_TOKENS = 16384
+
 # Number of automatic retries on malformed / missing tool-use responses.
 _MAX_RETRIES = 2
+
+
+async def _openai_chat_create(client: Any, **kwargs: Any) -> Any:
+    """Call chat.completions.create with a token-parameter fallback.
+
+    Classic chat models accept ``max_tokens``; newer reasoning models (o1/o3 and
+    some gpt-4.x variants) reject it and require ``max_completion_tokens``.  Try
+    the former, and on the specific "unsupported parameter" error retry with the
+    latter so the same code works across Azure/OpenAI deployments.
+    """
+    try:
+        return await client.chat.completions.create(
+            max_tokens=_DEFAULT_MAX_TOKENS, **kwargs
+        )
+    except Exception as exc:  # noqa: BLE001 — inspect message, then re-raise if unrelated
+        msg = str(exc).lower()
+        if "max_completion_tokens" in msg or (
+            "max_tokens" in msg and ("unsupported" in msg or "not supported" in msg)
+        ):
+            logger.debug("Retrying chat completion with max_completion_tokens.")
+            return await client.chat.completions.create(
+                max_completion_tokens=_DEFAULT_MAX_TOKENS, **kwargs
+            )
+        raise
 
 
 # ---------------------------------------------------------------------------
@@ -254,13 +282,8 @@ class OpenAILLM(BaseLLM):
                 )
 
             try:
-                # NOTE (FIX 5): Newer OpenAI models (o1, o3, gpt-4o-mini variants)
-                # deprecate `max_tokens` in favour of `max_completion_tokens`.
-                # This is a non-default path (default provider is Anthropic); for
-                # now we keep `max_tokens` which still works for gpt-4o and most
-                # models.  If you hit a "max_tokens is not supported" error from the
-                # API, switch this argument to `max_completion_tokens`.
-                response = await client.chat.completions.create(
+                response = await _openai_chat_create(
+                    client,
                     model=self._model,
                     messages=messages,
                     tools=[
@@ -279,7 +302,6 @@ class OpenAILLM(BaseLLM):
                         "type": "function",
                         "function": {"name": AGENT_TOOL_NAME},
                     },
-                    max_tokens=_DEFAULT_MAX_TOKENS,
                 )
             except Exception as exc:
                 # Lazy import means we can't catch openai-specific types directly.
@@ -401,9 +423,8 @@ class AzureOpenAILLM(BaseLLM):
                 )
 
             try:
-                # NOTE (FIX 5): See OpenAILLM above — newer models may require
-                # `max_completion_tokens` instead of `max_tokens`.
-                response = await client.chat.completions.create(
+                response = await _openai_chat_create(
+                    client,
                     model=self._deployment,
                     messages=messages,
                     tools=[
@@ -422,7 +443,6 @@ class AzureOpenAILLM(BaseLLM):
                         "type": "function",
                         "function": {"name": AGENT_TOOL_NAME},
                     },
-                    max_tokens=_DEFAULT_MAX_TOKENS,
                 )
             except Exception as exc:
                 raise LLMError(self._PROVIDER, str(exc)) from exc
@@ -455,6 +475,139 @@ class AzureOpenAILLM(BaseLLM):
             except json.JSONDecodeError as exc:
                 last_error = MalformedAgentResponse(
                     f"Tool call arguments are not valid JSON: {exc}"
+                )
+                continue
+
+            try:
+                return parse_agent_response(raw)
+            except MalformedAgentResponse as exc:
+                last_error = exc
+                continue
+
+        assert last_error is not None
+        raise last_error
+
+
+# ---------------------------------------------------------------------------
+# Azure AI Foundry — v1 "Responses" API (lazy import)
+# ---------------------------------------------------------------------------
+
+
+class AzureFoundryLLM(BaseLLM):
+    """LLM client for the Azure AI Foundry **v1 Responses** API.
+
+    This is the surface techbold provides, e.g.::
+
+        POST https://<resource>.services.ai.azure.com/api/projects/<project>/openai/v1/responses
+        header: api-key: <key>
+        body:   {"model": "gpt-5.4-nano", "input": "..."}
+
+    It differs from classic Azure OpenAI (``AzureOpenAILLM``): the model name
+    lives in the body (no deployment in the URL), auth is the ``api-key`` header,
+    and the call uses ``responses.create`` (``input``/``instructions``) rather
+    than ``chat.completions``.  Structured output is forced with a json_schema
+    ``text.format`` so the model returns AGENT_RESPONSE_SCHEMA-shaped JSON.
+
+    ``base_url`` must be the part up to and including ``/openai/v1`` (the SDK
+    appends ``/responses``).  Works for any OpenAI-compatible ``/v1/responses``
+    endpoint, not just Azure.
+    """
+
+    _PROVIDER = "azure-foundry"
+
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        base_url: str,
+        model: str,
+        client: Any | None = None,
+        max_output_tokens: int = _DEFAULT_RESPONSES_MAX_TOKENS,
+    ) -> None:
+        self._api_key = api_key
+        self._base_url = base_url.rstrip("/")
+        self._model = model
+        self._client = client  # injectable for tests
+        self._max_output_tokens = max_output_tokens
+
+    def _get_client(self) -> Any:
+        if self._client is not None:
+            return self._client
+        try:
+            from openai import AsyncOpenAI
+        except ImportError as exc:
+            raise LLMError(
+                self._PROVIDER,
+                "The `openai` package is not installed. Run `pip install openai`.",
+            ) from exc
+        # api-key header matches the techbold curl; api_key= also sets the
+        # Authorization: Bearer header, so the endpoint accepts either scheme.
+        return AsyncOpenAI(
+            base_url=self._base_url,
+            api_key=self._api_key,
+            default_headers={"api-key": self._api_key},
+        )
+
+    async def propose(
+        self,
+        *,
+        system_prompt: str,
+        user_message: str,
+    ) -> AgentResponse:
+        import json
+
+        client = self._get_client()
+        text_format = {
+            "format": {
+                "type": "json_schema",
+                "name": AGENT_TOOL_NAME,
+                "schema": AGENT_RESPONSE_SCHEMA,
+                # Non-strict: our schema has optional fields; pydantic + the
+                # retry loop below validate the result. The schema still guides
+                # the model strongly toward the right shape.
+                "strict": False,
+            }
+        }
+        last_error: MalformedAgentResponse | None = None
+        user = user_message
+
+        for attempt in range(_MAX_RETRIES + 1):
+            if attempt > 0 and last_error is not None:
+                user = user_message + (
+                    f"\n\n[System correction — attempt {attempt + 1}]: "
+                    f"Your previous response was invalid. {last_error.detail} "
+                    "Respond ONLY with JSON matching the required schema."
+                )
+                logger.debug(
+                    "Retrying Azure Foundry call (attempt %d/%d) after malformed response.",
+                    attempt + 1,
+                    _MAX_RETRIES + 1,
+                )
+
+            try:
+                response = await client.responses.create(
+                    model=self._model,
+                    instructions=system_prompt,
+                    input=user,
+                    text=text_format,
+                    max_output_tokens=self._max_output_tokens,
+                )
+            except Exception as exc:  # lazy import — can't catch openai types here
+                raise LLMError(self._PROVIDER, str(exc)) from exc
+
+            raw_text = getattr(response, "output_text", None)
+            if not raw_text:
+                last_error = MalformedAgentResponse(
+                    "The model returned no output text (possibly truncated or a "
+                    "refusal). It must return JSON matching the schema."
+                )
+                continue
+
+            try:
+                raw = json.loads(raw_text)
+            except json.JSONDecodeError as exc:
+                last_error = MalformedAgentResponse(
+                    f"Model output was not valid JSON: {exc}"
                 )
                 continue
 
@@ -588,17 +741,44 @@ def get_llm_client(settings: Any | None = None) -> BaseLLM:
                 f"Missing required settings: {', '.join(missing)}. "
                 "Add them to your .env file or environment.",
             )
+        api_version = settings.azure_openai_api_version or "2024-10-21"
         logger.info(
-            "Using Azure OpenAI LLM provider, deployment=%s",
+            "Using Azure OpenAI LLM provider, deployment=%s api_version=%s",
             settings.azure_openai_deployment,
+            api_version,
         )
         return AzureOpenAILLM(
             api_key=settings.azure_openai_api_key,
             endpoint=settings.azure_openai_endpoint,
             deployment=settings.azure_openai_deployment,
+            api_version=api_version,
+        )
+
+    if provider in ("azure-foundry", "azure-ai-foundry", "azure-responses", "foundry"):
+        missing = []
+        if not settings.azure_openai_api_key:
+            missing.append("AZURE_OPENAI_API_KEY")
+        if not settings.azure_openai_endpoint:
+            missing.append("AZURE_OPENAI_ENDPOINT (the full .../openai/v1 base URL)")
+        model = settings.llm_model or settings.azure_openai_deployment
+        if not model:
+            missing.append("LLM_MODEL (the model name, e.g. gpt-5.4-nano)")
+        if missing:
+            raise LLMError(
+                "azure-foundry",
+                f"Missing required settings: {', '.join(missing)}. "
+                "Add them to your .env file or environment.",
+            )
+        logger.info(
+            "Using Azure AI Foundry (Responses API) provider, model=%s", model
+        )
+        return AzureFoundryLLM(
+            api_key=settings.azure_openai_api_key,
+            base_url=settings.azure_openai_endpoint,
+            model=model,
         )
 
     raise ValueError(
-        f"Unknown LLM_PROVIDER '{provider}'. "
-        "Supported values: anthropic, openai, azure-openai."
+        f"Unknown LLM_PROVIDER '{provider}'. Supported values: "
+        "anthropic, openai, azure-openai, azure-foundry."
     )

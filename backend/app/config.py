@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     azure_openai_api_key: str = ""
     azure_openai_endpoint: str = ""
     azure_openai_deployment: str = ""
+    azure_openai_api_version: str = "2024-10-21"   # override to match your Azure resource
 
     # --- Agent behaviour (SPEC §3) ---
     auto_run_readonly: bool = True
