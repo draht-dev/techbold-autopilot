@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Any, Optional, Type
+from typing import Any, Optional, Sequence, Type
 
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
@@ -19,6 +19,32 @@ from app.config import Settings
 
 class LLMError(Exception):
     pass
+
+
+def reasoning_text(msg: AIMessage) -> str:
+    """Best-effort extraction of a reasoning/thinking string from an AIMessage.
+
+    OpenRouter returns reasoning content on the assistant message; LangChain
+    surfaces unknown fields in ``additional_kwargs``. Different providers use
+    different shapes, so we probe the common ones and degrade gracefully.
+    """
+    ak = getattr(msg, "additional_kwargs", None) or {}
+    reasoning = ak.get("reasoning")
+    if isinstance(reasoning, str) and reasoning.strip():
+        return reasoning.strip()
+    details = ak.get("reasoning_details") or reasoning
+    if isinstance(details, list):
+        parts: list[str] = []
+        for block in details:
+            if isinstance(block, dict):
+                text = block.get("text") or block.get("summary") or block.get("content")
+                if isinstance(text, str):
+                    parts.append(text)
+            elif isinstance(block, str):
+                parts.append(block)
+        if parts:
+            return "\n".join(p for p in parts if p.strip()).strip()
+    return ""
 
 
 def _extract_first_json_object(text: str) -> dict[str, Any]:
@@ -115,6 +141,42 @@ class LLM:
         if schema is not None:
             return schema.model_validate(parsed).model_dump()
         return parsed
+
+    async def complete_with_tools(
+        self,
+        messages: Sequence[BaseMessage],
+        tools: Sequence[Any],
+        *,
+        model: Optional[str] = None,
+        temperature: float = 0.1,
+        reasoning_effort: Optional[str] = None,
+    ) -> AIMessage:
+        """Invoke a tool-calling model over a full message history.
+
+        Returns the raw ``AIMessage`` so the caller (the continuous session) can
+        inspect ``tool_calls``, the assistant text, reasoning, and
+        ``usage_metadata``. Reasoning is requested via OpenRouter's ``reasoning``
+        body param when an effort level is configured; a model that ignores it
+        simply returns no reasoning.
+        """
+        chat = self._chat(model or self.agent_model, temperature)
+        runnable = chat.bind_tools(list(tools))
+        if reasoning_effort:
+            runnable = runnable.bind(extra_body={"reasoning": {"effort": reasoning_effort}})
+        try:
+            result = await runnable.ainvoke(list(messages))
+        except Exception as exc:  # noqa: BLE001 - surface as a typed error to the loop
+            if reasoning_effort:
+                # Some providers reject the reasoning body; retry once without it.
+                try:
+                    result = await chat.bind_tools(list(tools)).ainvoke(list(messages))
+                except Exception as exc2:  # noqa: BLE001
+                    raise LLMError(f"Tool-calling completion failed: {exc2}") from exc2
+            else:
+                raise LLMError(f"Tool-calling completion failed: {exc}") from exc
+        if isinstance(result, AIMessage):
+            return result
+        return AIMessage(content=str(result))
 
     async def complete_text(
         self,
