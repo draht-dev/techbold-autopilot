@@ -147,3 +147,20 @@ def test_resolution_returns_submitted_activity_and_log(client):
     assert any(
         e["type"] == "info" and "status API" in e.get("text", "") for e in res["events"]
     )
+
+
+def test_resolution_survives_run_eviction(client):
+    """The DONE ticket page still shows the solution + log after the run is gone."""
+    run_id = client.post("/api/runs", json={"ticket_id": 7004}).json()["run_id"]
+    run = client.mgr.get(run_id)
+    run.info("Unmasked and started the unit; public-test.sh passed")
+    run.submitted_activity = {"summary": "Unmasked the systemd unit"}
+    run.outcome = "fixed"
+    run.phase = RunPhase.DONE
+    client.mgr.save_resolution(run)
+
+    client.mgr.runs.clear()  # simulate GC eviction / backend restart
+
+    res = client.get("/api/tickets/7004/resolution").json()
+    assert res["submitted_activity"]["summary"] == "Unmasked the systemd unit"
+    assert any("public-test.sh" in e.get("text", "") for e in res["events"])

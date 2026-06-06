@@ -88,13 +88,18 @@ function LogLine({ ev }: { ev: RunEvent }) {
           {ev.success ? "passed" : "failed"}: {ev.proof}
         </div>
       );
-    case "command.run":
+    case "command.run": {
+      const out = ev.output_redacted || ev.output || "";
+      const code = ev.exit_code != null ? ` (exit ${ev.exit_code})` : "";
       return (
         <pre className="mono" style={{ margin: "2px 0", whiteSpace: "pre-wrap" }}>
           $ {ev.command}
-          {ev.output ? `\n${ev.output}` : ""}
+          {ev.actor ? `  [${ev.actor}]` : ""}
+          {code}
+          {out ? `\n${out}` : ""}
         </pre>
       );
+    }
     case "agent.message": {
       const calls = (ev.tool_calls || [])
         .map((c: any) => `→ ${c.name}${c.args?.command ? `: ${c.args.command}` : ""}`)

@@ -91,9 +91,7 @@ async def get_resolution(request: Request, ticket_id: int) -> Any:
     the run's submitted activity and complete event log. Null until a run has
     submitted its activity (or once that run is garbage-collected past the cap).
     """
-    mgr = _mgr(request)
-    run = mgr.resolved_run_for_ticket(ticket_id)
-    return run.snapshot() if run is not None else None
+    return _mgr(request).resolution_for_ticket(ticket_id)
 
 
 @router.post("/runs")

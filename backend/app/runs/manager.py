@@ -24,6 +24,7 @@ from app.models import (
     make_event,
     utcnow_iso,
 )
+from app.runs.resolutions import ResolutionStore
 from app.ssh import SSHRunner
 
 # A run in one of these phases is over: its SSH connection / PTY is released and it
@@ -397,6 +398,9 @@ class RunManager:
         self.settings = settings
         self.erp: Any = None
         self.runs: dict[str, Run] = {}
+        # Durable, ticket-keyed resolutions so a DONE ticket's solution + log
+        # survive GC of old runs and backend restarts.
+        self.resolutions = ResolutionStore(settings.audit_dir)
         # The current (non-final) run per ticket, so a restart can supersede the old
         # one instead of leaking it, and the UI can resume an in-flight run.
         self.active_by_ticket: dict[int, str] = {}
@@ -475,6 +479,22 @@ class RunManager:
         if not candidates:
             return None
         return max(candidates, key=lambda r: r.started_at)
+
+    def save_resolution(self, run: Run) -> None:
+        """Durably persist a finished run's solution + full log, keyed by ticket."""
+        self.resolutions.save(run.ticket_id, run.snapshot())
+
+    def resolution_for_ticket(self, ticket_id: int) -> Optional[dict[str, Any]]:
+        """The resolution snapshot (solution + full log) for a ticket, or None.
+
+        Prefers the in-memory run (freshest), falling back to the durable store so
+        a DONE ticket still shows how it was fixed after the run is GC'd or the
+        backend restarts.
+        """
+        run = self.resolved_run_for_ticket(ticket_id)
+        if run is not None:
+            return run.snapshot()
+        return self.resolutions.load(ticket_id)
 
     @staticmethod
     def summarize(run: Run) -> dict[str, Any]:

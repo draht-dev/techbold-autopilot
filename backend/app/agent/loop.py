@@ -37,6 +37,7 @@ from app.models import (
     utcnow_iso,
 )
 from app.runs.manager import Run, RunStopped
+from app.runs.resolutions import ResolutionStore
 from app.ssh import SSHError, SSHRunner
 
 # Hard safety cap so a misbehaving model cannot loop forever; the agent is
@@ -553,8 +554,7 @@ async def _finalize(run: Run, llm: LLM, args: dict[str, Any]) -> None:
         _fail(run, f"Failed to submit activity: {exc}")
         return
 
-    # Persist the solution on the run so the ticket page can show how it was fixed
-    # after the run finishes (the run stays in memory until GC'd past the cap).
+    # Record the solution on the run so the ticket page can show how it was fixed.
     run.submitted_activity = dict(fields)
     run.outcome = outcome
     run.audit.record("activity_submitted", activity_id=getattr(created, "id", None), outcome=outcome)
@@ -567,3 +567,8 @@ async def _finalize(run: Run, llm: LLM, args: dict[str, Any]) -> None:
         "Activity submitted and ticket marked "
         f"{'DONE' if final_status == TicketStatus.DONE else 'PENDING'}."
     )
+    # Durably persist the resolution (solution + full event log), keyed by ticket,
+    # so it survives this run being GC'd and the backend restarting. Phoenix accepts
+    # the activity but offers no read-back, so this on-disk copy is the only way the
+    # ticket page can retrieve the resolution later.
+    ResolutionStore(run.settings.audit_dir).save(run.ticket_id, run.snapshot())

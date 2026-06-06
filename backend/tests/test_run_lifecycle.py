@@ -229,6 +229,54 @@ async def test_resolved_run_for_ticket_returns_newest_with_activity(tmp_path):
     assert mgr.resolved_run_for_ticket(9999) is None
 
 
+def test_resolution_store_roundtrip(tmp_path):
+    from app.runs.resolutions import ResolutionStore
+
+    store = ResolutionStore(str(tmp_path))
+    assert store.load(7001) is None  # nothing stored yet
+
+    payload = {
+        "id": "r1", "ticket_id": 7001, "phase": "DONE", "outcome": "fixed",
+        "submitted_activity": {"summary": "Restarted the unit"},
+        "events": [{"type": "info", "text": "did the thing"}],
+    }
+    store.save(7001, payload)
+    loaded = store.load(7001)
+    assert loaded["submitted_activity"]["summary"] == "Restarted the unit"
+    assert loaded["outcome"] == "fixed"
+    assert loaded["events"][0]["text"] == "did the thing"
+
+
+async def test_resolution_for_ticket_falls_back_to_disk(tmp_path):
+    """A DONE ticket shows its solution even after the run is GC'd / restart loses it."""
+    mgr = RunManager(_settings(tmp_path))
+    run = await mgr.create_run(7001, True)
+    run.info("Restarted the status API and validated it")
+    run.submitted_activity = {"summary": "Restarted the status API service"}
+    run.outcome = "fixed"
+    run.phase = RunPhase.DONE
+    mgr.save_resolution(run)
+
+    mgr.runs.clear()  # simulate GC eviction / backend restart (in-memory lost)
+
+    res = mgr.resolution_for_ticket(7001)
+    assert res is not None
+    assert res["submitted_activity"]["summary"] == "Restarted the status API service"
+    assert any(e["type"] == "info" for e in res["events"])  # full log survived too
+
+
+async def test_resolution_for_ticket_prefers_memory_and_is_none_when_absent(tmp_path):
+    mgr = RunManager(_settings(tmp_path))
+    run = await mgr.create_run(7001, True)
+    run.submitted_activity = {"summary": "in-memory copy"}
+    run.outcome = "fixed"
+    run.phase = RunPhase.DONE
+
+    res = mgr.resolution_for_ticket(7001)
+    assert res["submitted_activity"]["summary"] == "in-memory copy"
+    assert mgr.resolution_for_ticket(9999) is None
+
+
 def test_snapshot_includes_resolution_fields(tmp_path):
     run = Run("r", 7001, _settings(tmp_path), erp=None, auto_approve_reads=True)
     # Defaults: an agent run with no resolution yet.
