@@ -167,3 +167,73 @@ async def test_no_hidden_cells_every_command_is_echoed(monkeypatch, tmp_path):
     assert executed  # sanity: the agent actually ran commands
     for cmd in executed:
         assert f"$ {cmd}" in term_text, f"command not visible in terminal: {cmd}"
+
+
+# --------------------------------------------------------------------------- #
+# Interactive PTY terminal (adjustment 1) — wiring tests with a fake process.
+# --------------------------------------------------------------------------- #
+class FakeStdout:
+    def __init__(self, chunks):
+        self._chunks = list(chunks)
+
+    async def read(self, _n):
+        return self._chunks.pop(0) if self._chunks else ""
+
+
+class FakeStdin:
+    def __init__(self):
+        self.written = []
+
+    def write(self, data):
+        self.written.append(data)
+
+
+class FakeProcess:
+    def __init__(self, chunks):
+        self.stdout = FakeStdout(chunks)
+        self.stdin = FakeStdin()
+        self.size = None
+        self.closed = False
+
+    def change_terminal_size(self, cols, rows):
+        self.size = (cols, rows)
+
+    def close(self):
+        self.closed = True
+
+
+async def test_interactive_shell_pumps_writes_and_resizes():
+    from app.ssh.runner import InteractiveShell
+
+    received: list[str] = []
+    proc = FakeProcess(["hello\r\n", "$ "])
+    shell = InteractiveShell(proc, lambda d: received.append(d))
+    await asyncio.sleep(0.02)  # let the reader pump drain stdout
+    assert "".join(received) == "hello\r\n$ "
+    shell.write("ls\n")
+    assert proc.stdin.written == ["ls\n"]
+    shell.resize(100, 40)
+    assert proc.size == (100, 40)
+    shell.close()
+    assert proc.closed
+
+
+class ShellSSH(FakeSSH):
+    async def open_shell(self, on_data, cols=120, rows=30):
+        from app.ssh.runner import InteractiveShell
+
+        self.shell_size = (cols, rows)
+        return InteractiveShell(FakeProcess(["# customer-vm:~ $ "]), on_data)
+
+
+async def test_run_terminal_write_opens_pty_and_mirrors_output(tmp_path):
+    run, _ = _make_run(tmp_path)
+    run.ssh = ShellSSH()
+    run.ssh.connected = True
+    await run.terminal_write("vim /etc/nginx/nginx.conf\n", cols=100, rows=30)
+    await asyncio.sleep(0.02)
+    term = "".join(e.get("data", "") for e in run.events if e["type"] == "term.data")
+    assert "# customer-vm" in term  # live PTY output is mirrored into the terminal
+    assert run.ssh.shell_size == (100, 30)  # opened at the client's terminal size
+    await run.close_shell()
+    assert run.shell is None
