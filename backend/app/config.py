@@ -38,6 +38,17 @@ class Settings(BaseSettings):
     # Fast model for verification, validation interpretation and activity drafting.
     fast_model: str = "openai/gpt-5.5-mini"
 
+    # ---- Autonomous agent ----
+    # The agent is one continuous tool-calling conversation. These bound its
+    # context (compaction triggers at threshold * max) and its autonomy.
+    agent_context_max_tokens: int = 200_000
+    agent_context_compact_threshold: float = 0.8
+    agent_context_keep_recent_messages: int = 20
+    # Hard cap on tool-call rounds so a misbehaving model cannot loop forever.
+    agent_max_iterations: int = 60
+    # OpenRouter reasoning effort ("low" | "medium" | "high"); empty disables it.
+    agent_reasoning_effort: str = "medium"
+
     # ---- Misc ----
     request_timeout: int = 20
     audit_dir: str = "audit_logs"
