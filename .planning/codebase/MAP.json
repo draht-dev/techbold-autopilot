@@ -1,13 +1,13 @@
 {
-  "schemaVersion": 3,
-  "generatedAt": "2026-06-06T14:55:36.085Z",
-  "buildMs": 41,
+  "schemaVersion": 4,
+  "generatedAt": "2026-06-06T15:18:27.245Z",
+  "buildMs": 55,
   "root": "techbold",
   "stats": {
-    "files": 124,
-    "totalLoc": 16383,
+    "files": 126,
+    "totalLoc": 16636,
     "languages": {
-      "other": 64,
+      "other": 66,
       "markdown": 4,
       "yaml": 2,
       "html": 1,
@@ -25,7 +25,7 @@
     "entryPoints": 4,
     "sinkModules": 2,
     "layers": {
-      "support": 87,
+      "support": 89,
       "application": 31,
       "infrastructure": 2,
       "presentation": 4
@@ -56,7 +56,7 @@
         "dir:backend"
       ],
       "source": "auto",
-      "moduleCount": 96
+      "moduleCount": 98
     }
   ],
   "containers": [
@@ -188,7 +188,7 @@
       "path": "backend",
       "kind": "directory",
       "description": null,
-      "moduleCount": 88,
+      "moduleCount": 90,
       "groupId": "group:other",
       "topFiles": [
         {
@@ -353,7 +353,7 @@
       "path": "backend",
       "kind": "directory",
       "description": null,
-      "moduleCount": 88,
+      "moduleCount": 90,
       "groupId": "group:other",
       "topFiles": [
         {
@@ -394,33 +394,37 @@
       "id": ".env",
       "path": ".env",
       "language": "other",
-      "size": 1411,
+      "size": 1708,
       "loc": 0,
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:.env"
     },
     {
       "id": ".env.example",
       "path": ".env.example",
       "language": "other",
-      "size": 1686,
+      "size": 1957,
       "loc": 0,
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:.env.example"
     },
     {
       "id": ".gitignore",
@@ -431,12 +435,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:.gitignore"
     },
     {
       "id": "LICENSE",
@@ -447,12 +453,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:LICENSE"
     },
     {
       "id": "README.md",
@@ -463,12 +471,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:README.md"
     },
     {
       "id": "REPORT.md",
@@ -479,12 +489,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:REPORT.md"
     },
     {
       "id": "SPEC.md",
@@ -495,12 +507,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:SPEC.md"
     },
     {
       "id": "docker-compose.yml",
@@ -511,12 +525,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:docker-compose.yml"
     },
     {
       "id": "keys/.gitkeep",
@@ -527,12 +543,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:keys/.gitkeep"
     },
     {
       "id": "keys/case1_key.pem",
@@ -543,12 +561,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:keys/.gitkeep"
     },
     {
       "id": "keys/case2_key.pem",
@@ -559,12 +579,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:keys/.gitkeep"
     },
     {
       "id": "keys/case3_key.pem",
@@ -575,12 +597,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:keys/.gitkeep"
     },
     {
       "id": "keys/case4_key.pem",
@@ -591,12 +615,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:keys/.gitkeep"
     },
     {
       "id": "keys/case5_key.pem",
@@ -607,12 +633,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:keys/.gitkeep"
     },
     {
       "id": "frontend/Dockerfile",
@@ -623,12 +651,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/index.html",
@@ -639,12 +669,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/package-lock.json",
@@ -655,12 +687,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/package.json",
@@ -671,12 +705,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/tsconfig.json",
@@ -687,12 +723,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/tsconfig.tsbuildinfo",
@@ -703,12 +741,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/vite.config.ts",
@@ -726,12 +766,21 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "default",
+          "kind": "default",
+          "line": 4,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/App.tsx",
@@ -749,12 +798,21 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "App",
+          "kind": "function",
+          "line": 10,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/api.ts",
@@ -850,6 +908,110 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "getMe",
+          "kind": "function",
+          "line": 47,
+          "exported": true
+        },
+        {
+          "name": "TicketParams",
+          "kind": "interface",
+          "line": 51,
+          "exported": true
+        },
+        {
+          "name": "listTickets",
+          "kind": "function",
+          "line": 58,
+          "exported": true
+        },
+        {
+          "name": "getTicket",
+          "kind": "function",
+          "line": 68,
+          "exported": true
+        },
+        {
+          "name": "getCustomerSystem",
+          "kind": "function",
+          "line": 72,
+          "exported": true
+        },
+        {
+          "name": "createSession",
+          "kind": "function",
+          "line": 78,
+          "exported": true
+        },
+        {
+          "name": "startSession",
+          "kind": "function",
+          "line": 82,
+          "exported": true
+        },
+        {
+          "name": "approve",
+          "kind": "function",
+          "line": 86,
+          "exported": true
+        },
+        {
+          "name": "reject",
+          "kind": "function",
+          "line": 97,
+          "exported": true
+        },
+        {
+          "name": "retry",
+          "kind": "function",
+          "line": 101,
+          "exported": true
+        },
+        {
+          "name": "abort",
+          "kind": "function",
+          "line": 105,
+          "exported": true
+        },
+        {
+          "name": "submitActivity",
+          "kind": "function",
+          "line": 109,
+          "exported": true
+        },
+        {
+          "name": "devReset",
+          "kind": "function",
+          "line": 116,
+          "exported": true
+        },
+        {
+          "name": "subscribe",
+          "kind": "function",
+          "line": 137,
+          "exported": true
+        },
+        {
+          "name": "request",
+          "kind": "function",
+          "line": 17,
+          "exported": false
+        },
+        {
+          "name": "post",
+          "kind": "function",
+          "line": 38,
+          "exported": false
+        },
+        {
+          "name": "KNOWN_EVENT_TYPES",
+          "kind": "const",
+          "line": 122,
+          "exported": false
+        }
+      ],
       "sinks": [
         "net:fetch"
       ],
@@ -864,7 +1026,8 @@
       "routes": [],
       "entryPoint": null,
       "layer": "infrastructure",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/index.css",
@@ -875,12 +1038,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/main.tsx",
@@ -891,12 +1056,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/types.ts",
@@ -1046,12 +1213,153 @@
           "doc": "Log entry for command log in AgentWorkspace"
         }
       ],
+      "symbols": [
+        {
+          "name": "TicketStatus",
+          "kind": "type",
+          "line": 3,
+          "exported": true
+        },
+        {
+          "name": "Ticket",
+          "kind": "interface",
+          "line": 5,
+          "exported": true
+        },
+        {
+          "name": "Employee",
+          "kind": "interface",
+          "line": 19,
+          "exported": true
+        },
+        {
+          "name": "Customer",
+          "kind": "interface",
+          "line": 27,
+          "exported": true
+        },
+        {
+          "name": "SystemInfo",
+          "kind": "interface",
+          "line": 34,
+          "exported": true
+        },
+        {
+          "name": "CustomerSystem",
+          "kind": "interface",
+          "line": 42,
+          "exported": true
+        },
+        {
+          "name": "Activity",
+          "kind": "interface",
+          "line": 48,
+          "exported": true
+        },
+        {
+          "name": "SSEEvent",
+          "kind": "interface",
+          "line": 61,
+          "exported": true
+        },
+        {
+          "name": "PhaseChangeData",
+          "kind": "interface",
+          "line": 69,
+          "exported": true
+        },
+        {
+          "name": "ThoughtData",
+          "kind": "interface",
+          "line": 73,
+          "exported": true
+        },
+        {
+          "name": "HypothesisItem",
+          "kind": "interface",
+          "line": 77,
+          "exported": true
+        },
+        {
+          "name": "HypothesesData",
+          "kind": "interface",
+          "line": 83,
+          "exported": true
+        },
+        {
+          "name": "PlanCommand",
+          "kind": "interface",
+          "line": 87,
+          "exported": true
+        },
+        {
+          "name": "PlanData",
+          "kind": "interface",
+          "line": 96,
+          "exported": true
+        },
+        {
+          "name": "AwaitingApprovalData",
+          "kind": "interface",
+          "line": 100,
+          "exported": true
+        },
+        {
+          "name": "CommandResultData",
+          "kind": "interface",
+          "line": 109,
+          "exported": true
+        },
+        {
+          "name": "SafetyBlockData",
+          "kind": "interface",
+          "line": 118,
+          "exported": true
+        },
+        {
+          "name": "ValidationData",
+          "kind": "interface",
+          "line": 123,
+          "exported": true
+        },
+        {
+          "name": "PersistCheckData",
+          "kind": "interface",
+          "line": 128,
+          "exported": true
+        },
+        {
+          "name": "ActivityDraftData",
+          "kind": "interface",
+          "line": 133,
+          "exported": true
+        },
+        {
+          "name": "DoneData",
+          "kind": "interface",
+          "line": 137,
+          "exported": true
+        },
+        {
+          "name": "ErrorData",
+          "kind": "interface",
+          "line": 142,
+          "exported": true
+        },
+        {
+          "name": "LogEntry",
+          "kind": "type",
+          "line": 148,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/vite-env.d.ts",
@@ -1062,12 +1370,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/ActivityReview.tsx",
@@ -1085,12 +1395,21 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "ActivityReview",
+          "kind": "function",
+          "line": 11,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/AgentWorkspace.tsx",
@@ -1108,12 +1427,39 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "AgentWorkspace",
+          "kind": "function",
+          "line": 41,
+          "exported": true
+        },
+        {
+          "name": "classificationClass",
+          "kind": "function",
+          "line": 32,
+          "exported": false
+        },
+        {
+          "name": "LogEntryRow",
+          "kind": "function",
+          "line": 281,
+          "exported": false
+        },
+        {
+          "name": "formatTs",
+          "kind": "function",
+          "line": 350,
+          "exported": false
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/CommandApproval.tsx",
@@ -1131,12 +1477,21 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "CommandApproval",
+          "kind": "function",
+          "line": 11,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/Controls.tsx",
@@ -1154,12 +1509,21 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "Controls",
+          "kind": "function",
+          "line": 9,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/HypothesisPanel.tsx",
@@ -1177,12 +1541,27 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "HypothesisPanel",
+          "kind": "function",
+          "line": 14,
+          "exported": true
+        },
+        {
+          "name": "confidenceColor",
+          "kind": "function",
+          "line": 8,
+          "exported": false
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/TicketDetail.tsx",
@@ -1200,12 +1579,21 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "TicketDetail",
+          "kind": "function",
+          "line": 11,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "frontend/src/components/TicketList.tsx",
@@ -1223,12 +1611,39 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "TicketList",
+          "kind": "function",
+          "line": 50,
+          "exported": true
+        },
+        {
+          "name": "priorityClass",
+          "kind": "function",
+          "line": 18,
+          "exported": false
+        },
+        {
+          "name": "statusClass",
+          "kind": "function",
+          "line": 28,
+          "exported": false
+        },
+        {
+          "name": "formatDate",
+          "kind": "function",
+          "line": 37,
+          "exported": false
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:frontend/Dockerfile"
     },
     {
       "id": "docs/phoenix-openapi.yaml",
@@ -1239,12 +1654,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:docs/phoenix-openapi.yaml"
     },
     {
       "id": "docs/scoring.md",
@@ -1255,12 +1672,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:docs/phoenix-openapi.yaml"
     },
     {
       "id": "backend/Dockerfile",
@@ -1271,12 +1690,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/pytest.ini",
@@ -1287,12 +1708,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/requirements.txt",
@@ -1303,12 +1726,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/__init__.py",
@@ -1319,12 +1744,14 @@
       "isTest": true,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/test_activity_generator.py",
@@ -1378,12 +1805,57 @@
           "doc": "ticket_id, start_datetime, end_datetime pass through unmodified."
         }
       ],
+      "symbols": [
+        {
+          "name": "_make_audit_log",
+          "kind": "def",
+          "line": 36,
+          "exported": true
+        },
+        {
+          "name": "_all_string_fields",
+          "kind": "def",
+          "line": 41,
+          "exported": true
+        },
+        {
+          "name": "TestBuildActivityNoFinal",
+          "kind": "class",
+          "line": 60,
+          "exported": true
+        },
+        {
+          "name": "TestBuildActivityWithFinal",
+          "kind": "class",
+          "line": 184,
+          "exported": true
+        },
+        {
+          "name": "TestSecretRedaction",
+          "kind": "class",
+          "line": 263,
+          "exported": true
+        },
+        {
+          "name": "TestBuildActivityEmptyLog",
+          "kind": "class",
+          "line": 357,
+          "exported": true
+        },
+        {
+          "name": "TestBuildActivityPassThrough",
+          "kind": "class",
+          "line": 377,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/test_agent_loop_mock.py",
@@ -1455,6 +1927,68 @@
           "doc": "End-to-end: create session, start, approve mutating commands, submit activity."
         }
       ],
+      "symbols": [
+        {
+          "name": "_make_nginx_script",
+          "kind": "def",
+          "line": 55,
+          "exported": true
+        },
+        {
+          "name": "FakeIO",
+          "kind": "class",
+          "line": 203,
+          "exported": true
+        },
+        {
+          "name": "_make_ticket",
+          "kind": "def",
+          "line": 251,
+          "exported": true
+        },
+        {
+          "name": "_make_customer_system",
+          "kind": "def",
+          "line": 263,
+          "exported": true
+        },
+        {
+          "name": "_make_audit_log",
+          "kind": "def",
+          "line": 277,
+          "exported": true
+        },
+        {
+          "name": "TestOrchestratorFullLoop",
+          "kind": "class",
+          "line": 289,
+          "exported": true
+        },
+        {
+          "name": "_make_hardblock_script",
+          "kind": "def",
+          "line": 467,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockMidLoop",
+          "kind": "class",
+          "line": 527,
+          "exported": true
+        },
+        {
+          "name": "_make_erp_client",
+          "kind": "def",
+          "line": 641,
+          "exported": true
+        },
+        {
+          "name": "TestFullApiApprovalGate",
+          "kind": "class",
+          "line": 647,
+          "exported": true
+        }
+      ],
       "sinks": [
         "net:http"
       ],
@@ -1469,7 +2003,8 @@
       "routes": [],
       "entryPoint": null,
       "layer": "infrastructure",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/test_erp_client.py",
@@ -1529,57 +2064,54 @@
           "doc": "An empty Bearer token is rejected by the mock ERP with 401."
         }
       ],
-      "sinks": [],
-      "sinkSites": [],
-      "routes": [],
-      "entryPoint": null,
-      "layer": "application",
-      "depth": null
-    },
-    {
-      "id": "backend/tests/test_llm_provider.py",
-      "path": "backend/tests/test_llm_provider.py",
-      "language": "python",
-      "size": 2198,
-      "loc": 70,
-      "isTest": true,
-      "package": null,
-      "exports": [
+      "symbols": [
         {
-          "name": "test_anthropic_is_default_provider",
-          "kind": "def",
-          "line": 20,
-          "doc": null
-        },
-        {
-          "name": "test_openai_provider_selected",
-          "kind": "def",
-          "line": 25,
-          "doc": null
-        },
-        {
-          "name": "test_azure_provider_uses_endpoint_deployment_and_api_version",
+          "name": "_make_client",
           "kind": "def",
           "line": 30,
-          "doc": null
+          "exported": true
         },
         {
-          "name": "test_azure_default_api_version_when_unset",
-          "kind": "def",
-          "line": 47,
-          "doc": null
+          "name": "TestGetMe",
+          "kind": "class",
+          "line": 42,
+          "exported": true
         },
         {
-          "name": "test_azure_missing_credentials_raises_clear_error",
-          "kind": "def",
-          "line": 58,
-          "doc": null
+          "name": "TestListTickets",
+          "kind": "class",
+          "line": 50,
+          "exported": true
         },
         {
-          "name": "test_unknown_provider_raises",
-          "kind": "def",
-          "line": 67,
-          "doc": null
+          "name": "TestGetTicket",
+          "kind": "class",
+          "line": 104,
+          "exported": true
+        },
+        {
+          "name": "TestGetCustomerSystem",
+          "kind": "class",
+          "line": 118,
+          "exported": true
+        },
+        {
+          "name": "TestSetStatus",
+          "kind": "class",
+          "line": 135,
+          "exported": true
+        },
+        {
+          "name": "TestCreateActivityAndReset",
+          "kind": "class",
+          "line": 159,
+          "exported": true
+        },
+        {
+          "name": "TestAuth401",
+          "kind": "class",
+          "line": 200,
+          "exported": true
         }
       ],
       "sinks": [],
@@ -1587,7 +2119,148 @@
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
+    },
+    {
+      "id": "backend/tests/test_llm_provider.py",
+      "path": "backend/tests/test_llm_provider.py",
+      "language": "python",
+      "size": 5311,
+      "loc": 162,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "_FakeResponses",
+          "kind": "class",
+          "line": 36,
+          "doc": "Stand-in for ``client.responses`` capturing the request + scripting output."
+        },
+        {
+          "name": "_FakeClient",
+          "kind": "class",
+          "line": 53,
+          "doc": null
+        },
+        {
+          "name": "test_anthropic_is_default_provider",
+          "kind": "def",
+          "line": 58,
+          "doc": null
+        },
+        {
+          "name": "test_openai_provider_selected",
+          "kind": "def",
+          "line": 63,
+          "doc": null
+        },
+        {
+          "name": "test_azure_provider_uses_endpoint_deployment_and_api_version",
+          "kind": "def",
+          "line": 68,
+          "doc": null
+        },
+        {
+          "name": "test_azure_default_api_version_when_unset",
+          "kind": "def",
+          "line": 85,
+          "doc": null
+        },
+        {
+          "name": "test_azure_missing_credentials_raises_clear_error",
+          "kind": "def",
+          "line": 96,
+          "doc": null
+        },
+        {
+          "name": "test_unknown_provider_raises",
+          "kind": "def",
+          "line": 105,
+          "doc": null
+        },
+        {
+          "name": "test_foundry_provider_selected_and_validates",
+          "kind": "def",
+          "line": 113,
+          "doc": null
+        },
+        {
+          "name": "test_foundry_missing_settings_raises_clear_error",
+          "kind": "def",
+          "line": 127,
+          "doc": null
+        }
+      ],
+      "symbols": [
+        {
+          "name": "_FakeResponses",
+          "kind": "class",
+          "line": 36,
+          "exported": true
+        },
+        {
+          "name": "_FakeClient",
+          "kind": "class",
+          "line": 53,
+          "exported": true
+        },
+        {
+          "name": "test_anthropic_is_default_provider",
+          "kind": "def",
+          "line": 58,
+          "exported": true
+        },
+        {
+          "name": "test_openai_provider_selected",
+          "kind": "def",
+          "line": 63,
+          "exported": true
+        },
+        {
+          "name": "test_azure_provider_uses_endpoint_deployment_and_api_version",
+          "kind": "def",
+          "line": 68,
+          "exported": true
+        },
+        {
+          "name": "test_azure_default_api_version_when_unset",
+          "kind": "def",
+          "line": 85,
+          "exported": true
+        },
+        {
+          "name": "test_azure_missing_credentials_raises_clear_error",
+          "kind": "def",
+          "line": 96,
+          "exported": true
+        },
+        {
+          "name": "test_unknown_provider_raises",
+          "kind": "def",
+          "line": 105,
+          "exported": true
+        },
+        {
+          "name": "test_foundry_provider_selected_and_validates",
+          "kind": "def",
+          "line": 113,
+          "exported": true
+        },
+        {
+          "name": "test_foundry_missing_settings_raises_clear_error",
+          "kind": "def",
+          "line": 127,
+          "exported": true
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/test_redaction.py",
@@ -1647,12 +2320,63 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "TestEnvAssignmentRedaction",
+          "kind": "class",
+          "line": 27,
+          "exported": true
+        },
+        {
+          "name": "TestDBUriRedaction",
+          "kind": "class",
+          "line": 74,
+          "exported": true
+        },
+        {
+          "name": "TestAPIKeyRedaction",
+          "kind": "class",
+          "line": 116,
+          "exported": true
+        },
+        {
+          "name": "TestPrivateKeyRedaction",
+          "kind": "class",
+          "line": 161,
+          "exported": true
+        },
+        {
+          "name": "TestShadowLineRedaction",
+          "kind": "class",
+          "line": 188,
+          "exported": true
+        },
+        {
+          "name": "TestDiagnosticPreservation",
+          "kind": "class",
+          "line": 206,
+          "exported": true
+        },
+        {
+          "name": "TestMixedRedaction",
+          "kind": "class",
+          "line": 273,
+          "exported": true
+        },
+        {
+          "name": "TestLoggingFilter",
+          "kind": "class",
+          "line": 300,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/test_safety_classifier.py",
@@ -1844,12 +2568,255 @@
           "doc": "Reads of secret-ish paths must return NEEDS_APPROVAL, not READ_ONLY."
         }
       ],
+      "symbols": [
+        {
+          "name": "assert_verdict",
+          "kind": "def",
+          "line": 25,
+          "exported": true
+        },
+        {
+          "name": "assert_hard_block",
+          "kind": "def",
+          "line": 33,
+          "exported": true
+        },
+        {
+          "name": "assert_needs_approval",
+          "kind": "def",
+          "line": 37,
+          "exported": true
+        },
+        {
+          "name": "assert_read_only",
+          "kind": "def",
+          "line": 41,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockRecursiveDeletion",
+          "kind": "class",
+          "line": 49,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockChmod",
+          "kind": "class",
+          "line": 143,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockChown",
+          "kind": "class",
+          "line": 213,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockDBDestruction",
+          "kind": "class",
+          "line": 253,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockDisablingSecurity",
+          "kind": "class",
+          "line": 308,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockSecretExposure",
+          "kind": "class",
+          "line": 374,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockHidingActions",
+          "kind": "class",
+          "line": 421,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockPrivEsc",
+          "kind": "class",
+          "line": 457,
+          "exported": true
+        },
+        {
+          "name": "TestHardBlockCatastrophic",
+          "kind": "class",
+          "line": 473,
+          "exported": true
+        },
+        {
+          "name": "TestReadOnly",
+          "kind": "class",
+          "line": 512,
+          "exported": true
+        },
+        {
+          "name": "TestSystemctlMutating",
+          "kind": "class",
+          "line": 786,
+          "exported": true
+        },
+        {
+          "name": "TestCurlWgetEdgeCases",
+          "kind": "class",
+          "line": 818,
+          "exported": true
+        },
+        {
+          "name": "TestPipelineAndCompound",
+          "kind": "class",
+          "line": 851,
+          "exported": true
+        },
+        {
+          "name": "TestSudoStripping",
+          "kind": "class",
+          "line": 890,
+          "exported": true
+        },
+        {
+          "name": "TestWrapperStripping",
+          "kind": "class",
+          "line": 919,
+          "exported": true
+        },
+        {
+          "name": "TestUnknownCommands",
+          "kind": "class",
+          "line": 940,
+          "exported": true
+        },
+        {
+          "name": "TestFindEdgeCases",
+          "kind": "class",
+          "line": 971,
+          "exported": true
+        },
+        {
+          "name": "TestMountEdgeCases",
+          "kind": "class",
+          "line": 992,
+          "exported": true
+        },
+        {
+          "name": "TestSysctlEdgeCases",
+          "kind": "class",
+          "line": 1007,
+          "exported": true
+        },
+        {
+          "name": "TestIpEdgeCases",
+          "kind": "class",
+          "line": 1022,
+          "exported": true
+        },
+        {
+          "name": "TestClassificationStructure",
+          "kind": "class",
+          "line": 1046,
+          "exported": true
+        },
+        {
+          "name": "TestRobustness",
+          "kind": "class",
+          "line": 1072,
+          "exported": true
+        },
+        {
+          "name": "TestCritical1QuoteWrappedDeletion",
+          "kind": "class",
+          "line": 1094,
+          "exported": true
+        },
+        {
+          "name": "TestCritical2AbsolutePathSSHKeys",
+          "kind": "class",
+          "line": 1142,
+          "exported": true
+        },
+        {
+          "name": "TestCritical2Low1SecretReadingTools",
+          "kind": "class",
+          "line": 1175,
+          "exported": true
+        },
+        {
+          "name": "TestCritical2bSecretishPathDowngrade",
+          "kind": "class",
+          "line": 1213,
+          "exported": true
+        },
+        {
+          "name": "TestMed1TrailingDotNormalization",
+          "kind": "class",
+          "line": 1291,
+          "exported": true
+        },
+        {
+          "name": "TestMinorSudoIFlag",
+          "kind": "class",
+          "line": 1311,
+          "exported": true
+        },
+        {
+          "name": "TestBypass1EscapedQuoteBashC",
+          "kind": "class",
+          "line": 1326,
+          "exported": true
+        },
+        {
+          "name": "TestBypass2SecretFileUnderBlock",
+          "kind": "class",
+          "line": 1368,
+          "exported": true
+        },
+        {
+          "name": "TestFix1ProcEnviron",
+          "kind": "class",
+          "line": 1428,
+          "exported": true
+        },
+        {
+          "name": "TestFix2LongFormAndDoubleSlash",
+          "kind": "class",
+          "line": 1464,
+          "exported": true
+        },
+        {
+          "name": "TestFix3FindSystemRootDelete",
+          "kind": "class",
+          "line": 1497,
+          "exported": true
+        },
+        {
+          "name": "TestFix4SecretCopyOut",
+          "kind": "class",
+          "line": 1534,
+          "exported": true
+        },
+        {
+          "name": "TestFix5ChmodSymbolicWorldWritable",
+          "kind": "class",
+          "line": 1573,
+          "exported": true
+        },
+        {
+          "name": "TestFix6CommandSubstitution",
+          "kind": "class",
+          "line": 1607,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/tests/test_ssh_runner.py",
@@ -1897,12 +2864,51 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "test_single_file_path_returns_itself",
+          "kind": "def",
+          "line": 19,
+          "exported": true
+        },
+        {
+          "name": "test_comma_separated_list_is_split",
+          "kind": "def",
+          "line": 23,
+          "exported": true
+        },
+        {
+          "name": "test_list_input_is_normalised",
+          "kind": "def",
+          "line": 28,
+          "exported": true
+        },
+        {
+          "name": "test_directory_expands_to_all_pem_keys",
+          "kind": "def",
+          "line": 32,
+          "exported": true
+        },
+        {
+          "name": "test_directory_results_are_sorted_and_deduped",
+          "kind": "def",
+          "line": 43,
+          "exported": true
+        },
+        {
+          "name": "test_nonexistent_path_falls_back_to_value",
+          "kind": "def",
+          "line": 49,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/__init__.py",
@@ -1913,12 +2919,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/mock_erp.py",
@@ -2056,6 +3064,134 @@
           "doc": "Clear stored activities and reset ticket statuses to seed values."
         }
       ],
+      "symbols": [
+        {
+          "name": "_load_json",
+          "kind": "def",
+          "line": 43,
+          "exported": true
+        },
+        {
+          "name": "TicketStatus",
+          "kind": "class",
+          "line": 62,
+          "exported": true
+        },
+        {
+          "name": "Employee",
+          "kind": "class",
+          "line": 68,
+          "exported": true
+        },
+        {
+          "name": "SystemInfo",
+          "kind": "class",
+          "line": 76,
+          "exported": true
+        },
+        {
+          "name": "Ticket",
+          "kind": "class",
+          "line": 84,
+          "exported": true
+        },
+        {
+          "name": "CustomerSystem",
+          "kind": "class",
+          "line": 97,
+          "exported": true
+        },
+        {
+          "name": "Customer",
+          "kind": "class",
+          "line": 103,
+          "exported": true
+        },
+        {
+          "name": "StatusUpdate",
+          "kind": "class",
+          "line": 111,
+          "exported": true
+        },
+        {
+          "name": "ActivityCreate",
+          "kind": "class",
+          "line": 115,
+          "exported": true
+        },
+        {
+          "name": "Activity",
+          "kind": "class",
+          "line": 127,
+          "exported": true
+        },
+        {
+          "name": "SimpleMessage",
+          "kind": "class",
+          "line": 144,
+          "exported": true
+        },
+        {
+          "name": "require_bearer",
+          "kind": "def",
+          "line": 178,
+          "exported": true
+        },
+        {
+          "name": "_find_ticket",
+          "kind": "def",
+          "line": 195,
+          "exported": true
+        },
+        {
+          "name": "get_me",
+          "kind": "def",
+          "line": 219,
+          "exported": true
+        },
+        {
+          "name": "list_my_tickets",
+          "kind": "def",
+          "line": 225,
+          "exported": true
+        },
+        {
+          "name": "get_ticket",
+          "kind": "def",
+          "line": 256,
+          "exported": true
+        },
+        {
+          "name": "get_customer_system",
+          "kind": "def",
+          "line": 268,
+          "exported": true
+        },
+        {
+          "name": "get_customer",
+          "kind": "def",
+          "line": 283,
+          "exported": true
+        },
+        {
+          "name": "set_ticket_status",
+          "kind": "def",
+          "line": 298,
+          "exported": true
+        },
+        {
+          "name": "create_activity",
+          "kind": "def",
+          "line": 314,
+          "exported": true
+        },
+        {
+          "name": "reset_me",
+          "kind": "def",
+          "line": 347,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [
@@ -2130,7 +3266,8 @@
         ]
       },
       "layer": "presentation",
-      "depth": 0
+      "depth": 0,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/mock_ssh.py",
@@ -2160,12 +3297,33 @@
           "doc": "Return a successful CommandResult (exit_code=0)."
         }
       ],
+      "symbols": [
+        {
+          "name": "MockSSHRunner",
+          "kind": "class",
+          "line": 130,
+          "exported": true
+        },
+        {
+          "name": "_strip_sudo",
+          "kind": "def",
+          "line": 345,
+          "exported": true
+        },
+        {
+          "name": "_ok",
+          "kind": "def",
+          "line": 353,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/fixtures/__init__.py",
@@ -2176,12 +3334,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/fixtures/customer_systems.json",
@@ -2192,12 +3352,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/fixtures/customers.json",
@@ -2208,12 +3370,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/mocks/fixtures/tickets.json",
@@ -2224,12 +3388,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/064d524094be4b99ba351e8696887fbf.jsonl",
@@ -2240,12 +3406,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/0a5a79e6b43f49ac9bc6e1ae12d84850.jsonl",
@@ -2256,12 +3424,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/0cb3c4ac24c44946bf1ffbda84760faf.jsonl",
@@ -2272,12 +3442,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/10d20164965f43ec91419de34339a61a.jsonl",
@@ -2288,12 +3460,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/16453f7455cb43b1b62df88ac89c9b5f.jsonl",
@@ -2304,12 +3478,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/1aa997e527dd45c684232656489599e6.jsonl",
@@ -2320,12 +3496,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/1c9e04446f2b4ac482ef1ae777e998b0.jsonl",
@@ -2336,12 +3514,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/29e2fe28ffab42bb993a5356b3acdf05.jsonl",
@@ -2352,12 +3532,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/2c445780cc00478ab190b662e5397af0.jsonl",
@@ -2368,12 +3550,32 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
+    },
+    {
+      "id": "backend/data/audit/3aa088ac8e53436c99d97891b58f72f0.jsonl",
+      "path": "backend/data/audit/3aa088ac8e53436c99d97891b58f72f0.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "symbols": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/3d609dbbbd9748aabbecf82ed7a91fe8.jsonl",
@@ -2384,12 +3586,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/407796e01120442986c122e03ec279b7.jsonl",
@@ -2400,12 +3604,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/420793edbfe747839951eecd7e23f380.jsonl",
@@ -2416,12 +3622,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/4416bdb1020f49f193f6db2566342387.jsonl",
@@ -2432,12 +3640,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/47c0b0a45dbc4e529cbf7ae2ad6e68b0.jsonl",
@@ -2448,12 +3658,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/4e8a66f8650a4e2ea265a58d87036b1d.jsonl",
@@ -2464,12 +3676,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/508558eb10ce4c97b2da86bba09ac7c9.jsonl",
@@ -2480,12 +3694,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/50a32113e6a846adbae9127188bd904d.jsonl",
@@ -2496,12 +3712,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/53fe1afa550347329ce4ae37235efa27.jsonl",
@@ -2512,12 +3730,32 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
+    },
+    {
+      "id": "backend/data/audit/60c84a8d2ba24451a7c2b34f1ee6db79.jsonl",
+      "path": "backend/data/audit/60c84a8d2ba24451a7c2b34f1ee6db79.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "symbols": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/67ebb1b354d04441847992dc5d5d5f5a.jsonl",
@@ -2528,12 +3766,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/6cb52d78527f438e95390fa4116d5f7f.jsonl",
@@ -2544,12 +3784,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/7320edbbf29d48dead3c01ae838ba803.jsonl",
@@ -2560,12 +3802,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/73494a44c35f476494e01550991c9e00.jsonl",
@@ -2576,12 +3820,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/74202031308844f5abffa963c4f909a4.jsonl",
@@ -2592,12 +3838,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/77c2b35f020449368782e86c29fa7596.jsonl",
@@ -2608,12 +3856,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/88f69ceb18004690a3c61a1708def5f5.jsonl",
@@ -2624,12 +3874,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/8a16f08aec054094a98bfc6a8263fbea.jsonl",
@@ -2640,12 +3892,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/90c81826e6bc48e495b38f02f323573c.jsonl",
@@ -2656,12 +3910,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/a0925fb06f594c6cbd013d7aa4924205.jsonl",
@@ -2672,12 +3928,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/a77d952e0f0d435ea5eccecd119e7e0f.jsonl",
@@ -2688,12 +3946,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/a899d193670d4bb5bdbaa30a6915de4a.jsonl",
@@ -2704,12 +3964,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/abf24a97b97e4688983d0a9de128072a.jsonl",
@@ -2720,12 +3982,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/ae2d1e6142a445deb1868e885b3d8074.jsonl",
@@ -2736,12 +4000,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/b39c57f302464704ba6b4ef213737855.jsonl",
@@ -2752,12 +4018,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/b91622f429cc4a80942fba4ed7cfcc80.jsonl",
@@ -2768,12 +4036,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/b92ac14489484874b1ffb907277652cf.jsonl",
@@ -2784,12 +4054,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/baeb5789cc3c436e943a3fbf92cb0d04.jsonl",
@@ -2800,12 +4072,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/c911e1bde6cd4992a288a255bdd7338f.jsonl",
@@ -2816,12 +4090,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/e24547377da94c2c887f8d8cb30c8179.jsonl",
@@ -2832,12 +4108,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/e31b98ad619e4c058b5ed10e2c1a12bd.jsonl",
@@ -2848,12 +4126,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/e37c5c4cad904eb5ab46fe0acc4a9245.jsonl",
@@ -2864,12 +4144,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/e3dd05720b62432e98647d2a96a8df7e.jsonl",
@@ -2880,12 +4162,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/e3f9385b10144ef39d74d97ad04e1a55.jsonl",
@@ -2896,12 +4180,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/eb2528cb3d74412296186b112a260187.jsonl",
@@ -2912,12 +4198,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/f4c4e674e8fb4796888ef415029d0c2a.jsonl",
@@ -2928,12 +4216,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/f56eccc29223424194de4adce5ab56cb.jsonl",
@@ -2944,12 +4234,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/f57b699fc6f647e28ee5e38530982ba1.jsonl",
@@ -2960,12 +4252,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/f58f0d9d9bae4478a71bcd1c3696e3b7.jsonl",
@@ -2976,12 +4270,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/f5c2ba34389245a8938f0aa6ee6c855d.jsonl",
@@ -2992,12 +4288,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/data/audit/fb3370a41f4e44cb9211a796c8672174.jsonl",
@@ -3008,12 +4306,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/__init__.py",
@@ -3024,12 +4324,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/activity_generator.py",
@@ -3077,12 +4379,51 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "_derive_summary",
+          "kind": "def",
+          "line": 26,
+          "exported": true
+        },
+        {
+          "name": "_derive_root_cause",
+          "kind": "def",
+          "line": 51,
+          "exported": true
+        },
+        {
+          "name": "_derive_actions_taken",
+          "kind": "def",
+          "line": 79,
+          "exported": true
+        },
+        {
+          "name": "_derive_commands_summary",
+          "kind": "def",
+          "line": 98,
+          "exported": true
+        },
+        {
+          "name": "_derive_validation_result",
+          "kind": "def",
+          "line": 119,
+          "exported": true
+        },
+        {
+          "name": "build_activity",
+          "kind": "def",
+          "line": 160,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/audit_log.py",
@@ -3100,12 +4441,21 @@
           "doc": "Append-only structured session log (memory + JSONL file)."
         }
       ],
+      "symbols": [
+        {
+          "name": "AuditLog",
+          "kind": "class",
+          "line": 25,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/config.py",
@@ -3135,12 +4485,33 @@
           "doc": "Return the effective (username, port) for an SSH connection to a"
         }
       ],
+      "symbols": [
+        {
+          "name": "Settings",
+          "kind": "class",
+          "line": 13,
+          "exported": true
+        },
+        {
+          "name": "get_settings",
+          "kind": "def",
+          "line": 61,
+          "exported": true
+        },
+        {
+          "name": "resolve_ssh_connection",
+          "kind": "def",
+          "line": 66,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/erp_client.py",
@@ -3182,12 +4553,45 @@
           "doc": "Create an ``ErpClient`` from application settings (SPEC §2.2)."
         }
       ],
+      "symbols": [
+        {
+          "name": "ErpError",
+          "kind": "class",
+          "line": 45,
+          "exported": true
+        },
+        {
+          "name": "ErpAuthError",
+          "kind": "class",
+          "line": 53,
+          "exported": true
+        },
+        {
+          "name": "_is_retryable_status",
+          "kind": "def",
+          "line": 65,
+          "exported": true
+        },
+        {
+          "name": "ErpClient",
+          "kind": "class",
+          "line": 74,
+          "exported": true
+        },
+        {
+          "name": "make_erp_client",
+          "kind": "def",
+          "line": 340,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/main.py",
@@ -3211,6 +4615,20 @@
           "doc": "Liveness probe — always returns 200 OK."
         }
       ],
+      "symbols": [
+        {
+          "name": "_configure_logging",
+          "kind": "def",
+          "line": 29,
+          "exported": true
+        },
+        {
+          "name": "health",
+          "kind": "def",
+          "line": 97,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [
@@ -3229,7 +4647,8 @@
         ]
       },
       "layer": "presentation",
-      "depth": 0
+      "depth": 0,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/models.py",
@@ -3385,12 +4804,159 @@
           "doc": "POST /api/agent/sessions/{sid}/activity body (SPEC §8)."
         }
       ],
+      "symbols": [
+        {
+          "name": "TicketStatus",
+          "kind": "class",
+          "line": 31,
+          "exported": true
+        },
+        {
+          "name": "Employee",
+          "kind": "class",
+          "line": 39,
+          "exported": true
+        },
+        {
+          "name": "Ticket",
+          "kind": "class",
+          "line": 51,
+          "exported": true
+        },
+        {
+          "name": "SystemInfo",
+          "kind": "class",
+          "line": 68,
+          "exported": true
+        },
+        {
+          "name": "CustomerSystem",
+          "kind": "class",
+          "line": 80,
+          "exported": true
+        },
+        {
+          "name": "Customer",
+          "kind": "class",
+          "line": 90,
+          "exported": true
+        },
+        {
+          "name": "StatusUpdate",
+          "kind": "class",
+          "line": 102,
+          "exported": true
+        },
+        {
+          "name": "ActivityCreate",
+          "kind": "class",
+          "line": 110,
+          "exported": true
+        },
+        {
+          "name": "Activity",
+          "kind": "class",
+          "line": 131,
+          "exported": true
+        },
+        {
+          "name": "Phase",
+          "kind": "class",
+          "line": 157,
+          "exported": true
+        },
+        {
+          "name": "Hypothesis",
+          "kind": "class",
+          "line": 170,
+          "exported": true
+        },
+        {
+          "name": "ProposedCommand",
+          "kind": "class",
+          "line": 180,
+          "exported": true
+        },
+        {
+          "name": "FinalReport",
+          "kind": "class",
+          "line": 192,
+          "exported": true
+        },
+        {
+          "name": "AgentResponse",
+          "kind": "class",
+          "line": 204,
+          "exported": true
+        },
+        {
+          "name": "CommandResult",
+          "kind": "class",
+          "line": 227,
+          "exported": true
+        },
+        {
+          "name": "Approval",
+          "kind": "class",
+          "line": 238,
+          "exported": true
+        },
+        {
+          "name": "AuditEntry",
+          "kind": "class",
+          "line": 248,
+          "exported": true
+        },
+        {
+          "name": "EventType",
+          "kind": "class",
+          "line": 269,
+          "exported": true
+        },
+        {
+          "name": "SSEEvent",
+          "kind": "class",
+          "line": 286,
+          "exported": true
+        },
+        {
+          "name": "CreateSessionRequest",
+          "kind": "class",
+          "line": 306,
+          "exported": true
+        },
+        {
+          "name": "CreateSessionResponse",
+          "kind": "class",
+          "line": 314,
+          "exported": true
+        },
+        {
+          "name": "ApproveRequest",
+          "kind": "class",
+          "line": 320,
+          "exported": true
+        },
+        {
+          "name": "RejectRequest",
+          "kind": "class",
+          "line": 329,
+          "exported": true
+        },
+        {
+          "name": "SubmitActivityRequest",
+          "kind": "class",
+          "line": 337,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/session.py",
@@ -3426,12 +4992,39 @@
           "doc": "A no-op runner that raises an error on connect (no real SSH target)."
         }
       ],
+      "symbols": [
+        {
+          "name": "SessionError",
+          "kind": "class",
+          "line": 46,
+          "exported": true
+        },
+        {
+          "name": "Session",
+          "kind": "class",
+          "line": 55,
+          "exported": true
+        },
+        {
+          "name": "SessionManager",
+          "kind": "class",
+          "line": 402,
+          "exported": true
+        },
+        {
+          "name": "_NullRunner",
+          "kind": "class",
+          "line": 535,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/ssh_runner.py",
@@ -3473,12 +5066,45 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "HardBlockedError",
+          "kind": "class",
+          "line": 39,
+          "exported": true
+        },
+        {
+          "name": "SSHRunnerError",
+          "kind": "class",
+          "line": 43,
+          "exported": true
+        },
+        {
+          "name": "resolve_key_paths",
+          "kind": "def",
+          "line": 56,
+          "exported": true
+        },
+        {
+          "name": "SSHRunner",
+          "kind": "class",
+          "line": 97,
+          "exported": true
+        },
+        {
+          "name": "make_ssh_runner",
+          "kind": "def",
+          "line": 330,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/safety/__init__.py",
@@ -3489,12 +5115,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/safety/classifier.py",
@@ -3608,12 +5236,117 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "Verdict",
+          "kind": "class",
+          "line": 49,
+          "exported": true
+        },
+        {
+          "name": "Classification",
+          "kind": "class",
+          "line": 56,
+          "exported": true
+        },
+        {
+          "name": "_more_restrictive",
+          "kind": "def",
+          "line": 73,
+          "exported": true
+        },
+        {
+          "name": "_split_segments",
+          "kind": "def",
+          "line": 88,
+          "exported": true
+        },
+        {
+          "name": "_strip_sudo",
+          "kind": "def",
+          "line": 113,
+          "exported": true
+        },
+        {
+          "name": "_strip_wrappers",
+          "kind": "def",
+          "line": 136,
+          "exported": true
+        },
+        {
+          "name": "_normalise_paths",
+          "kind": "def",
+          "line": 158,
+          "exported": true
+        },
+        {
+          "name": "_extract_command_substitutions",
+          "kind": "def",
+          "line": 189,
+          "exported": true
+        },
+        {
+          "name": "_extract_shell_c_payload",
+          "kind": "def",
+          "line": 249,
+          "exported": true
+        },
+        {
+          "name": "_check_hard_block",
+          "kind": "def",
+          "line": 307,
+          "exported": true
+        },
+        {
+          "name": "_check_read_only",
+          "kind": "def",
+          "line": 324,
+          "exported": true
+        },
+        {
+          "name": "_get_subcommand",
+          "kind": "def",
+          "line": 487,
+          "exported": true
+        },
+        {
+          "name": "_ip_is_mutating",
+          "kind": "def",
+          "line": 495,
+          "exported": true
+        },
+        {
+          "name": "_check_secret_ish_path",
+          "kind": "def",
+          "line": 504,
+          "exported": true
+        },
+        {
+          "name": "_classify_curl_wget",
+          "kind": "def",
+          "line": 531,
+          "exported": true
+        },
+        {
+          "name": "_classify_segment",
+          "kind": "def",
+          "line": 572,
+          "exported": true
+        },
+        {
+          "name": "classify",
+          "kind": "def",
+          "line": 701,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/safety/redaction.py",
@@ -3649,12 +5382,39 @@
           "doc": "Return a logging.Filter that redacts secrets from log records."
         }
       ],
+      "symbols": [
+        {
+          "name": "_tag",
+          "kind": "def",
+          "line": 31,
+          "exported": true
+        },
+        {
+          "name": "redact",
+          "kind": "def",
+          "line": 134,
+          "exported": true
+        },
+        {
+          "name": "_RedactingFilter",
+          "kind": "class",
+          "line": 211,
+          "exported": true
+        },
+        {
+          "name": "make_redacting_log_filter",
+          "kind": "def",
+          "line": 221,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/safety/rules.py",
@@ -3684,12 +5444,33 @@
           "doc": null
         }
       ],
+      "symbols": [
+        {
+          "name": "_path_token",
+          "kind": "def",
+          "line": 68,
+          "exported": true
+        },
+        {
+          "name": "HardBlockRule",
+          "kind": "class",
+          "line": 102,
+          "exported": true
+        },
+        {
+          "name": "_c",
+          "kind": "def",
+          "line": 108,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/routers/__init__.py",
@@ -3700,12 +5481,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/routers/agent.py",
@@ -3727,6 +5510,20 @@
           "kind": "def",
           "line": 61,
           "doc": "Return the Session or raise 404."
+        }
+      ],
+      "symbols": [
+        {
+          "name": "set_session_manager",
+          "kind": "def",
+          "line": 50,
+          "exported": true
+        },
+        {
+          "name": "_get_session",
+          "kind": "def",
+          "line": 61,
+          "exported": true
         }
       ],
       "sinks": [],
@@ -3807,7 +5604,8 @@
         ]
       },
       "layer": "presentation",
-      "depth": 0
+      "depth": 0,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/routers/tickets.py",
@@ -3829,6 +5627,20 @@
           "kind": "def",
           "line": 45,
           "doc": "Map ErpError / ErpAuthError to the correct HTTPException."
+        }
+      ],
+      "symbols": [
+        {
+          "name": "_get_erp",
+          "kind": "def",
+          "line": 35,
+          "exported": true
+        },
+        {
+          "name": "_handle_erp_error",
+          "kind": "def",
+          "line": 45,
+          "exported": true
         }
       ],
       "sinks": [],
@@ -3873,7 +5685,8 @@
         ]
       },
       "layer": "presentation",
-      "depth": 0
+      "depth": 0,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/agent/__init__.py",
@@ -3884,12 +5697,14 @@
       "isTest": false,
       "package": null,
       "exports": [],
+      "symbols": [],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "support",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/agent/contracts.py",
@@ -3931,12 +5746,45 @@
           "doc": "Validate and parse raw model output into an AgentResponse."
         }
       ],
+      "symbols": [
+        {
+          "name": "MalformedAgentResponse",
+          "kind": "class",
+          "line": 194,
+          "exported": true
+        },
+        {
+          "name": "_truncate_output",
+          "kind": "def",
+          "line": 214,
+          "exported": true
+        },
+        {
+          "name": "history_to_contract_dicts",
+          "kind": "def",
+          "line": 225,
+          "exported": true
+        },
+        {
+          "name": "build_user_message",
+          "kind": "def",
+          "line": 292,
+          "exported": true
+        },
+        {
+          "name": "parse_agent_response",
+          "kind": "def",
+          "line": 394,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/agent/doctrine.py",
@@ -3954,63 +5802,12 @@
           "doc": "Return the system prompt, allowing future per-run tweaks via settings."
         }
       ],
-      "sinks": [],
-      "sinkSites": [],
-      "routes": [],
-      "entryPoint": null,
-      "layer": "application",
-      "depth": null
-    },
-    {
-      "id": "backend/app/agent/llm.py",
-      "path": "backend/app/agent/llm.py",
-      "language": "python",
-      "size": 22378,
-      "loc": 624,
-      "isTest": false,
-      "package": null,
-      "exports": [
+      "symbols": [
         {
-          "name": "LLMError",
-          "kind": "class",
-          "line": 75,
-          "doc": "Raised on network, API, or timeout errors from any LLM provider."
-        },
-        {
-          "name": "BaseLLM",
-          "kind": "class",
-          "line": 89,
-          "doc": "Contract the orchestrator uses.  Providers must implement ``propose``."
-        },
-        {
-          "name": "AnthropicLLM",
-          "kind": "class",
-          "line": 118,
-          "doc": "LLM client backed by ``anthropic.AsyncAnthropic`` (default provider)."
-        },
-        {
-          "name": "OpenAILLM",
-          "kind": "class",
-          "line": 226,
-          "doc": "LLM client backed by ``openai.AsyncOpenAI``."
-        },
-        {
-          "name": "AzureOpenAILLM",
-          "kind": "class",
-          "line": 352,
-          "doc": "LLM client backed by ``openai.AsyncAzureOpenAI``."
-        },
-        {
-          "name": "StubLLM",
-          "kind": "class",
-          "line": 492,
-          "doc": "Deterministic replay LLM for tests and offline full-loop runs."
-        },
-        {
-          "name": "get_llm_client",
+          "name": "build_system_prompt",
           "kind": "def",
-          "line": 551,
-          "doc": "Return the configured LLM client, switching on ``LLM_PROVIDER``."
+          "line": 84,
+          "exported": true
         }
       ],
       "sinks": [],
@@ -4018,7 +5815,124 @@
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
+    },
+    {
+      "id": "backend/app/agent/llm.py",
+      "path": "backend/app/agent/llm.py",
+      "language": "python",
+      "size": 28542,
+      "loc": 785,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "LLMError",
+          "kind": "class",
+          "line": 79,
+          "doc": "Raised on network, API, or timeout errors from any LLM provider."
+        },
+        {
+          "name": "BaseLLM",
+          "kind": "class",
+          "line": 93,
+          "doc": "Contract the orchestrator uses.  Providers must implement ``propose``."
+        },
+        {
+          "name": "AnthropicLLM",
+          "kind": "class",
+          "line": 122,
+          "doc": "LLM client backed by ``anthropic.AsyncAnthropic`` (default provider)."
+        },
+        {
+          "name": "OpenAILLM",
+          "kind": "class",
+          "line": 230,
+          "doc": "LLM client backed by ``openai.AsyncOpenAI``."
+        },
+        {
+          "name": "AzureOpenAILLM",
+          "kind": "class",
+          "line": 356,
+          "doc": "LLM client backed by ``openai.AsyncAzureOpenAI``."
+        },
+        {
+          "name": "AzureFoundryLLM",
+          "kind": "class",
+          "line": 496,
+          "doc": "LLM client for the Azure AI Foundry **v1 Responses** API."
+        },
+        {
+          "name": "StubLLM",
+          "kind": "class",
+          "line": 629,
+          "doc": "Deterministic replay LLM for tests and offline full-loop runs."
+        },
+        {
+          "name": "get_llm_client",
+          "kind": "def",
+          "line": 688,
+          "doc": "Return the configured LLM client, switching on ``LLM_PROVIDER``."
+        }
+      ],
+      "symbols": [
+        {
+          "name": "LLMError",
+          "kind": "class",
+          "line": 79,
+          "exported": true
+        },
+        {
+          "name": "BaseLLM",
+          "kind": "class",
+          "line": 93,
+          "exported": true
+        },
+        {
+          "name": "AnthropicLLM",
+          "kind": "class",
+          "line": 122,
+          "exported": true
+        },
+        {
+          "name": "OpenAILLM",
+          "kind": "class",
+          "line": 230,
+          "exported": true
+        },
+        {
+          "name": "AzureOpenAILLM",
+          "kind": "class",
+          "line": 356,
+          "exported": true
+        },
+        {
+          "name": "AzureFoundryLLM",
+          "kind": "class",
+          "line": 496,
+          "exported": true
+        },
+        {
+          "name": "StubLLM",
+          "kind": "class",
+          "line": 629,
+          "exported": true
+        },
+        {
+          "name": "get_llm_client",
+          "kind": "def",
+          "line": 688,
+          "exported": true
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     },
     {
       "id": "backend/app/agent/orchestrator.py",
@@ -4078,189 +5992,287 @@
           "doc": "Drives the TRIAGE → … → DOCUMENT state machine for one session."
         }
       ],
+      "symbols": [
+        {
+          "name": "ApprovalDecision",
+          "kind": "class",
+          "line": 67,
+          "exported": true
+        },
+        {
+          "name": "CommandRunner",
+          "kind": "class",
+          "line": 74,
+          "exported": true
+        },
+        {
+          "name": "SessionIO",
+          "kind": "class",
+          "line": 82,
+          "exported": true
+        },
+        {
+          "name": "_now_iso",
+          "kind": "def",
+          "line": 108,
+          "exported": true
+        },
+        {
+          "name": "_truncate_output",
+          "kind": "def",
+          "line": 112,
+          "exported": true
+        },
+        {
+          "name": "_redact_customer_system",
+          "kind": "def",
+          "line": 123,
+          "exported": true
+        },
+        {
+          "name": "_fallback_activity",
+          "kind": "def",
+          "line": 129,
+          "exported": true
+        },
+        {
+          "name": "Orchestrator",
+          "kind": "class",
+          "line": 162,
+          "exported": true
+        }
+      ],
       "sinks": [],
       "sinkSites": [],
       "routes": [],
       "entryPoint": null,
       "layer": "application",
-      "depth": null
+      "depth": null,
+      "cluster": "cluster:backend/Dockerfile"
     }
   ],
   "edges": [
     {
       "from": "frontend/vite.config.ts",
       "to": "vite",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/vite.config.ts",
       "to": "@vitejs/plugin-react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/App.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/TicketList.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/TicketDetail.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/AgentWorkspace.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/api.ts",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/main.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/main.tsx",
       "to": "react-dom/client",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/main.tsx",
       "to": "frontend/src/App.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/ActivityReview.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/ActivityReview.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/ActivityReview.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/components/HypothesisPanel.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/components/CommandApproval.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/components/ActivityReview.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/components/Controls.tsx",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/CommandApproval.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/CommandApproval.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/CommandApproval.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/Controls.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/Controls.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/HypothesisPanel.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/HypothesisPanel.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/TicketList.tsx",
       "to": "react",
-      "kind": "external"
+      "kind": "external",
+      "confidence": "EXTRACTED",
+      "resolved": false
     },
     {
       "from": "frontend/src/components/TicketList.tsx",
       "to": "frontend/src/api.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     },
     {
       "from": "frontend/src/components/TicketList.tsx",
       "to": "frontend/src/types.ts",
-      "kind": "import"
+      "kind": "import",
+      "confidence": "EXTRACTED"
     }
   ],
   "callEdges": [
@@ -4268,79 +6280,92 @@
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "getMe",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/ActivityReview.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "submitActivity",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/AgentWorkspace.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "subscribe",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/CommandApproval.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "approve",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/CommandApproval.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "reject",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/Controls.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "retry",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/Controls.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "abort",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/Controls.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "devReset",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "getTicket",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "getCustomerSystem",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "createSession",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/TicketDetail.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "startSession",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     },
     {
       "from": "frontend/src/components/TicketList.tsx",
       "to": "frontend/src/api.ts",
       "symbol": "listTickets",
-      "count": 1
+      "count": 1,
+      "confidence": "INFERRED"
     }
   ],
   "containerEdges": [],
@@ -4700,10 +6725,10 @@
       "id": "dir:backend",
       "lane": "application",
       "title": "backend",
-      "sublabel": "88 modules · 4 entry · net:http",
+      "sublabel": "90 modules · 4 entry · net:http",
       "color": "#8b949e",
       "kind": "package",
-      "moduleCount": 88,
+      "moduleCount": 90,
       "hasEntry": true,
       "sinks": [
         "net:http"
@@ -4722,1466 +6747,2897 @@
     {
       "name": "default",
       "kind": "default",
+      "line": 4,
       "file": "frontend/vite.config.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "App",
       "kind": "function",
+      "line": 10,
       "file": "frontend/src/App.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "getMe",
       "kind": "function",
+      "line": 47,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TicketParams",
       "kind": "interface",
+      "line": 51,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "listTickets",
       "kind": "function",
+      "line": 58,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "getTicket",
       "kind": "function",
+      "line": 68,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "getCustomerSystem",
       "kind": "function",
+      "line": 72,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "createSession",
       "kind": "function",
+      "line": 78,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "startSession",
       "kind": "function",
+      "line": 82,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "approve",
       "kind": "function",
+      "line": 86,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "reject",
       "kind": "function",
+      "line": 97,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "retry",
       "kind": "function",
+      "line": 101,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "abort",
       "kind": "function",
+      "line": 105,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "submitActivity",
       "kind": "function",
+      "line": 109,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "devReset",
       "kind": "function",
+      "line": 116,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "subscribe",
       "kind": "function",
+      "line": 137,
       "file": "frontend/src/api.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TicketStatus",
       "kind": "type",
+      "line": 3,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Ticket",
       "kind": "interface",
+      "line": 5,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Employee",
       "kind": "interface",
+      "line": 19,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Customer",
       "kind": "interface",
+      "line": 27,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SystemInfo",
       "kind": "interface",
+      "line": 34,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CustomerSystem",
       "kind": "interface",
+      "line": 42,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Activity",
       "kind": "interface",
+      "line": 48,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SSEEvent",
       "kind": "interface",
+      "line": 61,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "PhaseChangeData",
       "kind": "interface",
+      "line": 69,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ThoughtData",
       "kind": "interface",
+      "line": 73,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "HypothesisItem",
       "kind": "interface",
+      "line": 77,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "HypothesesData",
       "kind": "interface",
+      "line": 83,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "PlanCommand",
       "kind": "interface",
+      "line": 87,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "PlanData",
       "kind": "interface",
+      "line": 96,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AwaitingApprovalData",
       "kind": "interface",
+      "line": 100,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CommandResultData",
       "kind": "interface",
+      "line": 109,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SafetyBlockData",
       "kind": "interface",
+      "line": 118,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ValidationData",
       "kind": "interface",
+      "line": 123,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "PersistCheckData",
       "kind": "interface",
+      "line": 128,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ActivityDraftData",
       "kind": "interface",
+      "line": 133,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "DoneData",
       "kind": "interface",
+      "line": 137,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ErrorData",
       "kind": "interface",
+      "line": 142,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "LogEntry",
       "kind": "type",
+      "line": 148,
       "file": "frontend/src/types.ts",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ActivityReview",
       "kind": "function",
+      "line": 11,
       "file": "frontend/src/components/ActivityReview.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AgentWorkspace",
       "kind": "function",
+      "line": 41,
       "file": "frontend/src/components/AgentWorkspace.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CommandApproval",
       "kind": "function",
+      "line": 11,
       "file": "frontend/src/components/CommandApproval.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Controls",
       "kind": "function",
+      "line": 9,
       "file": "frontend/src/components/Controls.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "HypothesisPanel",
       "kind": "function",
+      "line": 14,
       "file": "frontend/src/components/HypothesisPanel.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TicketDetail",
       "kind": "function",
+      "line": 11,
       "file": "frontend/src/components/TicketDetail.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TicketList",
       "kind": "function",
+      "line": 50,
       "file": "frontend/src/components/TicketList.tsx",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_audit_log",
       "kind": "def",
+      "line": 36,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_all_string_fields",
       "kind": "def",
+      "line": 41,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestBuildActivityNoFinal",
       "kind": "class",
+      "line": 60,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestBuildActivityWithFinal",
       "kind": "class",
+      "line": 184,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestSecretRedaction",
       "kind": "class",
+      "line": 263,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestBuildActivityEmptyLog",
       "kind": "class",
+      "line": 357,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestBuildActivityPassThrough",
       "kind": "class",
+      "line": 377,
       "file": "backend/tests/test_activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_nginx_script",
       "kind": "def",
+      "line": 55,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "FakeIO",
       "kind": "class",
+      "line": 203,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_ticket",
       "kind": "def",
+      "line": 251,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_customer_system",
       "kind": "def",
+      "line": 263,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_audit_log",
       "kind": "def",
+      "line": 277,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestOrchestratorFullLoop",
       "kind": "class",
+      "line": 289,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_hardblock_script",
       "kind": "def",
+      "line": 467,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockMidLoop",
       "kind": "class",
+      "line": 527,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_erp_client",
       "kind": "def",
+      "line": 641,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestFullApiApprovalGate",
       "kind": "class",
+      "line": 647,
       "file": "backend/tests/test_agent_loop_mock.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_make_client",
       "kind": "def",
+      "line": 30,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestGetMe",
       "kind": "class",
+      "line": 42,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestListTickets",
       "kind": "class",
+      "line": 50,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestGetTicket",
       "kind": "class",
+      "line": 104,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestGetCustomerSystem",
       "kind": "class",
+      "line": 118,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestSetStatus",
       "kind": "class",
+      "line": 135,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestCreateActivityAndReset",
       "kind": "class",
+      "line": 159,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestAuth401",
       "kind": "class",
+      "line": 200,
       "file": "backend/tests/test_erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
+    },
+    {
+      "name": "_FakeResponses",
+      "kind": "class",
+      "line": 36,
+      "file": "backend/tests/test_llm_provider.py",
+      "package": null,
+      "exported": true
+    },
+    {
+      "name": "_FakeClient",
+      "kind": "class",
+      "line": 53,
+      "file": "backend/tests/test_llm_provider.py",
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_anthropic_is_default_provider",
       "kind": "def",
+      "line": 58,
       "file": "backend/tests/test_llm_provider.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_openai_provider_selected",
       "kind": "def",
+      "line": 63,
       "file": "backend/tests/test_llm_provider.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_azure_provider_uses_endpoint_deployment_and_api_version",
       "kind": "def",
+      "line": 68,
       "file": "backend/tests/test_llm_provider.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_azure_default_api_version_when_unset",
       "kind": "def",
+      "line": 85,
       "file": "backend/tests/test_llm_provider.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_azure_missing_credentials_raises_clear_error",
       "kind": "def",
+      "line": 96,
       "file": "backend/tests/test_llm_provider.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_unknown_provider_raises",
       "kind": "def",
+      "line": 105,
       "file": "backend/tests/test_llm_provider.py",
-      "package": null
+      "package": null,
+      "exported": true
+    },
+    {
+      "name": "test_foundry_provider_selected_and_validates",
+      "kind": "def",
+      "line": 113,
+      "file": "backend/tests/test_llm_provider.py",
+      "package": null,
+      "exported": true
+    },
+    {
+      "name": "test_foundry_missing_settings_raises_clear_error",
+      "kind": "def",
+      "line": 127,
+      "file": "backend/tests/test_llm_provider.py",
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestEnvAssignmentRedaction",
       "kind": "class",
+      "line": 27,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestDBUriRedaction",
       "kind": "class",
+      "line": 74,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestAPIKeyRedaction",
       "kind": "class",
+      "line": 116,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestPrivateKeyRedaction",
       "kind": "class",
+      "line": 161,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestShadowLineRedaction",
       "kind": "class",
+      "line": 188,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestDiagnosticPreservation",
       "kind": "class",
+      "line": 206,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestMixedRedaction",
       "kind": "class",
+      "line": 273,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestLoggingFilter",
       "kind": "class",
+      "line": 300,
       "file": "backend/tests/test_redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "assert_verdict",
       "kind": "def",
+      "line": 25,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "assert_hard_block",
       "kind": "def",
+      "line": 33,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "assert_needs_approval",
       "kind": "def",
+      "line": 37,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "assert_read_only",
       "kind": "def",
+      "line": 41,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockRecursiveDeletion",
       "kind": "class",
+      "line": 49,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockChmod",
       "kind": "class",
+      "line": 143,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockChown",
       "kind": "class",
+      "line": 213,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockDBDestruction",
       "kind": "class",
+      "line": 253,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockDisablingSecurity",
       "kind": "class",
+      "line": 308,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockSecretExposure",
       "kind": "class",
+      "line": 374,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockHidingActions",
       "kind": "class",
+      "line": 421,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockPrivEsc",
       "kind": "class",
+      "line": 457,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestHardBlockCatastrophic",
       "kind": "class",
+      "line": 473,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestReadOnly",
       "kind": "class",
+      "line": 512,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestSystemctlMutating",
       "kind": "class",
+      "line": 786,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestCurlWgetEdgeCases",
       "kind": "class",
+      "line": 818,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestPipelineAndCompound",
       "kind": "class",
+      "line": 851,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestSudoStripping",
       "kind": "class",
+      "line": 890,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestWrapperStripping",
       "kind": "class",
+      "line": 919,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestUnknownCommands",
       "kind": "class",
+      "line": 940,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestFindEdgeCases",
       "kind": "class",
+      "line": 971,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestMountEdgeCases",
       "kind": "class",
+      "line": 992,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestSysctlEdgeCases",
       "kind": "class",
+      "line": 1007,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestIpEdgeCases",
       "kind": "class",
+      "line": 1022,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestClassificationStructure",
       "kind": "class",
+      "line": 1046,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestRobustness",
       "kind": "class",
+      "line": 1072,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestCritical1QuoteWrappedDeletion",
       "kind": "class",
+      "line": 1094,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestCritical2AbsolutePathSSHKeys",
       "kind": "class",
+      "line": 1142,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestCritical2Low1SecretReadingTools",
       "kind": "class",
+      "line": 1175,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TestCritical2bSecretishPathDowngrade",
       "kind": "class",
+      "line": 1213,
       "file": "backend/tests/test_safety_classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_single_file_path_returns_itself",
       "kind": "def",
+      "line": 19,
       "file": "backend/tests/test_ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_comma_separated_list_is_split",
       "kind": "def",
+      "line": 23,
       "file": "backend/tests/test_ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_list_input_is_normalised",
       "kind": "def",
+      "line": 28,
       "file": "backend/tests/test_ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_directory_expands_to_all_pem_keys",
       "kind": "def",
+      "line": 32,
       "file": "backend/tests/test_ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_directory_results_are_sorted_and_deduped",
       "kind": "def",
+      "line": 43,
       "file": "backend/tests/test_ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "test_nonexistent_path_falls_back_to_value",
       "kind": "def",
+      "line": 49,
       "file": "backend/tests/test_ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_load_json",
       "kind": "def",
+      "line": 43,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TicketStatus",
       "kind": "class",
+      "line": 62,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Employee",
       "kind": "class",
+      "line": 68,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SystemInfo",
       "kind": "class",
+      "line": 76,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Ticket",
       "kind": "class",
+      "line": 84,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CustomerSystem",
       "kind": "class",
+      "line": 97,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Customer",
       "kind": "class",
+      "line": 103,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "StatusUpdate",
       "kind": "class",
+      "line": 111,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ActivityCreate",
       "kind": "class",
+      "line": 115,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Activity",
       "kind": "class",
+      "line": 127,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SimpleMessage",
       "kind": "class",
+      "line": 144,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "require_bearer",
       "kind": "def",
+      "line": 178,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_find_ticket",
       "kind": "def",
+      "line": 195,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "get_me",
       "kind": "def",
+      "line": 219,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "list_my_tickets",
       "kind": "def",
+      "line": 225,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "get_ticket",
       "kind": "def",
+      "line": 256,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "get_customer_system",
       "kind": "def",
+      "line": 268,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "get_customer",
       "kind": "def",
+      "line": 283,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "set_ticket_status",
       "kind": "def",
+      "line": 298,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "create_activity",
       "kind": "def",
+      "line": 314,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "reset_me",
       "kind": "def",
+      "line": 347,
       "file": "backend/mocks/mock_erp.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "MockSSHRunner",
       "kind": "class",
+      "line": 130,
       "file": "backend/mocks/mock_ssh.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_strip_sudo",
       "kind": "def",
+      "line": 345,
       "file": "backend/mocks/mock_ssh.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_ok",
       "kind": "def",
+      "line": 353,
       "file": "backend/mocks/mock_ssh.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_derive_summary",
       "kind": "def",
+      "line": 26,
       "file": "backend/app/activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_derive_root_cause",
       "kind": "def",
+      "line": 51,
       "file": "backend/app/activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_derive_actions_taken",
       "kind": "def",
+      "line": 79,
       "file": "backend/app/activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_derive_commands_summary",
       "kind": "def",
+      "line": 98,
       "file": "backend/app/activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_derive_validation_result",
       "kind": "def",
+      "line": 119,
       "file": "backend/app/activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "build_activity",
       "kind": "def",
+      "line": 160,
       "file": "backend/app/activity_generator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AuditLog",
       "kind": "class",
+      "line": 25,
       "file": "backend/app/audit_log.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Settings",
       "kind": "class",
+      "line": 13,
       "file": "backend/app/config.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "get_settings",
       "kind": "def",
+      "line": 61,
       "file": "backend/app/config.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "resolve_ssh_connection",
       "kind": "def",
+      "line": 66,
       "file": "backend/app/config.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ErpError",
       "kind": "class",
+      "line": 45,
       "file": "backend/app/erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ErpAuthError",
       "kind": "class",
+      "line": 53,
       "file": "backend/app/erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_is_retryable_status",
       "kind": "def",
+      "line": 65,
       "file": "backend/app/erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ErpClient",
       "kind": "class",
+      "line": 74,
       "file": "backend/app/erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "make_erp_client",
       "kind": "def",
+      "line": 340,
       "file": "backend/app/erp_client.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_configure_logging",
       "kind": "def",
+      "line": 29,
       "file": "backend/app/main.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "health",
       "kind": "def",
+      "line": 97,
       "file": "backend/app/main.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "TicketStatus",
       "kind": "class",
+      "line": 31,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Employee",
       "kind": "class",
+      "line": 39,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Ticket",
       "kind": "class",
+      "line": 51,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SystemInfo",
       "kind": "class",
+      "line": 68,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CustomerSystem",
       "kind": "class",
+      "line": 80,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Customer",
       "kind": "class",
+      "line": 90,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "StatusUpdate",
       "kind": "class",
+      "line": 102,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ActivityCreate",
       "kind": "class",
+      "line": 110,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Activity",
       "kind": "class",
+      "line": 131,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Phase",
       "kind": "class",
+      "line": 157,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Hypothesis",
       "kind": "class",
+      "line": 170,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ProposedCommand",
       "kind": "class",
+      "line": 180,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "FinalReport",
       "kind": "class",
+      "line": 192,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AgentResponse",
       "kind": "class",
+      "line": 204,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CommandResult",
       "kind": "class",
+      "line": 227,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Approval",
       "kind": "class",
+      "line": 238,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AuditEntry",
       "kind": "class",
+      "line": 248,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "EventType",
       "kind": "class",
+      "line": 269,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SSEEvent",
       "kind": "class",
+      "line": 286,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CreateSessionRequest",
       "kind": "class",
+      "line": 306,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CreateSessionResponse",
       "kind": "class",
+      "line": 314,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ApproveRequest",
       "kind": "class",
+      "line": 320,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "RejectRequest",
       "kind": "class",
+      "line": 329,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SubmitActivityRequest",
       "kind": "class",
+      "line": 337,
       "file": "backend/app/models.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SessionError",
       "kind": "class",
+      "line": 46,
       "file": "backend/app/session.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Session",
       "kind": "class",
+      "line": 55,
       "file": "backend/app/session.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SessionManager",
       "kind": "class",
+      "line": 402,
       "file": "backend/app/session.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_NullRunner",
       "kind": "class",
+      "line": 535,
       "file": "backend/app/session.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "HardBlockedError",
       "kind": "class",
+      "line": 39,
       "file": "backend/app/ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SSHRunnerError",
       "kind": "class",
+      "line": 43,
       "file": "backend/app/ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "resolve_key_paths",
       "kind": "def",
+      "line": 56,
       "file": "backend/app/ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SSHRunner",
       "kind": "class",
+      "line": 97,
       "file": "backend/app/ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "make_ssh_runner",
       "kind": "def",
+      "line": 330,
       "file": "backend/app/ssh_runner.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Verdict",
       "kind": "class",
+      "line": 49,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Classification",
       "kind": "class",
+      "line": 56,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_more_restrictive",
       "kind": "def",
+      "line": 73,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_split_segments",
       "kind": "def",
+      "line": 88,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_strip_sudo",
       "kind": "def",
+      "line": 113,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_strip_wrappers",
       "kind": "def",
+      "line": 136,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_normalise_paths",
       "kind": "def",
+      "line": 158,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_extract_command_substitutions",
       "kind": "def",
+      "line": 189,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_extract_shell_c_payload",
       "kind": "def",
+      "line": 249,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_check_hard_block",
       "kind": "def",
+      "line": 307,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_check_read_only",
       "kind": "def",
+      "line": 324,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_get_subcommand",
       "kind": "def",
+      "line": 487,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_ip_is_mutating",
       "kind": "def",
+      "line": 495,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_check_secret_ish_path",
       "kind": "def",
+      "line": 504,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_classify_curl_wget",
       "kind": "def",
+      "line": 531,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_classify_segment",
       "kind": "def",
+      "line": 572,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "classify",
       "kind": "def",
+      "line": 701,
       "file": "backend/app/safety/classifier.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_tag",
       "kind": "def",
+      "line": 31,
       "file": "backend/app/safety/redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "redact",
       "kind": "def",
+      "line": 134,
       "file": "backend/app/safety/redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_RedactingFilter",
       "kind": "class",
+      "line": 211,
       "file": "backend/app/safety/redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "make_redacting_log_filter",
       "kind": "def",
+      "line": 221,
       "file": "backend/app/safety/redaction.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_path_token",
       "kind": "def",
+      "line": 68,
       "file": "backend/app/safety/rules.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "HardBlockRule",
       "kind": "class",
+      "line": 102,
       "file": "backend/app/safety/rules.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_c",
       "kind": "def",
+      "line": 108,
       "file": "backend/app/safety/rules.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "set_session_manager",
       "kind": "def",
+      "line": 50,
       "file": "backend/app/routers/agent.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_get_session",
       "kind": "def",
+      "line": 61,
       "file": "backend/app/routers/agent.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_get_erp",
       "kind": "def",
+      "line": 35,
       "file": "backend/app/routers/tickets.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_handle_erp_error",
       "kind": "def",
+      "line": 45,
       "file": "backend/app/routers/tickets.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "MalformedAgentResponse",
       "kind": "class",
+      "line": 194,
       "file": "backend/app/agent/contracts.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_truncate_output",
       "kind": "def",
+      "line": 214,
       "file": "backend/app/agent/contracts.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "history_to_contract_dicts",
       "kind": "def",
+      "line": 225,
       "file": "backend/app/agent/contracts.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "build_user_message",
       "kind": "def",
+      "line": 292,
       "file": "backend/app/agent/contracts.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "parse_agent_response",
       "kind": "def",
+      "line": 394,
       "file": "backend/app/agent/contracts.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "build_system_prompt",
       "kind": "def",
+      "line": 84,
       "file": "backend/app/agent/doctrine.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "LLMError",
       "kind": "class",
+      "line": 79,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "BaseLLM",
       "kind": "class",
+      "line": 93,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AnthropicLLM",
       "kind": "class",
+      "line": 122,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "OpenAILLM",
       "kind": "class",
+      "line": 230,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "AzureOpenAILLM",
       "kind": "class",
+      "line": 356,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
+    },
+    {
+      "name": "AzureFoundryLLM",
+      "kind": "class",
+      "line": 496,
+      "file": "backend/app/agent/llm.py",
+      "package": null,
+      "exported": true
     },
     {
       "name": "StubLLM",
       "kind": "class",
+      "line": 629,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "get_llm_client",
       "kind": "def",
+      "line": 688,
       "file": "backend/app/agent/llm.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "ApprovalDecision",
       "kind": "class",
+      "line": 67,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "CommandRunner",
       "kind": "class",
+      "line": 74,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "SessionIO",
       "kind": "class",
+      "line": 82,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_now_iso",
       "kind": "def",
+      "line": 108,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_truncate_output",
       "kind": "def",
+      "line": 112,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_redact_customer_system",
       "kind": "def",
+      "line": 123,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "_fallback_activity",
       "kind": "def",
+      "line": 129,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
     },
     {
       "name": "Orchestrator",
       "kind": "class",
+      "line": 162,
       "file": "backend/app/agent/orchestrator.py",
-      "package": null
+      "package": null,
+      "exported": true
+    }
+  ],
+  "hotspots": {
+    "godNodes": [
+      {
+        "id": "frontend/src/types.ts",
+        "path": "frontend/src/types.ts",
+        "package": null,
+        "inDegree": 8,
+        "outDegree": 0,
+        "loc": 155,
+        "score": 23.29,
+        "reason": "8 dependents · 0 deps"
+      },
+      {
+        "id": "frontend/src/api.ts",
+        "path": "frontend/src/api.ts",
+        "package": null,
+        "inDegree": 7,
+        "outDegree": 1,
+        "loc": 167,
+        "score": 22.39,
+        "reason": "7 dependents · 1 deps"
+      },
+      {
+        "id": "frontend/src/components/AgentWorkspace.tsx",
+        "path": "frontend/src/components/AgentWorkspace.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 6,
+        "loc": 357,
+        "score": 16.48,
+        "reason": "1 dependents · 6 deps"
+      },
+      {
+        "id": "frontend/src/App.tsx",
+        "path": "frontend/src/App.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 5,
+        "loc": 90,
+        "score": 13.51,
+        "reason": "1 dependents · 5 deps"
+      },
+      {
+        "id": "frontend/src/components/TicketList.tsx",
+        "path": "frontend/src/components/TicketList.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 216,
+        "score": 11.76,
+        "reason": "1 dependents · 2 deps"
+      },
+      {
+        "id": "frontend/src/components/ActivityReview.tsx",
+        "path": "frontend/src/components/ActivityReview.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 151,
+        "score": 11.25,
+        "reason": "1 dependents · 2 deps"
+      },
+      {
+        "id": "frontend/src/components/TicketDetail.tsx",
+        "path": "frontend/src/components/TicketDetail.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 150,
+        "score": 11.24,
+        "reason": "1 dependents · 2 deps"
+      },
+      {
+        "id": "frontend/src/components/CommandApproval.tsx",
+        "path": "frontend/src/components/CommandApproval.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 131,
+        "score": 11.04,
+        "reason": "1 dependents · 2 deps"
+      },
+      {
+        "id": "frontend/package-lock.json",
+        "path": "frontend/package-lock.json",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 1733,
+        "score": 10.76,
+        "reason": "0 dependents · 0 deps"
+      },
+      {
+        "id": "backend/app/agent/orchestrator.py",
+        "path": "backend/app/agent/orchestrator.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 976,
+        "score": 9.93,
+        "reason": "0 dependents · 0 deps"
+      },
+      {
+        "id": "frontend/src/index.css",
+        "path": "frontend/src/index.css",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 827,
+        "score": 9.69,
+        "reason": "0 dependents · 0 deps"
+      },
+      {
+        "id": "backend/app/agent/llm.py",
+        "path": "backend/app/agent/llm.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 785,
+        "score": 9.62,
+        "reason": "0 dependents · 0 deps"
+      },
+      {
+        "id": "backend/app/safety/classifier.py",
+        "path": "backend/app/safety/classifier.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 774,
+        "score": 9.6,
+        "reason": "0 dependents · 0 deps"
+      },
+      {
+        "id": "backend/app/safety/rules.py",
+        "path": "backend/app/safety/rules.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 765,
+        "score": 9.58,
+        "reason": "0 dependents · 0 deps"
+      },
+      {
+        "id": "frontend/src/components/Controls.tsx",
+        "path": "frontend/src/components/Controls.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 1,
+        "loc": 88,
+        "score": 9.48,
+        "reason": "1 dependents · 1 deps"
+      }
+    ],
+    "mostDependedOn": [
+      {
+        "id": "frontend/src/types.ts",
+        "path": "frontend/src/types.ts",
+        "package": null,
+        "inDegree": 8,
+        "outDegree": 0,
+        "loc": 155,
+        "score": 8,
+        "reason": "8 dependents"
+      },
+      {
+        "id": "frontend/src/api.ts",
+        "path": "frontend/src/api.ts",
+        "package": null,
+        "inDegree": 7,
+        "outDegree": 1,
+        "loc": 167,
+        "score": 7,
+        "reason": "7 dependents"
+      },
+      {
+        "id": "frontend/src/App.tsx",
+        "path": "frontend/src/App.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 5,
+        "loc": 90,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/ActivityReview.tsx",
+        "path": "frontend/src/components/ActivityReview.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 151,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/AgentWorkspace.tsx",
+        "path": "frontend/src/components/AgentWorkspace.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 6,
+        "loc": 357,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/CommandApproval.tsx",
+        "path": "frontend/src/components/CommandApproval.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 131,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/Controls.tsx",
+        "path": "frontend/src/components/Controls.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 1,
+        "loc": 88,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/HypothesisPanel.tsx",
+        "path": "frontend/src/components/HypothesisPanel.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 1,
+        "loc": 55,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/TicketDetail.tsx",
+        "path": "frontend/src/components/TicketDetail.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 150,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": "frontend/src/components/TicketList.tsx",
+        "path": "frontend/src/components/TicketList.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 216,
+        "score": 1,
+        "reason": "1 dependents"
+      },
+      {
+        "id": ".env",
+        "path": ".env",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "0 dependents"
+      },
+      {
+        "id": ".env.example",
+        "path": ".env.example",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "0 dependents"
+      },
+      {
+        "id": ".gitignore",
+        "path": ".gitignore",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "0 dependents"
+      },
+      {
+        "id": "LICENSE",
+        "path": "LICENSE",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "0 dependents"
+      },
+      {
+        "id": "README.md",
+        "path": "README.md",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 328,
+        "score": 0,
+        "reason": "0 dependents"
+      }
+    ],
+    "orchestrators": [
+      {
+        "id": "frontend/src/components/AgentWorkspace.tsx",
+        "path": "frontend/src/components/AgentWorkspace.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 6,
+        "loc": 357,
+        "score": 6,
+        "reason": "imports 6 modules"
+      },
+      {
+        "id": "frontend/src/App.tsx",
+        "path": "frontend/src/App.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 5,
+        "loc": 90,
+        "score": 5,
+        "reason": "imports 5 modules"
+      },
+      {
+        "id": "frontend/src/components/ActivityReview.tsx",
+        "path": "frontend/src/components/ActivityReview.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 151,
+        "score": 2,
+        "reason": "imports 2 modules"
+      },
+      {
+        "id": "frontend/src/components/CommandApproval.tsx",
+        "path": "frontend/src/components/CommandApproval.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 131,
+        "score": 2,
+        "reason": "imports 2 modules"
+      },
+      {
+        "id": "frontend/src/components/TicketDetail.tsx",
+        "path": "frontend/src/components/TicketDetail.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 150,
+        "score": 2,
+        "reason": "imports 2 modules"
+      },
+      {
+        "id": "frontend/src/components/TicketList.tsx",
+        "path": "frontend/src/components/TicketList.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 2,
+        "loc": 216,
+        "score": 2,
+        "reason": "imports 2 modules"
+      },
+      {
+        "id": "frontend/src/api.ts",
+        "path": "frontend/src/api.ts",
+        "package": null,
+        "inDegree": 7,
+        "outDegree": 1,
+        "loc": 167,
+        "score": 1,
+        "reason": "imports 1 modules"
+      },
+      {
+        "id": "frontend/src/components/Controls.tsx",
+        "path": "frontend/src/components/Controls.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 1,
+        "loc": 88,
+        "score": 1,
+        "reason": "imports 1 modules"
+      },
+      {
+        "id": "frontend/src/components/HypothesisPanel.tsx",
+        "path": "frontend/src/components/HypothesisPanel.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 1,
+        "loc": 55,
+        "score": 1,
+        "reason": "imports 1 modules"
+      },
+      {
+        "id": "frontend/src/main.tsx",
+        "path": "frontend/src/main.tsx",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 1,
+        "loc": 11,
+        "score": 1,
+        "reason": "imports 1 modules"
+      },
+      {
+        "id": ".env",
+        "path": ".env",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "imports 0 modules"
+      },
+      {
+        "id": ".env.example",
+        "path": ".env.example",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "imports 0 modules"
+      },
+      {
+        "id": ".gitignore",
+        "path": ".gitignore",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "imports 0 modules"
+      },
+      {
+        "id": "LICENSE",
+        "path": "LICENSE",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 0,
+        "score": 0,
+        "reason": "imports 0 modules"
+      },
+      {
+        "id": "README.md",
+        "path": "README.md",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 328,
+        "score": 0,
+        "reason": "imports 0 modules"
+      }
+    ],
+    "largest": [
+      {
+        "id": "frontend/package-lock.json",
+        "path": "frontend/package-lock.json",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 1733,
+        "score": 1733,
+        "reason": "1733 LOC"
+      },
+      {
+        "id": "backend/app/agent/orchestrator.py",
+        "path": "backend/app/agent/orchestrator.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 976,
+        "score": 976,
+        "reason": "976 LOC"
+      },
+      {
+        "id": "frontend/src/index.css",
+        "path": "frontend/src/index.css",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 827,
+        "score": 827,
+        "reason": "827 LOC"
+      },
+      {
+        "id": "backend/app/agent/llm.py",
+        "path": "backend/app/agent/llm.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 785,
+        "score": 785,
+        "reason": "785 LOC"
+      },
+      {
+        "id": "backend/app/safety/classifier.py",
+        "path": "backend/app/safety/classifier.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 774,
+        "score": 774,
+        "reason": "774 LOC"
+      },
+      {
+        "id": "backend/app/safety/rules.py",
+        "path": "backend/app/safety/rules.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 765,
+        "score": 765,
+        "reason": "765 LOC"
+      },
+      {
+        "id": "backend/app/session.py",
+        "path": "backend/app/session.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 548,
+        "score": 548,
+        "reason": "548 LOC"
+      },
+      {
+        "id": "backend/app/agent/contracts.py",
+        "path": "backend/app/agent/contracts.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 440,
+        "score": 440,
+        "reason": "440 LOC"
+      },
+      {
+        "id": "SPEC.md",
+        "path": "SPEC.md",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 430,
+        "score": 430,
+        "reason": "430 LOC"
+      },
+      {
+        "id": "backend/app/ssh_runner.py",
+        "path": "backend/app/ssh_runner.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 372,
+        "score": 372,
+        "reason": "372 LOC"
+      },
+      {
+        "id": "backend/mocks/mock_erp.py",
+        "path": "backend/mocks/mock_erp.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 371,
+        "score": 371,
+        "reason": "371 LOC"
+      },
+      {
+        "id": "frontend/src/components/AgentWorkspace.tsx",
+        "path": "frontend/src/components/AgentWorkspace.tsx",
+        "package": null,
+        "inDegree": 1,
+        "outDegree": 6,
+        "loc": 357,
+        "score": 357,
+        "reason": "357 LOC"
+      },
+      {
+        "id": "backend/mocks/mock_ssh.py",
+        "path": "backend/mocks/mock_ssh.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 356,
+        "score": 356,
+        "reason": "356 LOC"
+      },
+      {
+        "id": "backend/app/erp_client.py",
+        "path": "backend/app/erp_client.py",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 351,
+        "score": 351,
+        "reason": "351 LOC"
+      },
+      {
+        "id": "docs/phoenix-openapi.yaml",
+        "path": "docs/phoenix-openapi.yaml",
+        "package": null,
+        "inDegree": 0,
+        "outDegree": 0,
+        "loc": 346,
+        "score": 346,
+        "reason": "346 LOC"
+      }
+    ]
+  },
+  "clusters": [
+    {
+      "id": "cluster:backend/Dockerfile",
+      "label": "backend",
+      "size": 90,
+      "members": [
+        "backend/Dockerfile",
+        "backend/app/__init__.py",
+        "backend/app/activity_generator.py",
+        "backend/app/agent/__init__.py",
+        "backend/app/agent/contracts.py",
+        "backend/app/agent/doctrine.py",
+        "backend/app/agent/llm.py",
+        "backend/app/agent/orchestrator.py",
+        "backend/app/audit_log.py",
+        "backend/app/config.py",
+        "backend/app/erp_client.py",
+        "backend/app/main.py",
+        "backend/app/models.py",
+        "backend/app/routers/__init__.py",
+        "backend/app/routers/agent.py",
+        "backend/app/routers/tickets.py",
+        "backend/app/safety/__init__.py",
+        "backend/app/safety/classifier.py",
+        "backend/app/safety/redaction.py",
+        "backend/app/safety/rules.py",
+        "backend/app/session.py",
+        "backend/app/ssh_runner.py",
+        "backend/data/audit/064d524094be4b99ba351e8696887fbf.jsonl",
+        "backend/data/audit/0a5a79e6b43f49ac9bc6e1ae12d84850.jsonl",
+        "backend/data/audit/0cb3c4ac24c44946bf1ffbda84760faf.jsonl",
+        "backend/data/audit/10d20164965f43ec91419de34339a61a.jsonl",
+        "backend/data/audit/16453f7455cb43b1b62df88ac89c9b5f.jsonl",
+        "backend/data/audit/1aa997e527dd45c684232656489599e6.jsonl",
+        "backend/data/audit/1c9e04446f2b4ac482ef1ae777e998b0.jsonl",
+        "backend/data/audit/29e2fe28ffab42bb993a5356b3acdf05.jsonl",
+        "backend/data/audit/2c445780cc00478ab190b662e5397af0.jsonl",
+        "backend/data/audit/3aa088ac8e53436c99d97891b58f72f0.jsonl",
+        "backend/data/audit/3d609dbbbd9748aabbecf82ed7a91fe8.jsonl",
+        "backend/data/audit/407796e01120442986c122e03ec279b7.jsonl",
+        "backend/data/audit/420793edbfe747839951eecd7e23f380.jsonl",
+        "backend/data/audit/4416bdb1020f49f193f6db2566342387.jsonl",
+        "backend/data/audit/47c0b0a45dbc4e529cbf7ae2ad6e68b0.jsonl",
+        "backend/data/audit/4e8a66f8650a4e2ea265a58d87036b1d.jsonl",
+        "backend/data/audit/508558eb10ce4c97b2da86bba09ac7c9.jsonl",
+        "backend/data/audit/50a32113e6a846adbae9127188bd904d.jsonl",
+        "backend/data/audit/53fe1afa550347329ce4ae37235efa27.jsonl",
+        "backend/data/audit/60c84a8d2ba24451a7c2b34f1ee6db79.jsonl",
+        "backend/data/audit/67ebb1b354d04441847992dc5d5d5f5a.jsonl",
+        "backend/data/audit/6cb52d78527f438e95390fa4116d5f7f.jsonl",
+        "backend/data/audit/7320edbbf29d48dead3c01ae838ba803.jsonl",
+        "backend/data/audit/73494a44c35f476494e01550991c9e00.jsonl",
+        "backend/data/audit/74202031308844f5abffa963c4f909a4.jsonl",
+        "backend/data/audit/77c2b35f020449368782e86c29fa7596.jsonl",
+        "backend/data/audit/88f69ceb18004690a3c61a1708def5f5.jsonl",
+        "backend/data/audit/8a16f08aec054094a98bfc6a8263fbea.jsonl",
+        "backend/data/audit/90c81826e6bc48e495b38f02f323573c.jsonl",
+        "backend/data/audit/a0925fb06f594c6cbd013d7aa4924205.jsonl",
+        "backend/data/audit/a77d952e0f0d435ea5eccecd119e7e0f.jsonl",
+        "backend/data/audit/a899d193670d4bb5bdbaa30a6915de4a.jsonl",
+        "backend/data/audit/abf24a97b97e4688983d0a9de128072a.jsonl",
+        "backend/data/audit/ae2d1e6142a445deb1868e885b3d8074.jsonl",
+        "backend/data/audit/b39c57f302464704ba6b4ef213737855.jsonl",
+        "backend/data/audit/b91622f429cc4a80942fba4ed7cfcc80.jsonl",
+        "backend/data/audit/b92ac14489484874b1ffb907277652cf.jsonl",
+        "backend/data/audit/baeb5789cc3c436e943a3fbf92cb0d04.jsonl",
+        "backend/data/audit/c911e1bde6cd4992a288a255bdd7338f.jsonl",
+        "backend/data/audit/e24547377da94c2c887f8d8cb30c8179.jsonl",
+        "backend/data/audit/e31b98ad619e4c058b5ed10e2c1a12bd.jsonl",
+        "backend/data/audit/e37c5c4cad904eb5ab46fe0acc4a9245.jsonl",
+        "backend/data/audit/e3dd05720b62432e98647d2a96a8df7e.jsonl",
+        "backend/data/audit/e3f9385b10144ef39d74d97ad04e1a55.jsonl",
+        "backend/data/audit/eb2528cb3d74412296186b112a260187.jsonl",
+        "backend/data/audit/f4c4e674e8fb4796888ef415029d0c2a.jsonl",
+        "backend/data/audit/f56eccc29223424194de4adce5ab56cb.jsonl",
+        "backend/data/audit/f57b699fc6f647e28ee5e38530982ba1.jsonl",
+        "backend/data/audit/f58f0d9d9bae4478a71bcd1c3696e3b7.jsonl",
+        "backend/data/audit/f5c2ba34389245a8938f0aa6ee6c855d.jsonl",
+        "backend/data/audit/fb3370a41f4e44cb9211a796c8672174.jsonl",
+        "backend/mocks/__init__.py",
+        "backend/mocks/fixtures/__init__.py",
+        "backend/mocks/fixtures/customer_systems.json",
+        "backend/mocks/fixtures/customers.json",
+        "backend/mocks/fixtures/tickets.json",
+        "backend/mocks/mock_erp.py",
+        "backend/mocks/mock_ssh.py",
+        "backend/pytest.ini",
+        "backend/requirements.txt",
+        "backend/tests/__init__.py",
+        "backend/tests/test_activity_generator.py",
+        "backend/tests/test_agent_loop_mock.py",
+        "backend/tests/test_erp_client.py",
+        "backend/tests/test_llm_provider.py",
+        "backend/tests/test_redaction.py",
+        "backend/tests/test_safety_classifier.py",
+        "backend/tests/test_ssh_runner.py"
+      ],
+      "dominantPackage": "backend",
+      "dominantLayer": "support",
+      "packages": [
+        "backend"
+      ]
+    },
+    {
+      "id": "cluster:frontend/Dockerfile",
+      "label": "frontend",
+      "size": 20,
+      "members": [
+        "frontend/Dockerfile",
+        "frontend/index.html",
+        "frontend/package-lock.json",
+        "frontend/package.json",
+        "frontend/src/App.tsx",
+        "frontend/src/api.ts",
+        "frontend/src/components/ActivityReview.tsx",
+        "frontend/src/components/AgentWorkspace.tsx",
+        "frontend/src/components/CommandApproval.tsx",
+        "frontend/src/components/Controls.tsx",
+        "frontend/src/components/HypothesisPanel.tsx",
+        "frontend/src/components/TicketDetail.tsx",
+        "frontend/src/components/TicketList.tsx",
+        "frontend/src/index.css",
+        "frontend/src/main.tsx",
+        "frontend/src/types.ts",
+        "frontend/src/vite-env.d.ts",
+        "frontend/tsconfig.json",
+        "frontend/tsconfig.tsbuildinfo",
+        "frontend/vite.config.ts"
+      ],
+      "dominantPackage": "frontend",
+      "dominantLayer": "application",
+      "packages": [
+        "frontend"
+      ]
+    },
+    {
+      "id": "cluster:keys/.gitkeep",
+      "label": "keys",
+      "size": 6,
+      "members": [
+        "keys/.gitkeep",
+        "keys/case1_key.pem",
+        "keys/case2_key.pem",
+        "keys/case3_key.pem",
+        "keys/case4_key.pem",
+        "keys/case5_key.pem"
+      ],
+      "dominantPackage": "keys",
+      "dominantLayer": "support",
+      "packages": [
+        "keys"
+      ]
+    },
+    {
+      "id": "cluster:docs/phoenix-openapi.yaml",
+      "label": "docs",
+      "size": 2,
+      "members": [
+        "docs/phoenix-openapi.yaml",
+        "docs/scoring.md"
+      ],
+      "dominantPackage": "docs",
+      "dominantLayer": "support",
+      "packages": [
+        "docs"
+      ]
+    },
+    {
+      "id": "cluster:.env",
+      "label": ".env",
+      "size": 1,
+      "members": [
+        ".env"
+      ],
+      "dominantPackage": ".env",
+      "dominantLayer": "support",
+      "packages": [
+        ".env"
+      ]
+    },
+    {
+      "id": "cluster:.env.example",
+      "label": ".env.example",
+      "size": 1,
+      "members": [
+        ".env.example"
+      ],
+      "dominantPackage": ".env.example",
+      "dominantLayer": "support",
+      "packages": [
+        ".env.example"
+      ]
+    },
+    {
+      "id": "cluster:.gitignore",
+      "label": ".gitignore",
+      "size": 1,
+      "members": [
+        ".gitignore"
+      ],
+      "dominantPackage": ".gitignore",
+      "dominantLayer": "support",
+      "packages": [
+        ".gitignore"
+      ]
+    },
+    {
+      "id": "cluster:LICENSE",
+      "label": "LICENSE",
+      "size": 1,
+      "members": [
+        "LICENSE"
+      ],
+      "dominantPackage": "LICENSE",
+      "dominantLayer": "support",
+      "packages": [
+        "LICENSE"
+      ]
+    },
+    {
+      "id": "cluster:README.md",
+      "label": "README.md",
+      "size": 1,
+      "members": [
+        "README.md"
+      ],
+      "dominantPackage": "README.md",
+      "dominantLayer": "support",
+      "packages": [
+        "README.md"
+      ]
+    },
+    {
+      "id": "cluster:REPORT.md",
+      "label": "REPORT.md",
+      "size": 1,
+      "members": [
+        "REPORT.md"
+      ],
+      "dominantPackage": "REPORT.md",
+      "dominantLayer": "support",
+      "packages": [
+        "REPORT.md"
+      ]
+    },
+    {
+      "id": "cluster:SPEC.md",
+      "label": "SPEC.md",
+      "size": 1,
+      "members": [
+        "SPEC.md"
+      ],
+      "dominantPackage": "SPEC.md",
+      "dominantLayer": "support",
+      "packages": [
+        "SPEC.md"
+      ]
+    },
+    {
+      "id": "cluster:docker-compose.yml",
+      "label": "docker-compose.yml",
+      "size": 1,
+      "members": [
+        "docker-compose.yml"
+      ],
+      "dominantPackage": "docker-compose.yml",
+      "dominantLayer": "support",
+      "packages": [
+        "docker-compose.yml"
+      ]
+    }
+  ],
+  "surprisingConnections": [],
+  "rationaleIndex": [
+    {
+      "file": "backend/tests/test_agent_loop_mock.py",
+      "line": 318,
+      "tag": "BUG",
+      "text": "1 FIX: validation and persist_check SSE events must now be emitted"
+    },
+    {
+      "file": "backend/tests/test_agent_loop_mock.py",
+      "line": 326,
+      "tag": "BUG",
+      "text": "2 FIX: phase_change sequence must include validate AND persist_check"
+    },
+    {
+      "file": "backend/app/agent/orchestrator.py",
+      "line": 719,
+      "tag": "NOTE",
+      "text": "propose_fix → apply transition is now handled in"
     }
   ],
   "tests": {
@@ -6197,7 +9653,7 @@
   "planning": {
     "hasProject": false,
     "hasRoadmap": false,
-    "hasDomain": false,
+    "hasDomain": true,
     "currentState": null
   },
   "agentHints": {
@@ -6213,7 +9669,14 @@
       "`flows` is a list of named scenarios (CLI invocation, HTTP request, library call). Each flow has numbered `steps` going from `from` box → `to` box with a `description`. Boxes are packages (`pkg:NAME`), sinks (`sink:KIND`), or `actor:user`.",
       "`lanes` + `boxes` give you swim-lane layout coordinates: each box belongs to a lane (presentation / application / domain / infrastructure / sinks / actors).",
       "To curate flows or groups: write `.planning/codebase/FLOWS.json` or `.planning/codebase/GROUPS.json` — entries with matching `id` override auto-generated ones; new ids are appended.",
-      "`modules[*].layer` classifies each file as presentation / application / domain / infrastructure / support."
+      "`modules[*].layer` classifies each file as presentation / application / domain / infrastructure / support.",
+      "`modules[*].symbols` are symbol-level nodes ({name,kind,line,exported}); `modules[*].cluster` is the structural neighborhood id.",
+      "`hotspots` ranks god-nodes / most-depended-on / orchestrators / largest (non-test import degree).",
+      "`clusters` are STRUCTURAL (import-topology) neighborhoods — not semantic bounded contexts; confirm with a human before equating a cluster with a context. Non-JS/TS packages degenerate to one cluster per package.",
+      "`surprisingConnections` flags import edges that bridge distant clusters, cross functional groups, or violate layer direction — review these.",
+      "`rationaleIndex` collects inline NOTE/WHY/HACK/TODO/FIXME/SECURITY notes ({file,line,tag,text}).",
+      "`edges[*].confidence` / `callEdges[*].confidence` ∈ EXTRACTED (literal in source) / INFERRED (regex call heuristic) / AMBIGUOUS (member-call, imported symbol uncertain).",
+      "Query the map with `draht-tools graph-context|graph-impact|graph-query|graph-callers|graph-callees|graph-path|graph-hotspots|graph-clusters` instead of reading this whole file or grepping."
     ]
   }
 }

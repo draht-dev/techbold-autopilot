@@ -165,6 +165,7 @@ svg { display:block; user-select:none; }
     <button id="tab-architecture" class="active">Architecture</button>
     <button id="tab-modules">Modules</button>
     <button id="tab-flows">Flow Trace</button>
+    <button id="tab-insights">Insights</button>
   </div>
   <div class="live" id="live-indicator">● live</div>
 </header>
@@ -277,7 +278,7 @@ async function load(initial) {
 
 function setView(v) {
   state.view = v;
-  ["tab-architecture","tab-modules","tab-flows"].forEach(function (id) {
+  ["tab-architecture","tab-modules","tab-flows","tab-insights"].forEach(function (id) {
     $(id).classList.toggle("active", id === "tab-" + v);
   });
   // Sidebar layout: flows shows step detail, others show entry inspection
@@ -309,7 +310,7 @@ function selectFlow(flowId) {
   state.selectedFlow = flowId;
   state.selectedStep = null;
   state.view = "flows";
-  ["tab-architecture","tab-modules","tab-flows"].forEach(function (id) {
+  ["tab-architecture","tab-modules","tab-flows","tab-insights"].forEach(function (id) {
     $(id).classList.toggle("active", id === "tab-flows");
   });
   renderFlowList();
@@ -655,6 +656,7 @@ function render() {
   svg.appendChild(g);
   if (state.view === "architecture") renderArchitecture(g, W, H);
   else if (state.view === "modules") renderModules(g, W, H);
+  else if (state.view === "insights") renderInsights(g, W, H);
   else renderFlowsSwimlane(g, W, H);
   $("legend").innerHTML = legendHtml();
   $("hud").textContent = hudText();
@@ -670,6 +672,12 @@ function legendHtml() {
     state.map.lanes.forEach(function (l) {
       s += '<div class="row"><div class="dot" style="background:' + l.color + '"></div>' + l.name + '</div>';
     });
+  } else if (state.view === "insights") {
+    (state.map.clusters || []).slice(0, 8).forEach(function (c) {
+      s += '<div class="row"><div class="dot" style="background:' + clusterColor(c.id) + '"></div>' + escapeHtml(c.label) + ' (' + c.size + ')</div>';
+    });
+    s += '<div class="row"><div class="dot" style="background:#fff;border:1px solid #888"></div>god node (larger)</div>';
+    s += '<div class="row"><div class="dot" style="background:#ff5c5c"></div>surprising edge</div>';
   } else {
     LAYER_ORDER.forEach(function (l) {
       s += '<div class="row"><div class="dot" style="background:' + LAYER_COLOR[l] + '"></div>' + l + '</div>';
@@ -691,6 +699,10 @@ function hudText() {
       return f ? "FLOW: " + f.name + " — " + f.steps.length + " steps" : "";
     }
     return "Pick a flow on the right to highlight the path through the system";
+  }
+  if (state.view === "insights") {
+    var god = (state.map.hotspots && state.map.hotspots.godNodes) || [];
+    return "Insights · " + ((state.map.clusters || []).length) + " clusters · " + god.length + " god-nodes · " + ((state.map.surprisingConnections || []).length) + " surprising edges · hover a node for detail";
   }
   if (state.focus) return "focused on " + state.focus.kind + ":" + state.focus.id + " — " + state.focus.set.size + " module(s) (esc to clear)";
   return state.view + " view · scroll = zoom · drag = pan · click = focus";
@@ -1114,6 +1126,43 @@ function renderModules(g, W, H) {
   });
 }
 
+// ====================== Insights view (clusters · god-nodes · surprising connections) ======================
+function clusterColor(cid) {
+  if (!cid) return "#8b949e";
+  var h = 0; for (var i=0; i<cid.length; i++) h = (h * 31 + cid.charCodeAt(i)) % 360;
+  return "hsl(" + h + ",58%,62%)";
+}
+function renderInsights(g, W, H) {
+  var map = state.map;
+  var layout = layoutModules(map, W, H);
+  var god = (map.hotspots && map.hotspots.godNodes) || [];
+  var godIds = new Set(god.map(function (x) { return x.id; }));
+  var godBy = {}; god.forEach(function (x) { godBy[x.id] = x; });
+  layout.containerPos.forEach(function (p) {
+    g.appendChild(el("rect", { class: "container-rect", x: p.x, y: p.y, width: p.w, height: p.h, rx: 8, ry: 8 }));
+    g.appendChild(el("text", { class: "container-label", x: p.x + 8, y: p.y + 14 }, p.container.name));
+  });
+  // Surprising connections as hot dashed edges (only these — keeps the view legible).
+  ((map.surprisingConnections) || []).forEach(function (x) {
+    var a = layout.modulePos.get(x.from), b = layout.modulePos.get(x.to);
+    if (!a || !b) return;
+    var p = arrow(a.x, a.y, b.x, b.y, { class: "edge", stroke: "#ff5c5c", "stroke-width": 1.6, "stroke-dasharray": "4 3", opacity: 0.85 });
+    p.appendChild(el("title", null, "surprising: " + x.reason + " (score " + x.score + ")"));
+    g.appendChild(p);
+  });
+  // Module nodes colored by cluster; god-nodes enlarged + outlined.
+  layout.modulePos.forEach(function (p, id) {
+    var m = p.m;
+    var isGod = godIds.has(id);
+    var r = isGod ? Math.max(6, Math.min(16, 5 + Math.sqrt((m.loc || 1) / 20))) : Math.max(2, Math.min(8, 1.5 + Math.sqrt(Math.max(1, (m.loc || 1) / 30))));
+    var node = el("g", { class: "module-node", transform: "translate(" + p.x + "," + p.y + ")" });
+    var c = el("circle", { r: r, fill: clusterColor(m.cluster), stroke: isGod ? "#ffffff" : "none", "stroke-width": isGod ? 1.5 : 0 });
+    node.appendChild(c);
+    node.appendChild(el("title", null, m.path + (isGod ? " — god node (in " + godBy[id].inDegree + " · out " + godBy[id].outDegree + ")" : (m.cluster ? " — cluster " + m.cluster : ""))));
+    g.appendChild(node);
+  });
+}
+
 // ====================== Sidebars ======================
 
 function renderSidebar() {
@@ -1303,11 +1352,13 @@ window.addEventListener("keydown", function (e) {
   if (e.key === "a") setView("architecture");
   if (e.key === "m") setView("modules");
   if (e.key === "F") setView("flows");
+  if (e.key === "i") setView("insights");
 });
 
 $("tab-architecture").onclick = function () { setView("architecture"); };
 $("tab-modules").onclick = function () { setView("modules"); };
 $("tab-flows").onclick = function () { setView("flows"); };
+$("tab-insights").onclick = function () { setView("insights"); };
 $("fit").onclick = fit;
 $("clear").onclick = function () { clearFlow(); state.collapsedGroups = {}; state.selected = null; render(); };
 $("reload").onclick = function () { load(false); };
