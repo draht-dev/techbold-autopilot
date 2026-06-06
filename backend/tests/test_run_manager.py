@@ -50,6 +50,44 @@ async def test_hypothesis_selection(tmp_path):
     assert selected == {"kind": "existing", "id": "h2"}
 
 
+async def test_decision_resolves(tmp_path):
+    run = make_run(tmp_path)
+
+    async def decide_later():
+        await asyncio.sleep(0.01)
+        run.resolve_decision("Close as not reproducible")
+
+    asyncio.create_task(decide_later())
+    choice = await run.await_decision(
+        "Cannot reproduce. How to proceed?",
+        ["Investigate anyway", "Close as not reproducible"],
+    )
+    assert choice == "Close as not reproducible"
+    assert any(e["type"] == "decision.request" for e in run.events)
+    assert any(e["type"] == "decision.resolved" for e in run.events)
+
+
+async def test_stop_unblocks_pending_decision(tmp_path):
+    run = make_run(tmp_path)
+
+    async def stop_later():
+        await asyncio.sleep(0.01)
+        run.request_stop()
+
+    asyncio.create_task(stop_later())
+    with pytest.raises(RunStopped):
+        await run.await_decision("How to proceed?", ["a", "b"])
+
+
+def test_stream_agent_emits_agent_message(tmp_path):
+    run = make_run(tmp_path)
+    run.stream_agent(kind="assistant", text="hi", reasoning="because", tool_calls=[{"name": "RunCommand"}])
+    ev = next(e for e in run.events if e["type"] == "agent.message")
+    assert ev["text"] == "hi"
+    assert ev["reasoning"] == "because"
+    assert ev["tool_calls"][0]["name"] == "RunCommand"
+
+
 async def test_custom_hypothesis_submission(tmp_path):
     run = make_run(tmp_path)
 

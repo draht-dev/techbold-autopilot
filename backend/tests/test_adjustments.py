@@ -1,13 +1,14 @@
-"""Tests for the merged-branch adjustments.
+"""Tests for the autonomous-agent adjustments.
 
-Covers: likelihood rendered as a normalised PERCENTAGE, a hypothesis carrying
-MULTIPLE check commands, the technician's OWN hypothesis driving the loop, and the
-"no hidden cells" guarantee that every executed agent command is echoed to the
-terminal stream.
+Covers: likelihood rendered as a normalised PERCENTAGE, the technician's OWN
+hypothesis driving the loop through the PresentHypotheses gate, the "no hidden
+cells" guarantee that every executed agent command is echoed to the terminal
+stream, and the interactive PTY wiring.
 """
 import asyncio
 
 import pytest
+from langchain_core.messages import AIMessage
 
 from app.agent.loop import _normalize_likelihoods, run_agent
 from app.config import Settings
@@ -49,34 +50,37 @@ class FakeERP:
         self.statuses[ticket_id] = status
 
 
-class TwoCheckLLM:
-    """Returns one hypothesis with TWO check commands."""
+class ScriptLLM:
+    """Returns a fixed sequence of tool calls, one assistant turn per invoke."""
 
     configured = True
     agent_model = "agent"
     fast_model = "fast"
 
+    def __init__(self, script):
+        self.script = list(script)
+        self.calls = 0
+
+    async def complete_with_tools(self, messages, tools, model=None, reasoning_effort=None):
+        idx = self.calls
+        self.calls += 1
+        step = self.script[idx] if idx < len(self.script) else [("Finish", {"outcome": "fixed"})]
+        tool_calls = [
+            {"name": name, "args": args, "id": f"c{idx}_{i}"}
+            for i, (name, args) in enumerate(step)
+        ]
+        return AIMessage(content="(thinking)", tool_calls=tool_calls)
+
     async def complete_json(self, system, user, model=None, temperature=0.1, schema=None):
-        if "RANKED" in system:
-            return {"hypotheses": [{
-                "title": "nginx down",
-                "reasoning": "failed unit",
-                "evidence": "systemctl --failed",
-                "proposed_checks": ["systemctl is-active nginx", "journalctl -u nginx -n 5"],
-                "likelihood": 0.8,
-            }]}
-        if "selected one hypothesis" in system or "wrote their own" in system:
-            return {"confirmed": True, "reasoning": "inactive", "proposed_fix": {
-                "explanation": "start nginx", "commands": ["systemctl enable --now nginx"],
-                "service": "nginx", "validation_command": "curl http://localhost/health"}}
-        if "verify whether a fix" in system:
-            return {"success": True, "validation_result": "HTTP 200 OK"}
         return {"summary": "Restored nginx.", "root_cause": "nginx disabled.",
                 "actions_taken": "Enabled nginx.", "commands_summary": "systemctl enable --now nginx",
                 "validation_result": "HTTP 200 OK", "description": "Fixed."}
 
+    async def complete_text(self, *args, **kwargs):
+        return "summary"
 
-def _make_run(tmp_path, llm_cls=TwoCheckLLM):
+
+def _make_run(tmp_path):
     settings = Settings(audit_dir=str(tmp_path))
     run = Run("run-adj", 7001, settings, FakeERP(), auto_approve_reads=True)
     run.ticket = Ticket(id=7001, title="API down", description="502s", priority="high",
@@ -95,7 +99,6 @@ def test_likelihood_is_normalised_to_percentages():
     _normalize_likelihoods(hyps)
     total = sum(h.likelihood for h in hyps)
     assert abs(total - 100.0) < 1.0  # percentages, summing to ~100
-    # sorted by likelihood desc, ranks reassigned
     assert [h.rank for h in hyps] == [1, 2, 3]
     assert hyps[0].likelihood >= hyps[1].likelihood >= hyps[2].likelihood
     assert all(0 <= h.likelihood <= 100 for h in hyps)
@@ -110,28 +113,46 @@ def test_percentages_handle_values_already_in_percent():
 
 
 async def _drive_selecting(run, picker):
-    for _ in range(500):
+    for _ in range(2000):
         if run.task and run.task.done():
             return
         for approval_id in list(run.pending_approvals):
             run.resolve_approval(approval_id, True, None)
         if run.hypothesis_future and not run.hypothesis_future.done() and run.hypotheses:
             picker(run)
+        if run.decision_future and not run.decision_future.done():
+            run.resolve_decision("Continue investigating")
         if run.activity_future and not run.activity_future.done():
             run.submit_activity(None)
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.005)
 
 
-async def test_hypothesis_runs_all_its_checks(monkeypatch, tmp_path):
+_ONE_HYP = {
+    "title": "nginx down",
+    "reasoning": "failed unit",
+    "evidence": "systemctl --failed",
+    "proposed_checks": ["systemctl is-active nginx", "journalctl -u nginx -n 5"],
+    "likelihood": 0.8,
+}
+
+
+async def test_agent_runs_each_of_its_commands(monkeypatch, tmp_path):
     monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
     run, _ = _make_run(tmp_path)
-    run.task = asyncio.create_task(run_agent(run, TwoCheckLLM()))
+    script = [
+        [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
+        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],
+        [("RunCommand", {"command": "systemctl is-active nginx", "purpose": "check"})],
+        [("RunCommand", {"command": "journalctl -u nginx -n 5", "purpose": "check"})],
+        [("RunCommand", {"command": "systemctl enable --now nginx", "purpose": "fix"})],
+        [("Finish", {"outcome": "fixed"})],
+    ]
+    run.task = asyncio.create_task(run_agent(run, ScriptLLM(script)))
     await asyncio.wait_for(
         asyncio.gather(_drive_selecting(run, lambda r: r.select_hypothesis(r.hypotheses[0].id)), run.task),
         timeout=15,
     )
     executed = [c.get("command") for c in run.audit.commands()]
-    # BOTH check commands of the single hypothesis were run (not just one).
     assert "systemctl is-active nginx" in executed
     assert "journalctl -u nginx -n 5" in executed
     assert run.phase == RunPhase.DONE
@@ -145,18 +166,30 @@ async def test_own_hypothesis_drives_the_loop(monkeypatch, tmp_path):
         r.submit_custom_hypothesis({"title": "my theory", "reasoning": "hunch",
                                     "checks": ["cat /etc/nginx/nginx.conf"]})
 
-    run.task = asyncio.create_task(run_agent(run, TwoCheckLLM()))
+    script = [
+        [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
+        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],
+        [("RunCommand", {"command": "cat /etc/nginx/nginx.conf", "purpose": "check own theory"})],
+        [("Finish", {"outcome": "fixed"})],
+    ]
+    run.task = asyncio.create_task(run_agent(run, ScriptLLM(script)))
     await asyncio.wait_for(asyncio.gather(_drive_selecting(run, submit_own), run.task), timeout=15)
     technician_hyps = [h for h in run.hypotheses if h.source == "technician"]
     assert technician_hyps and technician_hyps[0].title == "my theory"
     executed = [c.get("command") for c in run.audit.commands()]
-    assert "cat /etc/nginx/nginx.conf" in executed  # the technician's own check ran
+    assert "cat /etc/nginx/nginx.conf" in executed  # the agent acted on the own theory
 
 
 async def test_no_hidden_cells_every_command_is_echoed(monkeypatch, tmp_path):
     monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
     run, _ = _make_run(tmp_path)
-    run.task = asyncio.create_task(run_agent(run, TwoCheckLLM()))
+    script = [
+        [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
+        [("PresentHypotheses", {"hypotheses": [_ONE_HYP]})],
+        [("RunCommand", {"command": "systemctl is-active nginx", "purpose": "check"})],
+        [("Finish", {"outcome": "fixed"})],
+    ]
+    run.task = asyncio.create_task(run_agent(run, ScriptLLM(script)))
     await asyncio.wait_for(
         asyncio.gather(_drive_selecting(run, lambda r: r.select_hypothesis(r.hypotheses[0].id)), run.task),
         timeout=15,
@@ -170,7 +203,7 @@ async def test_no_hidden_cells_every_command_is_echoed(monkeypatch, tmp_path):
 
 
 # --------------------------------------------------------------------------- #
-# Interactive PTY terminal (adjustment 1) — wiring tests with a fake process.
+# Interactive PTY terminal — wiring tests with a fake process.
 # --------------------------------------------------------------------------- #
 class FakeStdout:
     def __init__(self, chunks):

@@ -1,10 +1,14 @@
-"""End-to-end agent loop with fakes (the walking skeleton).
+"""End-to-end autonomous agent loop with fakes (the walking skeleton).
 
-Exercises connect -> recon -> hypotheses -> check -> fix -> validate -> persist ->
-activity, driving every human gate (approvals, selection, submission) and asserting
-the run reaches DONE and writes the activity + sets the ticket DONE.
+The agent is one continuous tool-calling conversation. A scripted ``FakeLLM``
+returns tool calls (RunCommand -> PresentHypotheses -> RunCommand -> Finish) and
+we drive every human gate (connect/command approvals, hypothesis selection,
+decision, activity submission), asserting the run reaches DONE, writes the
+activity, and that the agent's stream is emitted.
 """
 import asyncio
+
+from langchain_core.messages import AIMessage
 
 from app.agent.loop import run_agent
 from app.config import Settings
@@ -46,37 +50,32 @@ class FakeERP:
         self.statuses[ticket_id] = status
 
 
-class FakeLLM:
+class ScriptLLM:
+    """Returns a fixed sequence of tool calls, one assistant turn per ``invoke``."""
+
     configured = True
     agent_model = "agent"
     fast_model = "fast"
 
+    def __init__(self, script):
+        self.script = list(script)
+        self.calls = 0
+
+    async def complete_with_tools(self, messages, tools, model=None, reasoning_effort=None):
+        idx = self.calls
+        self.calls += 1
+        step = (
+            self.script[idx]
+            if idx < len(self.script)
+            else [("Finish", {"outcome": "fixed", "note": "done"})]
+        )
+        tool_calls = [
+            {"name": name, "args": args, "id": f"call{idx}_{i}"}
+            for i, (name, args) in enumerate(step)
+        ]
+        return AIMessage(content="(thinking)", tool_calls=tool_calls)
+
     async def complete_json(self, system, user, model=None, temperature=0.1, schema=None):
-        if "RANKED" in system:
-            return {
-                "hypotheses": [
-                    {
-                        "title": "nginx service is down",
-                        "reasoning": "failed unit in recon",
-                        "evidence": "systemctl --failed",
-                        "proposed_check": "systemctl is-active nginx",
-                        "likelihood": 0.9,
-                    }
-                ]
-            }
-        if "selected one hypothesis" in system:
-            return {
-                "confirmed": True,
-                "reasoning": "inactive",
-                "proposed_fix": {
-                    "explanation": "enable and start nginx",
-                    "commands": ["systemctl enable --now nginx"],
-                    "service": "nginx",
-                    "validation_command": "curl http://localhost/health",
-                },
-            }
-        if "verify whether a fix" in system:
-            return {"success": True, "validation_result": "HTTP 200 OK"}
         return {
             "summary": "Restored nginx.",
             "root_cause": "nginx unit was disabled.",
@@ -87,41 +86,99 @@ class FakeLLM:
         }
 
     async def complete_text(self, *args, **kwargs):
-        return ""
+        return "Earlier: recon and reproduction."
 
 
-async def _drive(run: Run) -> None:
-    """Approve everything, pick the first hypothesis, accept the activity draft."""
-    for _ in range(500):
-        if run.task and run.task.done():
-            return
-        for approval_id in list(run.pending_approvals):
-            run.resolve_approval(approval_id, True, None)
-        if run.hypothesis_future and not run.hypothesis_future.done():
-            if run.hypotheses:
-                run.select_hypothesis(run.hypotheses[0].id)
-        if run.activity_future and not run.activity_future.done():
-            run.submit_activity(None)
-        await asyncio.sleep(0.01)
-
-
-async def test_full_run_reaches_done(monkeypatch, tmp_path):
-    monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
+def _make_run(tmp_path):
     settings = Settings(audit_dir=str(tmp_path))
-    erp = FakeERP()
-    run = Run("run-e2e", 7001, settings, erp, auto_approve_reads=True)
+    run = Run("run-e2e", 7001, settings, FakeERP(), auto_approve_reads=True)
     run.ticket = Ticket(
         id=7001, title="Status API down", description="502s", priority="high",
         status="OPEN", customer_id=5001, customer_name="Acme",
     )
     run.system_info = SystemInfo(ip="10.0.0.5", port=22, username="azureuser", os="Ubuntu 22.04")
+    return run
 
-    run.task = asyncio.create_task(run_agent(run, FakeLLM()))
+
+async def _drive(run: Run, *, decision_choice=None) -> None:
+    """Approve everything, pick the first hypothesis, answer decisions, accept draft."""
+    for _ in range(2000):
+        if run.task and run.task.done():
+            return
+        for approval_id in list(run.pending_approvals):
+            run.resolve_approval(approval_id, True, None)
+        if run.hypothesis_future and not run.hypothesis_future.done() and run.hypotheses:
+            run.select_hypothesis(run.hypotheses[0].id)
+        if run.decision_future and not run.decision_future.done():
+            run.resolve_decision(decision_choice or "Continue investigating")
+        if run.activity_future and not run.activity_future.done():
+            run.submit_activity(None)
+        await asyncio.sleep(0.005)
+
+
+_HAPPY_PATH = [
+    [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
+    [(
+        "PresentHypotheses",
+        {"hypotheses": [{
+            "title": "nginx service is down",
+            "reasoning": "failed unit in recon",
+            "evidence": "systemctl --failed",
+            "proposed_checks": ["systemctl is-active nginx"],
+            "likelihood": 0.9,
+        }]},
+    )],
+    [("RunCommand", {"command": "systemctl enable --now nginx", "purpose": "apply fix"})],
+    [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "validate"})],
+    [("Finish", {"outcome": "fixed", "note": "nginx restored and validated"})],
+]
+
+
+async def test_full_run_reaches_done(monkeypatch, tmp_path):
+    monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
+    run = _make_run(tmp_path)
+    erp = run.erp
+
+    run.task = asyncio.create_task(run_agent(run, ScriptLLM(_HAPPY_PATH)))
     await asyncio.wait_for(asyncio.gather(_drive(run), run.task), timeout=15)
 
     assert run.phase == RunPhase.DONE
     assert len(erp.activities) == 1
     assert erp.activities[0].root_cause == "nginx unit was disabled."
     assert erp.statuses.get(7001) == TicketStatus.DONE
-    # The audit log captured commands (recon + check + fix + validation).
+    # recon seed + reproduce + fix + validate commands were audited.
     assert len(run.audit.commands()) >= 8
+    # The continuous agent streamed its thinking / tool flow to the dev window.
+    assert any(e["type"] == "agent.message" for e in run.events)
+
+
+_NOT_REPRODUCIBLE = [
+    [("RunCommand", {"command": "curl -fsS http://localhost/health", "purpose": "reproduce"})],
+    [(
+        "RequestDecision",
+        {
+            "question": "I cannot reproduce the reported outage. How should I proceed?",
+            "options": ["Investigate anyway", "Close as not reproducible", "Stop"],
+        },
+    )],
+    [("Finish", {"outcome": "not_reproducible", "note": "Service healthy; cannot reproduce."})],
+]
+
+
+async def test_not_reproducible_pauses_for_decision_then_closes_pending(monkeypatch, tmp_path):
+    monkeypatch.setattr("app.agent.loop.SSHRunner", FakeSSH)
+    run = _make_run(tmp_path)
+    erp = run.erp
+
+    run.task = asyncio.create_task(run_agent(run, ScriptLLM(_NOT_REPRODUCIBLE)))
+    await asyncio.wait_for(
+        asyncio.gather(_drive(run, decision_choice="Close as not reproducible"), run.task),
+        timeout=15,
+    )
+
+    assert run.phase == RunPhase.DONE  # finished cleanly even without a fix
+    assert len(erp.activities) == 1
+    # Not reproducible -> ticket returns to the queue, not DONE.
+    assert erp.statuses.get(7001) == TicketStatus.PENDING
+    assert any(e["type"] == "decision.request" for e in run.events)
+    assert any(e["type"] == "decision.resolved" for e in run.events)
