@@ -4,6 +4,10 @@ services:
     env_file:
       - path: .env
         required: false   # copy .env.example -> .env; the stack still starts without it
+    environment:
+      # Inside the container the keys are mounted at /keys (see volumes below),
+      # so override whatever host path .env uses for SSH_PRIVATE_KEY_PATH.
+      SSH_PRIVATE_KEY_PATH: /keys
     ports:
       - "8000:8000"
     volumes:

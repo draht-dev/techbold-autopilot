@@ -15,10 +15,12 @@ Factory:
 from __future__ import annotations
 
 import asyncio
+import glob
 import logging
+import os
 import time
 from types import TracebackType
-from typing import Optional, Type
+from typing import Optional, Type, Union
 
 import asyncssh
 
@@ -43,6 +45,51 @@ class SSHRunnerError(Exception):
 
 
 # ---------------------------------------------------------------------------
+# Key-path resolution
+# ---------------------------------------------------------------------------
+
+# Filename globs that look like a private key (the matching .pub is excluded).
+_PRIVATE_KEY_GLOBS = ("*.pem", "*.key", "id_*", "*_key", "*_rsa", "*_ed25519", "*_ecdsa")
+_NON_KEY_BASENAMES = {".gitkeep", ".DS_Store", "known_hosts", "config", "authorized_keys"}
+
+
+def resolve_key_paths(value: Union[str, list[str], tuple[str, ...]]) -> list[str]:
+    """Expand the configured ``SSH_PRIVATE_KEY_PATH`` into a list of key files.
+
+    The competition ships one distinct key per incident VM (e.g.
+    ``keys/case1_key.pem`` … ``keys/case5_key.pem``).  asyncssh accepts a list
+    of candidate keys and authenticates with whichever the target accepts, so
+    this lets a single config value cover every case with no per-ticket setup.
+
+    Accepts:
+      * a single file path                  -> ``[path]``
+      * a comma-separated list of paths      -> each path
+      * a directory                          -> every private-key file in it
+        (``*.pem``/``*.key``/``id_*``/``*_key`` …; ``*.pub`` and stray files
+        like ``.gitkeep``/``.DS_Store`` are excluded; result is sorted)
+
+    Never reads or logs key contents.  Falls back to ``[value]`` so a bad path
+    still surfaces a clear auth/connect error rather than silently doing nothing.
+    """
+    if isinstance(value, (list, tuple)):
+        paths = [str(v).strip() for v in value if str(v).strip()]
+        return paths or [str(value)]
+    if "," in value:
+        return [p.strip() for p in value.split(",") if p.strip()] or [value]
+    if os.path.isdir(value):
+        found: list[str] = []
+        for pattern in _PRIVATE_KEY_GLOBS:
+            for path in sorted(glob.glob(os.path.join(value, pattern))):
+                base = os.path.basename(path)
+                if path.endswith(".pub") or base in _NON_KEY_BASENAMES or base.startswith("."):
+                    continue
+                if path not in found:
+                    found.append(path)
+        return found or [value]
+    return [value]
+
+
+# ---------------------------------------------------------------------------
 # SSHRunner
 # ---------------------------------------------------------------------------
 
@@ -59,7 +106,10 @@ class SSHRunner:
     username:
         SSH username.
     key_path:
-        Path to the PEM/OpenSSH private key file. Its content is NEVER logged.
+        A private-key file, a directory of keys, or a comma-separated list
+        (see ``resolve_key_paths``). All candidates are offered to asyncssh,
+        which authenticates with whichever the target accepts. Contents are
+        NEVER logged.
     connect_timeout:
         Seconds to wait for the initial connection handshake.
     command_timeout:
@@ -73,7 +123,7 @@ class SSHRunner:
         host: str,
         port: int,
         username: str,
-        key_path: str,
+        key_path: Union[str, list[str]],
         connect_timeout: int,
         command_timeout: int,
         command_timeout_max: int,
@@ -81,7 +131,8 @@ class SSHRunner:
         self.host = host
         self.port = port
         self.username = username
-        self._key_path = key_path  # kept private; never logged
+        # Expand to a list of candidate key files; kept private, never logged.
+        self._key_paths = resolve_key_paths(key_path)
         self.connect_timeout = connect_timeout
         self.command_timeout = command_timeout
         self.command_timeout_max = command_timeout_max
@@ -99,18 +150,19 @@ class SSHRunner:
         The private key path is never included in log messages.
         """
         logger.info(
-            "Connecting to %s:%s as %s (connect_timeout=%ss)",
+            "Connecting to %s:%s as %s (connect_timeout=%ss, %d candidate key(s))",
             self.host,
             self.port,
             self.username,
             self.connect_timeout,
+            len(self._key_paths),
         )
         try:
             self._conn = await asyncssh.connect(
                 self.host,
                 port=self.port,
                 username=self.username,
-                client_keys=[self._key_path],
+                client_keys=self._key_paths,
                 known_hosts=None,
                 connect_timeout=self.connect_timeout,
             )
