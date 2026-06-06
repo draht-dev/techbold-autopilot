@@ -1,89 +1,120 @@
 # Domain Model Hints
 
-Generated: 2026-06-06
+Generated: 2026-06-07
 
-Extracted from the codebase and curated after manual analysis. The authoritative
-domain writeup is `.planning/DOMAIN.md`.
+## Candidate Bounded Contexts
 
-## Primary Contract Types
+- Phoenix ERP Integration: `backend/app/erp`, `backend/app/mock`,
+  `docs/phoenix-openapi.yaml`.
+- Incident Run Lifecycle: `backend/app/runs`, `backend/app/api/routes.py`,
+  `backend/app/api/ws.py`.
+- Agent Investigation: `backend/app/agent`.
+- Command Safety, Execution, and Audit: `backend/app/safety`,
+  `backend/app/agent/tools.py`, `backend/app/audit`.
+- Customer System Access: `backend/app/ssh`.
+- Technician Console: `frontend/src/api`, `frontend/src/pages`,
+  `frontend/src/components`.
 
-Backend Pydantic contracts:
+## Entity And Value Object Candidates
 
+### Phoenix / Ticketing
+
+- `Ticket`
 - `TicketStatus`
 - `Employee`
-- `Ticket`
-- `SystemInfo`
-- `CustomerSystem`
 - `Customer`
-- `StatusUpdate`
+- `CustomerSystem`
+- `SystemInfo`
 - `ActivityCreate`
 - `Activity`
-- `RunPhase`
-- `HypothesisComment`
-- `Hypothesis`
-- `StartRunRequest`
-- `EventType`
+- `PhoenixClient`
+- `PhoenixError`
 
-Agent structured-output contracts:
-
-- `HypothesisItem`
-- `HypothesesOutput`
-- `ProposedFix`
-- `CheckOutput`
-- `ValidationOutput`
-- `ActivityOutput`
-
-Execution/safety/audit contracts:
+### Run Lifecycle
 
 - `Run`
 - `RunManager`
+- `RunPhase`
+- `RunSnapshot`
+- `RunSummary`
 - `ApprovalDecision`
-- `ExecResult`
+- `Hypothesis`
+- `HypothesisComment`
+- `EventType`
+- `RunEvent`
+- `ResolutionStore`
+
+### Agent Investigation
+
+- `AgentSession`
+- `RunCommand`
+- `PresentHypotheses`
+- `HypothesisInput`
+- `ProposeFix`
+- `RequestDecision`
+- `Finish`
+- `HypothesesOutput`
+- `HypothesisItem`
+- `CheckOutput`
+- `ProposedFix`
+- `ValidationOutput`
+- `ActivityOutput`
+- `LLM`
+- `LLMError`
+
+### Command Safety And Execution
+
 - `Decision`
 - `Category`
+- `ExecResult`
 - `AuditLog`
 - `SSHRunner`
 - `InteractiveShell`
 - `CommandResult`
+- `SSHError`
 
-Frontend mirrored contracts:
+## Existing Event Names
 
-- `TicketStatus`
-- `Ticket`
-- `SystemInfo`
-- `CustomerSystem`
-- `Employee`
-- `HypothesisComment`
-- `Hypothesis`
-- `ActivityDraft`
-- `RunEvent`
-- `RunSnapshot`
+Outbound WebSocket events:
 
-## Candidate Bounded Contexts
+- `run.state`
+- `command.run`
+- `hypotheses`
+- `approval.request`
+- `approval.resolved`
+- `decision.request`
+- `decision.resolved`
+- `agent.message`
+- `validation.result`
+- `activity.draft`
+- `activity.submitted`
+- `term.data`
+- `info`
+- `error`
 
-- Service Desk / Phoenix Ticketing
-- Troubleshooting Run & Human Control
-- Diagnostic Agent
-- Command Safety & Audit
-- Remote Execution
-- Technician Workspace UI
-- API / Composition
-- Phoenix Mock
+Inbound WebSocket commands:
 
-## Domain Persistence
+- `select_hypothesis`
+- `submit_hypothesis`
+- `comment_hypothesis`
+- `approval.decision`
+- `decision`
+- `mode.set`
+- `submit_activity`
+- `stop`
+- `terminal.data`
+- `terminal.resize`
+- `terminal.input`
 
-- No app-owned relational database tables were found.
-- External persistence is Phoenix ERP tickets, status updates, customer-system data,
-  and activities.
-- Local persistence is per-run audit JSONL.
-- The Phoenix mock persists only in process through fixture state: `tickets`,
-  `activities`, `_SYSTEMS`, `_CUSTOMER_SYSTEMS`, and `activity_seq`.
+Audit record types observed:
 
-## Boundary Watchlist
-
-- `backend/app/models.py` is a broad shared kernel.
-- `Run` is a large aggregate with coordination, events, approvals, hypotheses, SSH,
-  audit, activity, and ERP references.
-- `backend/app/agent/loop.py` spans diagnostic flow, run coordination, remote execution,
-  and service-desk writeback.
-- Frontend DTOs are manually duplicated from backend contracts.
+- `phase`
+- `command`
+- `hypothesis_selected`
+- `hypothesis_comment`
+- `decision_request`
+- `decision`
+- `fix_approved`
+- `validation`
+- `activity_submitted`
+- `shell_open`

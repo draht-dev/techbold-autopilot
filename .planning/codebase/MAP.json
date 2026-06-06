@@ -1,33 +1,33 @@
 {
   "schemaVersion": 3,
-  "generatedAt": "2026-06-06T18:51:33.160Z",
-  "buildMs": 25,
+  "generatedAt": "2026-06-06T23:16:05.501Z",
+  "buildMs": 30,
   "root": "techbold",
   "stats": {
-    "files": 130,
-    "totalLoc": 9300,
+    "files": 141,
+    "totalLoc": 11625,
     "languages": {
-      "other": 72,
+      "other": 73,
       "markdown": 2,
       "shell": 1,
       "yaml": 2,
       "html": 1,
-      "json": 3,
-      "typescript": 13,
+      "json": 4,
+      "typescript": 16,
       "css": 2,
-      "python": 34
+      "python": 40
     },
     "packages": 0,
     "containers": 6,
     "groups": 2,
-    "edges": 36,
+    "edges": 43,
     "callEdges": 5,
     "containerEdges": 0,
     "entryPoints": 3,
     "sinkModules": 2,
     "layers": {
-      "support": 94,
-      "application": 29,
+      "support": 96,
+      "application": 38,
       "infrastructure": 1,
       "presentation": 6
     }
@@ -43,7 +43,7 @@
         "dir:frontend"
       ],
       "source": "auto",
-      "moduleCount": 22
+      "moduleCount": 25
     },
     {
       "id": "group:other",
@@ -58,7 +58,7 @@
         "dir:backend"
       ],
       "source": "auto",
-      "moduleCount": 99
+      "moduleCount": 107
     }
   ],
   "containers": [
@@ -143,14 +143,20 @@
       "path": "frontend",
       "kind": "directory",
       "description": null,
-      "moduleCount": 22,
+      "moduleCount": 25,
       "groupId": "group:frontend",
       "topFiles": [
         {
+          "path": "frontend/src/api/client.ts",
+          "reason": "most depended-on",
+          "score": 12.73,
+          "loc": 188
+        },
+        {
           "path": "frontend/src/pages/Workspace.tsx",
-          "reason": "largest",
-          "score": 12,
-          "loc": 291
+          "reason": "orchestrator",
+          "score": 12.6,
+          "loc": 345
         },
         {
           "path": "frontend/package-lock.json",
@@ -159,22 +165,16 @@
           "loc": 3255
         },
         {
-          "path": "frontend/src/api/client.ts",
-          "reason": "most depended-on",
-          "score": 9.87,
-          "loc": 133
-        },
-        {
-          "path": "frontend/src/components/HypothesisList.tsx",
+          "path": "frontend/src/components/Resolution.tsx",
           "reason": "largest",
-          "score": 9.8,
-          "loc": 222
+          "score": 11.67,
+          "loc": 135
         },
         {
           "path": "frontend/src/pages/TicketDetail.tsx",
           "reason": "largest",
-          "score": 9.55,
-          "loc": 124
+          "score": 10.79,
+          "loc": 220
         }
       ]
     },
@@ -207,7 +207,7 @@
       "path": "backend",
       "kind": "directory",
       "description": null,
-      "moduleCount": 91,
+      "moduleCount": 99,
       "groupId": "group:other",
       "topFiles": [
         {
@@ -219,8 +219,8 @@
         {
           "path": "backend/app/api/routes.py",
           "reason": "HTTP handler",
-          "score": 15.87,
-          "loc": 116
+          "score": 16.5,
+          "loc": 180
         },
         {
           "path": "backend/app/main.py",
@@ -229,16 +229,16 @@
           "loc": 67
         },
         {
-          "path": "backend/app/safety/rules.py",
+          "path": "backend/app/runs/manager.py",
           "reason": "largest",
-          "score": 10.8,
-          "loc": 446
+          "score": 11.2,
+          "loc": 588
         },
         {
           "path": "backend/app/agent/loop.py",
           "reason": "largest",
-          "score": 10.64,
-          "loc": 397
+          "score": 11.17,
+          "loc": 576
         }
       ]
     }
@@ -325,14 +325,20 @@
       "path": "frontend",
       "kind": "directory",
       "description": null,
-      "moduleCount": 22,
+      "moduleCount": 25,
       "groupId": "group:frontend",
       "topFiles": [
         {
+          "path": "frontend/src/api/client.ts",
+          "reason": "most depended-on",
+          "score": 12.73,
+          "loc": 188
+        },
+        {
           "path": "frontend/src/pages/Workspace.tsx",
-          "reason": "largest",
-          "score": 12,
-          "loc": 291
+          "reason": "orchestrator",
+          "score": 12.6,
+          "loc": 345
         },
         {
           "path": "frontend/package-lock.json",
@@ -341,22 +347,16 @@
           "loc": 3255
         },
         {
-          "path": "frontend/src/api/client.ts",
-          "reason": "most depended-on",
-          "score": 9.87,
-          "loc": 133
-        },
-        {
-          "path": "frontend/src/components/HypothesisList.tsx",
+          "path": "frontend/src/components/Resolution.tsx",
           "reason": "largest",
-          "score": 9.8,
-          "loc": 222
+          "score": 11.67,
+          "loc": 135
         },
         {
           "path": "frontend/src/pages/TicketDetail.tsx",
           "reason": "largest",
-          "score": 9.55,
-          "loc": 124
+          "score": 10.79,
+          "loc": 220
         }
       ]
     },
@@ -389,7 +389,7 @@
       "path": "backend",
       "kind": "directory",
       "description": null,
-      "moduleCount": 91,
+      "moduleCount": 99,
       "groupId": "group:other",
       "topFiles": [
         {
@@ -401,8 +401,8 @@
         {
           "path": "backend/app/api/routes.py",
           "reason": "HTTP handler",
-          "score": 15.87,
-          "loc": 116
+          "score": 16.5,
+          "loc": 180
         },
         {
           "path": "backend/app/main.py",
@@ -411,16 +411,16 @@
           "loc": 67
         },
         {
-          "path": "backend/app/safety/rules.py",
+          "path": "backend/app/runs/manager.py",
           "reason": "largest",
-          "score": 10.8,
-          "loc": 446
+          "score": 11.2,
+          "loc": 588
         },
         {
           "path": "backend/app/agent/loop.py",
           "reason": "largest",
-          "score": 10.64,
-          "loc": 397
+          "score": 11.17,
+          "loc": 576
         }
       ]
     }
@@ -462,7 +462,7 @@
       "id": ".env.example",
       "path": ".env.example",
       "language": "other",
-      "size": 1317,
+      "size": 1817,
       "loc": 0,
       "isTest": false,
       "package": null,
@@ -526,8 +526,8 @@
       "id": "README.md",
       "path": "README.md",
       "language": "markdown",
-      "size": 10464,
-      "loc": 236,
+      "size": 12369,
+      "loc": 261,
       "isTest": false,
       "package": null,
       "exports": [],
@@ -558,8 +558,8 @@
       "id": "docker-compose.yml",
       "path": "docker-compose.yml",
       "language": "yaml",
-      "size": 608,
-      "loc": 24,
+      "size": 902,
+      "loc": 28,
       "isTest": false,
       "package": null,
       "exports": [],
@@ -766,7 +766,7 @@
       "id": "frontend/tsconfig.tsbuildinfo",
       "path": "frontend/tsconfig.tsbuildinfo",
       "language": "other",
-      "size": 384,
+      "size": 491,
       "loc": 0,
       "isTest": false,
       "package": null,
@@ -805,15 +805,15 @@
       "id": "frontend/src/App.tsx",
       "path": "frontend/src/App.tsx",
       "language": "typescript",
-      "size": 1172,
-      "loc": 41,
+      "size": 735,
+      "loc": 25,
       "isTest": false,
       "package": null,
       "exports": [
         {
           "name": "App",
           "kind": "function",
-          "line": 8,
+          "line": 6,
           "doc": null
         }
       ],
@@ -876,15 +876,15 @@
       "id": "frontend/src/pages/TicketDetail.tsx",
       "path": "frontend/src/pages/TicketDetail.tsx",
       "language": "typescript",
-      "size": 4151,
-      "loc": 124,
+      "size": 8612,
+      "loc": 220,
       "isTest": false,
       "package": null,
       "exports": [
         {
           "name": "TicketDetail",
           "kind": "function",
-          "line": 6,
+          "line": 7,
           "doc": null
         }
       ],
@@ -899,8 +899,8 @@
       "id": "frontend/src/pages/TicketList.tsx",
       "path": "frontend/src/pages/TicketList.tsx",
       "language": "typescript",
-      "size": 3412,
-      "loc": 105,
+      "size": 5201,
+      "loc": 160,
       "isTest": false,
       "package": null,
       "exports": [
@@ -922,15 +922,15 @@
       "id": "frontend/src/pages/Workspace.tsx",
       "path": "frontend/src/pages/Workspace.tsx",
       "language": "typescript",
-      "size": 8684,
-      "loc": 291,
+      "size": 10672,
+      "loc": 345,
       "isTest": false,
       "package": null,
       "exports": [
         {
           "name": "Workspace",
           "kind": "function",
-          "line": 28,
+          "line": 34,
           "doc": null
         }
       ],
@@ -940,7 +940,7 @@
       "sinkSites": [
         {
           "kind": "net:http",
-          "line": 63,
+          "line": 76,
           "snippet": "const ws = new WebSocket(runSocketUrl(runId));",
           "inFunction": "send"
         }
@@ -974,11 +974,34 @@
       "depth": null
     },
     {
+      "id": "frontend/src/components/AgentStream.tsx",
+      "path": "frontend/src/components/AgentStream.tsx",
+      "language": "typescript",
+      "size": 2867,
+      "loc": 96,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "AgentStream",
+          "kind": "function",
+          "line": 13,
+          "doc": "A small dev window that streams the ONE continuous agent's live thinking, tool calls, and tool results. Purely for development visibility — every command is still gated/audited and mirrored into the real terminal."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
       "id": "frontend/src/components/ApprovalPrompt.tsx",
       "path": "frontend/src/components/ApprovalPrompt.tsx",
       "language": "typescript",
-      "size": 3201,
-      "loc": 101,
+      "size": 3394,
+      "loc": 106,
       "isTest": false,
       "package": null,
       "exports": [
@@ -993,6 +1016,29 @@
           "kind": "function",
           "line": 15,
           "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/DecisionPrompt.tsx",
+      "path": "frontend/src/components/DecisionPrompt.tsx",
+      "language": "typescript",
+      "size": 1252,
+      "loc": 41,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "DecisionPrompt",
+          "kind": "function",
+          "line": 12,
+          "doc": "Blocking prompt shown when the agent calls RequestDecision — e.g. it could not reproduce the reported bug and needs the technician to decide how to proceed."
         }
       ],
       "sinks": [],
@@ -1039,6 +1085,29 @@
           "kind": "function",
           "line": 5,
           "doc": "Renders GitHub-flavoured markdown (tables, lists, code, links) safely."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/Resolution.tsx",
+      "path": "frontend/src/components/Resolution.tsx",
+      "language": "typescript",
+      "size": 4368,
+      "loc": 135,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "Resolution",
+          "kind": "function",
+          "line": 14,
+          "doc": "Shows how a finished ticket was resolved: the submitted solution (summary, root cause, actions, validation) and — collapsed by default — the complete troubleshooting log of the run that fixed it."
         }
       ],
       "sinks": [],
@@ -1098,8 +1167,8 @@
       "id": "frontend/src/api/client.ts",
       "path": "frontend/src/api/client.ts",
       "language": "typescript",
-      "size": 3471,
-      "loc": 133,
+      "size": 5310,
+      "loc": 188,
       "isTest": false,
       "package": null,
       "exports": [
@@ -1164,21 +1233,51 @@
           "doc": null
         },
         {
+          "name": "AgentToolCall",
+          "kind": "interface",
+          "line": 79,
+          "doc": null
+        },
+        {
+          "name": "AgentMessage",
+          "kind": "interface",
+          "line": 84,
+          "doc": null
+        },
+        {
+          "name": "AgentDecision",
+          "kind": "interface",
+          "line": 96,
+          "doc": null
+        },
+        {
           "name": "RunSnapshot",
           "kind": "interface",
-          "line": 98,
+          "line": 122,
           "doc": null
+        },
+        {
+          "name": "RunSummary",
+          "kind": "interface",
+          "line": 137,
+          "doc": null
+        },
+        {
+          "name": "FINAL_PHASES",
+          "kind": "const",
+          "line": 147,
+          "doc": "Phases in which a run is over: SSH released, no longer resumable."
         },
         {
           "name": "api",
           "kind": "const",
-          "line": 107,
+          "line": 149,
           "doc": null
         },
         {
           "name": "runSocketUrl",
           "kind": "function",
-          "line": 129,
+          "line": 184,
           "doc": null
         }
       ],
@@ -1188,7 +1287,7 @@
       "sinkSites": [
         {
           "kind": "net:fetch",
-          "line": 80,
+          "line": 104,
           "snippet": "const res = await fetch(`${API_BASE}${path}`, {",
           "inFunction": "req"
         }
@@ -1314,69 +1413,69 @@
       "id": "backend/tests/test_adjustments.py",
       "path": "backend/tests/test_adjustments.py",
       "language": "python",
-      "size": 9402,
-      "loc": 240,
+      "size": 12031,
+      "loc": 306,
       "isTest": true,
       "package": null,
       "exports": [
         {
           "name": "FakeSSH",
           "kind": "class",
-          "line": 19,
+          "line": 20,
           "doc": null
         },
         {
           "name": "FakeERP",
           "kind": "class",
-          "line": 35,
+          "line": 36,
           "doc": null
         },
         {
-          "name": "TwoCheckLLM",
+          "name": "ScriptLLM",
           "kind": "class",
-          "line": 52,
-          "doc": "Returns one hypothesis with TWO check commands."
+          "line": 53,
+          "doc": "Returns a fixed sequence of tool calls, one assistant turn per invoke."
         },
         {
           "name": "_make_run",
           "kind": "def",
-          "line": 79,
+          "line": 83,
           "doc": null
         },
         {
           "name": "test_likelihood_is_normalised_to_percentages",
           "kind": "def",
-          "line": 89,
+          "line": 93,
           "doc": null
         },
         {
           "name": "test_percentages_handle_values_already_in_percent",
           "kind": "def",
-          "line": 104,
+          "line": 107,
           "doc": null
         },
         {
           "name": "FakeStdout",
           "kind": "class",
-          "line": 175,
+          "line": 241,
           "doc": null
         },
         {
           "name": "FakeStdin",
           "kind": "class",
-          "line": 183,
+          "line": 249,
           "doc": null
         },
         {
           "name": "FakeProcess",
           "kind": "class",
-          "line": 191,
+          "line": 257,
           "doc": null
         },
         {
           "name": "ShellSSH",
           "kind": "class",
-          "line": 221,
+          "line": 287,
           "doc": null
         }
       ],
@@ -1391,27 +1490,33 @@
       "id": "backend/tests/test_agent_loop.py",
       "path": "backend/tests/test_agent_loop.py",
       "language": "python",
-      "size": 4621,
-      "loc": 128,
+      "size": 7643,
+      "loc": 205,
       "isTest": true,
       "package": null,
       "exports": [
         {
           "name": "FakeSSH",
           "kind": "class",
-          "line": 16,
+          "line": 20,
           "doc": null
         },
         {
           "name": "FakeERP",
           "kind": "class",
-          "line": 30,
+          "line": 34,
           "doc": null
         },
         {
-          "name": "FakeLLM",
+          "name": "ScriptLLM",
           "kind": "class",
-          "line": 49,
+          "line": 53,
+          "doc": "Returns a fixed sequence of tool calls, one assistant turn per ``invoke``."
+        },
+        {
+          "name": "_make_run",
+          "kind": "def",
+          "line": 92,
           "doc": null
         }
       ],
@@ -1498,11 +1603,141 @@
       "depth": null
     },
     {
+      "id": "backend/tests/test_routes.py",
+      "path": "backend/tests/test_routes.py",
+      "language": "python",
+      "size": 6694,
+      "loc": 171,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "FakeERP",
+          "kind": "class",
+          "line": 19,
+          "doc": null
+        },
+        {
+          "name": "client",
+          "kind": "def",
+          "line": 41,
+          "doc": null
+        },
+        {
+          "name": "test_runs_endpoints_empty",
+          "kind": "def",
+          "line": 67,
+          "doc": null
+        },
+        {
+          "name": "test_start_run_then_discover",
+          "kind": "def",
+          "line": 72,
+          "doc": null
+        },
+        {
+          "name": "test_start_run_supersedes_through_route",
+          "kind": "def",
+          "line": 87,
+          "doc": null
+        },
+        {
+          "name": "test_start_run_blocked_when_ticket_done",
+          "kind": "def",
+          "line": 104,
+          "doc": null
+        },
+        {
+          "name": "test_start_shell_run_allowed_when_ticket_done",
+          "kind": "def",
+          "line": 112,
+          "doc": null
+        },
+        {
+          "name": "test_resolution_null_when_no_resolved_run",
+          "kind": "def",
+          "line": 125,
+          "doc": null
+        },
+        {
+          "name": "test_resolution_returns_submitted_activity_and_log",
+          "kind": "def",
+          "line": 129,
+          "doc": null
+        },
+        {
+          "name": "test_resolution_survives_run_eviction",
+          "kind": "def",
+          "line": 152,
+          "doc": "The DONE ticket page still shows the solution after the run is gone."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_run_lifecycle.py",
+      "path": "backend/tests/test_run_lifecycle.py",
+      "language": "python",
+      "size": 11332,
+      "loc": 297,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "_settings",
+          "kind": "def",
+          "line": 18,
+          "doc": "Stand-in for SSHRunner that records whether close() was called."
+        },
+        {
+          "name": "RecordingSSH",
+          "kind": "class",
+          "line": 22,
+          "doc": "Stand-in for SSHRunner that records whether close() was called."
+        },
+        {
+          "name": "test_term_data_kept_out_of_semantic_events",
+          "kind": "def",
+          "line": 37,
+          "doc": null
+        },
+        {
+          "name": "test_term_buffer_is_bounded",
+          "kind": "def",
+          "line": 49,
+          "doc": null
+        },
+        {
+          "name": "test_resolution_store_roundtrip",
+          "kind": "def",
+          "line": 232,
+          "doc": null
+        },
+        {
+          "name": "test_snapshot_includes_resolution_fields",
+          "kind": "def",
+          "line": 285,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
       "id": "backend/tests/test_run_manager.py",
       "path": "backend/tests/test_run_manager.py",
       "language": "python",
-      "size": 3052,
-      "loc": 91,
+      "size": 4331,
+      "loc": 129,
       "isTest": true,
       "package": null,
       "exports": [
@@ -1513,9 +1748,15 @@
           "doc": null
         },
         {
+          "name": "test_stream_agent_emits_agent_message",
+          "kind": "def",
+          "line": 82,
+          "doc": null
+        },
+        {
           "name": "test_comment_hypothesis",
           "kind": "def",
-          "line": 69,
+          "line": 107,
           "doc": null
         }
       ],
@@ -1575,6 +1816,35 @@
           "name": "test_redaction_of_private_key_block",
           "kind": "def",
           "line": 97,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_session.py",
+      "path": "backend/tests/test_session.py",
+      "language": "python",
+      "size": 3008,
+      "loc": 86,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "FakeLLM",
+          "kind": "class",
+          "line": 8,
+          "doc": null
+        },
+        {
+          "name": "test_estimate_tokens",
+          "kind": "def",
+          "line": 24,
           "doc": null
         }
       ],
@@ -2402,6 +2672,22 @@
       "depth": null
     },
     {
+      "id": "backend/audit_logs/3d082f18c544.jsonl",
+      "path": "backend/audit_logs/3d082f18c544.jsonl",
+      "language": "other",
+      "size": 358792,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
       "id": "backend/audit_logs/df9c2c1dc750.jsonl",
       "path": "backend/audit_logs/df9c2c1dc750.jsonl",
       "language": "other",
@@ -2434,6 +2720,22 @@
       "depth": null
     },
     {
+      "id": "backend/audit_logs/resolutions/7005.json",
+      "path": "backend/audit_logs/resolutions/7005.json",
+      "language": "json",
+      "size": 1855,
+      "loc": 1,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
       "id": "backend/app/__init__.py",
       "path": "backend/app/__init__.py",
       "language": "python",
@@ -2453,8 +2755,8 @@
       "id": "backend/app/config.py",
       "path": "backend/app/config.py",
       "language": "python",
-      "size": 2568,
-      "loc": 71,
+      "size": 3686,
+      "loc": 92,
       "isTest": false,
       "package": null,
       "exports": [
@@ -2467,7 +2769,7 @@
         {
           "name": "get_settings",
           "kind": "def",
-          "line": 69,
+          "line": 90,
           "doc": null
         }
       ],
@@ -2518,8 +2820,8 @@
       "id": "backend/app/models.py",
       "path": "backend/app/models.py",
       "language": "python",
-      "size": 4791,
-      "loc": 174,
+      "size": 5194,
+      "loc": 183,
       "isTest": false,
       "package": null,
       "exports": [
@@ -2592,31 +2894,31 @@
         {
           "name": "HypothesisComment",
           "kind": "class",
-          "line": 114,
+          "line": 120,
           "doc": "A free-text note a technician attaches to a hypothesis."
         },
         {
           "name": "Hypothesis",
           "kind": "class",
-          "line": 122,
+          "line": 128,
           "doc": null
         },
         {
           "name": "StartRunRequest",
           "kind": "class",
-          "line": 146,
+          "line": 152,
           "doc": null
         },
         {
           "name": "EventType",
           "kind": "class",
-          "line": 154,
+          "line": 160,
           "doc": null
         },
         {
           "name": "make_event",
           "kind": "def",
-          "line": 168,
+          "line": 177,
           "doc": null
         }
       ],
@@ -2809,33 +3111,56 @@
       "id": "backend/app/runs/manager.py",
       "path": "backend/app/runs/manager.py",
       "language": "python",
-      "size": 10962,
-      "loc": 309,
+      "size": 23885,
+      "loc": 588,
       "isTest": false,
       "package": null,
       "exports": [
         {
           "name": "RunStopped",
           "kind": "class",
-          "line": 28,
+          "line": 35,
           "doc": "Raised inside the agent loop when the technician hits STOP."
         },
         {
           "name": "ApprovalDecision",
           "kind": "class",
-          "line": 33,
+          "line": 40,
           "doc": null
         },
         {
           "name": "Run",
           "kind": "class",
-          "line": 38,
+          "line": 45,
           "doc": null
         },
         {
           "name": "RunManager",
           "kind": "class",
-          "line": 284,
+          "line": 412,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/runs/resolutions.py",
+      "path": "backend/app/runs/resolutions.py",
+      "language": "python",
+      "size": 2105,
+      "loc": 52,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "ResolutionStore",
+          "kind": "class",
+          "line": 21,
           "doc": null
         }
       ],
@@ -3064,8 +3389,8 @@
       "id": "backend/app/api/routes.py",
       "path": "backend/app/api/routes.py",
       "language": "python",
-      "size": 3505,
-      "loc": 116,
+      "size": 6178,
+      "loc": 180,
       "isTest": false,
       "package": null,
       "exports": [
@@ -3114,7 +3439,23 @@
           "path": "/tickets/{ticket_id}/customer-system"
         },
         {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}/active-run"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}/resolution"
+        },
+        {
           "method": "POST",
+          "path": "/runs"
+        },
+        {
+          "method": "POST",
+          "path": "/runs/shell"
+        },
+        {
+          "method": "GET",
           "path": "/runs"
         },
         {
@@ -3150,20 +3491,20 @@
             "path": "/tickets/{ticket_id}/customer-system"
           },
           {
+            "method": "GET",
+            "path": "/tickets/{ticket_id}/active-run"
+          },
+          {
+            "method": "GET",
+            "path": "/tickets/{ticket_id}/resolution"
+          },
+          {
             "method": "POST",
             "path": "/runs"
           },
           {
-            "method": "GET",
-            "path": "/runs/{run_id}"
-          },
-          {
             "method": "POST",
-            "path": "/runs/{run_id}/stop"
-          },
-          {
-            "method": "POST",
-            "path": "/runs/{run_id}/activity"
+            "path": "/runs/shell"
           }
         ]
       },
@@ -3174,8 +3515,8 @@
       "id": "backend/app/api/ws.py",
       "path": "backend/app/api/ws.py",
       "language": "python",
-      "size": 3440,
-      "loc": 96,
+      "size": 3724,
+      "loc": 101,
       "isTest": false,
       "package": null,
       "exports": [],
@@ -3232,11 +3573,64 @@
       "depth": null
     },
     {
+      "id": "backend/app/agent/agent_tools.py",
+      "path": "backend/app/agent/agent_tools.py",
+      "language": "python",
+      "size": 5373,
+      "loc": 128,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "RunCommand",
+          "kind": "class",
+          "line": 23,
+          "doc": "Run ONE shell command on the customer's Linux VM over SSH."
+        },
+        {
+          "name": "HypothesisInput",
+          "kind": "class",
+          "line": 41,
+          "doc": "A single ranked root-cause hypothesis."
+        },
+        {
+          "name": "PresentHypotheses",
+          "kind": "class",
+          "line": 57,
+          "doc": "Present a RANKED list of root-cause hypotheses to the technician and WAIT."
+        },
+        {
+          "name": "ProposeFix",
+          "kind": "class",
+          "line": 72,
+          "doc": "Apply the remediation as ONE reviewable plan, instead of ad-hoc commands."
+        },
+        {
+          "name": "RequestDecision",
+          "kind": "class",
+          "line": 95,
+          "doc": "Ask the technician to make a decision when you are blocked or uncertain."
+        },
+        {
+          "name": "Finish",
+          "kind": "class",
+          "line": 109,
+          "doc": "End the run and hand off the documentation to the technician."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
       "id": "backend/app/agent/llm.py",
       "path": "backend/app/agent/llm.py",
       "language": "python",
-      "size": 4798,
-      "loc": 139,
+      "size": 7592,
+      "loc": 201,
       "isTest": false,
       "package": null,
       "exports": [
@@ -3244,18 +3638,24 @@
           "name": "LLMError",
           "kind": "class",
           "line": 20,
-          "doc": "Parse the first JSON object from model text (handles trailing junk)."
+          "doc": "Best-effort extraction of a reasoning/thinking string from an AIMessage."
+        },
+        {
+          "name": "reasoning_text",
+          "kind": "def",
+          "line": 24,
+          "doc": "Best-effort extraction of a reasoning/thinking string from an AIMessage."
         },
         {
           "name": "_extract_first_json_object",
           "kind": "def",
-          "line": 24,
+          "line": 50,
           "doc": "Parse the first JSON object from model text (handles trailing junk)."
         },
         {
           "name": "LLM",
           "kind": "class",
-          "line": 55,
+          "line": 81,
           "doc": null
         }
       ],
@@ -3270,45 +3670,63 @@
       "id": "backend/app/agent/loop.py",
       "path": "backend/app/agent/loop.py",
       "language": "python",
-      "size": 14931,
-      "loc": 397,
+      "size": 22603,
+      "loc": 576,
       "isTest": false,
       "package": null,
       "exports": [
         {
           "name": "_fail",
           "kind": "def",
-          "line": 53,
+          "line": 70,
           "doc": null
         },
         {
           "name": "_ticket_context",
           "kind": "def",
-          "line": 59,
+          "line": 76,
+          "doc": null
+        },
+        {
+          "name": "_stream_assistant",
+          "kind": "def",
+          "line": 226,
+          "doc": null
+        },
+        {
+          "name": "_format_exec",
+          "kind": "def",
+          "line": 271,
+          "doc": null
+        },
+        {
+          "name": "_snippet",
+          "kind": "def",
+          "line": 284,
           "doc": null
         },
         {
           "name": "_normalize_likelihoods",
           "kind": "def",
-          "line": 220,
+          "line": 350,
           "doc": "Turn raw model likelihoods into PERCENTAGES across the set, then rank by them."
         },
         {
           "name": "_emit_hypotheses",
           "kind": "def",
-          "line": 247,
+          "line": 377,
           "doc": null
         },
         {
           "name": "_format_comments",
           "kind": "def",
-          "line": 251,
+          "line": 381,
           "doc": null
         },
         {
           "name": "_resolve_selection",
           "kind": "def",
-          "line": 258,
+          "line": 388,
           "doc": "Map a selection message to a Hypothesis."
         }
       ],
@@ -3323,8 +3741,8 @@
       "id": "backend/app/agent/prompts.py",
       "path": "backend/app/agent/prompts.py",
       "language": "python",
-      "size": 4619,
-      "loc": 103,
+      "size": 5687,
+      "loc": 99,
       "isTest": false,
       "package": null,
       "exports": [],
@@ -3389,6 +3807,59 @@
       "depth": null
     },
     {
+      "id": "backend/app/agent/session.py",
+      "path": "backend/app/agent/session.py",
+      "language": "python",
+      "size": 9217,
+      "loc": 244,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "estimate_tokens",
+          "kind": "def",
+          "line": 40,
+          "doc": "Rough token estimate (chars / 4). Good enough for compaction triggers."
+        },
+        {
+          "name": "_message_text",
+          "kind": "def",
+          "line": 45,
+          "doc": null
+        },
+        {
+          "name": "_tool_calls",
+          "kind": "def",
+          "line": 57,
+          "doc": "Render one message (including tool calls / results) for the summary input."
+        },
+        {
+          "name": "_render_message",
+          "kind": "def",
+          "line": 61,
+          "doc": "Render one message (including tool calls / results) for the summary input."
+        },
+        {
+          "name": "_messages_token_estimate",
+          "kind": "def",
+          "line": 86,
+          "doc": null
+        },
+        {
+          "name": "AgentSession",
+          "kind": "class",
+          "line": 95,
+          "doc": "One continuous tool-calling conversation for a single troubleshooting run."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
       "id": "backend/app/agent/tools.py",
       "path": "backend/app/agent/tools.py",
       "language": "python",
@@ -3437,18 +3908,8 @@
     },
     {
       "from": "frontend/src/App.tsx",
-      "to": "react",
-      "kind": "external"
-    },
-    {
-      "from": "frontend/src/App.tsx",
       "to": "react-router-dom",
       "kind": "external"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/api/client.ts",
-      "kind": "import"
     },
     {
       "from": "frontend/src/App.tsx",
@@ -3498,6 +3959,11 @@
     {
       "from": "frontend/src/pages/TicketDetail.tsx",
       "to": "frontend/src/components/Markdown.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/TicketDetail.tsx",
+      "to": "frontend/src/components/Resolution.tsx",
       "kind": "import"
     },
     {
@@ -3556,6 +4022,16 @@
       "kind": "import"
     },
     {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/AgentStream.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/DecisionPrompt.tsx",
+      "kind": "import"
+    },
+    {
       "from": "frontend/src/components/ActivityReview.tsx",
       "to": "react",
       "kind": "external"
@@ -3566,9 +4042,24 @@
       "kind": "import"
     },
     {
+      "from": "frontend/src/components/AgentStream.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/AgentStream.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
       "from": "frontend/src/components/ApprovalPrompt.tsx",
       "to": "react",
       "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/DecisionPrompt.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
     },
     {
       "from": "frontend/src/components/HypothesisList.tsx",
@@ -3591,6 +4082,21 @@
       "kind": "external"
     },
     {
+      "from": "frontend/src/components/Resolution.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/Resolution.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/components/Resolution.tsx",
+      "to": "frontend/src/components/Markdown.tsx",
+      "kind": "import"
+    },
+    {
       "from": "frontend/src/components/Terminal.tsx",
       "to": "react",
       "kind": "external"
@@ -3608,21 +4114,21 @@
   ],
   "callEdges": [
     {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/api/client.ts",
-      "symbol": "api",
-      "count": 1
-    },
-    {
       "from": "frontend/src/pages/TicketDetail.tsx",
       "to": "frontend/src/api/client.ts",
       "symbol": "api",
-      "count": 3
+      "count": 7
     },
     {
       "from": "frontend/src/pages/TicketList.tsx",
       "to": "frontend/src/api/client.ts",
       "symbol": "api",
+      "count": 2
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/api/client.ts",
+      "symbol": "FINAL_PHASES",
       "count": 1
     },
     {
@@ -3718,20 +4224,20 @@
           "path": "/tickets/{ticket_id}/customer-system"
         },
         {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}/active-run"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}/resolution"
+        },
+        {
           "method": "POST",
           "path": "/runs"
         },
         {
-          "method": "GET",
-          "path": "/runs/{run_id}"
-        },
-        {
           "method": "POST",
-          "path": "/runs/{run_id}/stop"
-        },
-        {
-          "method": "POST",
-          "path": "/runs/{run_id}/activity"
+          "path": "/runs/shell"
         }
       ]
     }
@@ -3896,10 +4402,10 @@
       "id": "dir:frontend",
       "lane": "application",
       "title": "frontend",
-      "sublabel": "22 modules · net:http, net:fetch",
+      "sublabel": "25 modules · net:http, net:fetch",
       "color": "#7ee787",
       "kind": "package",
-      "moduleCount": 22,
+      "moduleCount": 25,
       "hasEntry": false,
       "sinks": [
         "net:http",
@@ -3921,10 +4427,10 @@
       "id": "dir:backend",
       "lane": "application",
       "title": "backend",
-      "sublabel": "91 modules · 3 entry",
+      "sublabel": "99 modules · 3 entry",
       "color": "#8b949e",
       "kind": "package",
-      "moduleCount": 91,
+      "moduleCount": 99,
       "hasEntry": true,
       "sinks": []
     }
@@ -3967,6 +4473,12 @@
       "package": null
     },
     {
+      "name": "AgentStream",
+      "kind": "function",
+      "file": "frontend/src/components/AgentStream.tsx",
+      "package": null
+    },
+    {
       "name": "Approval",
       "kind": "interface",
       "file": "frontend/src/components/ApprovalPrompt.tsx",
@@ -3979,6 +4491,12 @@
       "package": null
     },
     {
+      "name": "DecisionPrompt",
+      "kind": "function",
+      "file": "frontend/src/components/DecisionPrompt.tsx",
+      "package": null
+    },
+    {
       "name": "HypothesisList",
       "kind": "function",
       "file": "frontend/src/components/HypothesisList.tsx",
@@ -3988,6 +4506,12 @@
       "name": "Markdown",
       "kind": "function",
       "file": "frontend/src/components/Markdown.tsx",
+      "package": null
+    },
+    {
+      "name": "Resolution",
+      "kind": "function",
+      "file": "frontend/src/components/Resolution.tsx",
       "package": null
     },
     {
@@ -4063,8 +4587,38 @@
       "package": null
     },
     {
+      "name": "AgentToolCall",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "AgentMessage",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "AgentDecision",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
       "name": "RunSnapshot",
       "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "RunSummary",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "FINAL_PHASES",
+      "kind": "const",
       "file": "frontend/src/api/client.ts",
       "package": null
     },
@@ -4093,7 +4647,7 @@
       "package": null
     },
     {
-      "name": "TwoCheckLLM",
+      "name": "ScriptLLM",
       "kind": "class",
       "file": "backend/tests/test_adjustments.py",
       "package": null
@@ -4153,8 +4707,14 @@
       "package": null
     },
     {
-      "name": "FakeLLM",
+      "name": "ScriptLLM",
       "kind": "class",
+      "file": "backend/tests/test_agent_loop.py",
+      "package": null
+    },
+    {
+      "name": "_make_run",
+      "kind": "def",
       "file": "backend/tests/test_agent_loop.py",
       "package": null
     },
@@ -4183,7 +4743,109 @@
       "package": null
     },
     {
+      "name": "FakeERP",
+      "kind": "class",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "client",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_runs_endpoints_empty",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_start_run_then_discover",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_start_run_supersedes_through_route",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_start_run_blocked_when_ticket_done",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_start_shell_run_allowed_when_ticket_done",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_resolution_null_when_no_resolved_run",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_resolution_returns_submitted_activity_and_log",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "test_resolution_survives_run_eviction",
+      "kind": "def",
+      "file": "backend/tests/test_routes.py",
+      "package": null
+    },
+    {
+      "name": "_settings",
+      "kind": "def",
+      "file": "backend/tests/test_run_lifecycle.py",
+      "package": null
+    },
+    {
+      "name": "RecordingSSH",
+      "kind": "class",
+      "file": "backend/tests/test_run_lifecycle.py",
+      "package": null
+    },
+    {
+      "name": "test_term_data_kept_out_of_semantic_events",
+      "kind": "def",
+      "file": "backend/tests/test_run_lifecycle.py",
+      "package": null
+    },
+    {
+      "name": "test_term_buffer_is_bounded",
+      "kind": "def",
+      "file": "backend/tests/test_run_lifecycle.py",
+      "package": null
+    },
+    {
+      "name": "test_resolution_store_roundtrip",
+      "kind": "def",
+      "file": "backend/tests/test_run_lifecycle.py",
+      "package": null
+    },
+    {
+      "name": "test_snapshot_includes_resolution_fields",
+      "kind": "def",
+      "file": "backend/tests/test_run_lifecycle.py",
+      "package": null
+    },
+    {
       "name": "make_run",
+      "kind": "def",
+      "file": "backend/tests/test_run_manager.py",
+      "package": null
+    },
+    {
+      "name": "test_stream_agent_emits_agent_message",
       "kind": "def",
       "file": "backend/tests/test_run_manager.py",
       "package": null
@@ -4234,6 +4896,18 @@
       "name": "test_redaction_of_private_key_block",
       "kind": "def",
       "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "FakeLLM",
+      "kind": "class",
+      "file": "backend/tests/test_session.py",
+      "package": null
+    },
+    {
+      "name": "test_estimate_tokens",
+      "kind": "def",
+      "file": "backend/tests/test_session.py",
       "package": null
     },
     {
@@ -4471,6 +5145,12 @@
       "package": null
     },
     {
+      "name": "ResolutionStore",
+      "kind": "class",
+      "file": "backend/app/runs/resolutions.py",
+      "package": null
+    },
+    {
       "name": "_now",
       "kind": "def",
       "file": "backend/app/mock/phoenix.py",
@@ -4537,8 +5217,50 @@
       "package": null
     },
     {
+      "name": "RunCommand",
+      "kind": "class",
+      "file": "backend/app/agent/agent_tools.py",
+      "package": null
+    },
+    {
+      "name": "HypothesisInput",
+      "kind": "class",
+      "file": "backend/app/agent/agent_tools.py",
+      "package": null
+    },
+    {
+      "name": "PresentHypotheses",
+      "kind": "class",
+      "file": "backend/app/agent/agent_tools.py",
+      "package": null
+    },
+    {
+      "name": "ProposeFix",
+      "kind": "class",
+      "file": "backend/app/agent/agent_tools.py",
+      "package": null
+    },
+    {
+      "name": "RequestDecision",
+      "kind": "class",
+      "file": "backend/app/agent/agent_tools.py",
+      "package": null
+    },
+    {
+      "name": "Finish",
+      "kind": "class",
+      "file": "backend/app/agent/agent_tools.py",
+      "package": null
+    },
+    {
       "name": "LLMError",
       "kind": "class",
+      "file": "backend/app/agent/llm.py",
+      "package": null
+    },
+    {
+      "name": "reasoning_text",
+      "kind": "def",
       "file": "backend/app/agent/llm.py",
       "package": null
     },
@@ -4562,6 +5284,24 @@
     },
     {
       "name": "_ticket_context",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_stream_assistant",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_format_exec",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_snippet",
       "kind": "def",
       "file": "backend/app/agent/loop.py",
       "package": null
@@ -4627,6 +5367,42 @@
       "package": null
     },
     {
+      "name": "estimate_tokens",
+      "kind": "def",
+      "file": "backend/app/agent/session.py",
+      "package": null
+    },
+    {
+      "name": "_message_text",
+      "kind": "def",
+      "file": "backend/app/agent/session.py",
+      "package": null
+    },
+    {
+      "name": "_tool_calls",
+      "kind": "def",
+      "file": "backend/app/agent/session.py",
+      "package": null
+    },
+    {
+      "name": "_render_message",
+      "kind": "def",
+      "file": "backend/app/agent/session.py",
+      "package": null
+    },
+    {
+      "name": "_messages_token_estimate",
+      "kind": "def",
+      "file": "backend/app/agent/session.py",
+      "package": null
+    },
+    {
+      "name": "AgentSession",
+      "kind": "class",
+      "file": "backend/app/agent/session.py",
+      "package": null
+    },
+    {
       "name": "ExecResult",
       "kind": "class",
       "file": "backend/app/agent/tools.py",
@@ -4646,20 +5422,20 @@
     }
   ],
   "tests": {
-    "total": 8,
+    "total": 11,
     "byContainer": {
       "LICENSE": 0,
       "Makefile": 0,
       "keys": 0,
       "frontend": 0,
       "docs": 0,
-      "backend": 8
+      "backend": 11
     }
   },
   "planning": {
     "hasProject": false,
     "hasRoadmap": false,
-    "hasDomain": false,
+    "hasDomain": true,
     "currentState": null
   },
   "agentHints": {

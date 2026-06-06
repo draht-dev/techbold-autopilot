@@ -1,61 +1,50 @@
 # Concerns
 
-Generated: 2026-06-06
+Generated: 2026-06-07
 
-## Architectural Risks
+## Architecture
 
-- Runs are in-memory only. A backend restart loses active run state, event history,
-  pending approvals, and open SSH/PTY sessions.
-- One run per ticket is documented in the README, but `RunManager` does not enforce
-  uniqueness by ticket ID.
-- `backend/app/models.py` mixes external Phoenix DTOs with internal run, hypothesis,
-  approval, and event contracts. This is a broad shared kernel and a likely source of
-  cross-context coupling over time.
-- `Run` is a large aggregate: coordination, event history, SSH shell, audit log,
-  approvals, hypotheses, activity state, and an ERP reference are all inside one object.
-- `backend/app/agent/loop.py` directly depends on `Run`, `SSHRunner`, `TicketStatus`,
-  `ActivityCreate`, and `run.erp`, which blurs Diagnostic Agent, Run Coordination,
-  Remote Execution, and Service Desk writeback.
-- `backend/app/api/ws.py` imports `execute_command` from `agent.tools` for legacy
-  one-shot terminal commands, coupling WebSocket transport to the agent tool layer.
-- Frontend TypeScript DTOs manually duplicate backend Pydantic models, so REST/event
-  contract drift is possible.
-- `.planning/codebase/MAP.json` currently classifies the backend coarsely, so internal
-  backend bounded contexts require manual analysis rather than relying only on the
-  generated graph.
-- The backend has broad CORS (`allow_origins=["*"]`), acceptable for hackathon/local
-  use but too broad for production.
-- Host-key checking is disabled in `SSHRunner.connect()`, which fits the hackathon VM
-  assumption but should be revisited for trusted production infrastructure.
-- The interactive PTY is intentionally outside per-command safety classification.
-  This preserves human control but means raw human terminal sessions rely on the
-  technician rather than the deterministic command gate.
-- Audit write failures are swallowed to avoid breaking runs; this means disk or
-  permission problems could silently degrade persistent auditability while in-memory
-  entries continue.
+- `Run` is a large aggregate. It owns lifecycle state, event history, terminal
+  replay, human gates, hypotheses, activity state, SSH shell, audit log, and ERP
+  access. This is workable now, but future features should consider extracting
+  smaller coordinators or ports.
+- `agent/loop.py` imports and mutates `Run` directly, so agent behavior and run
+  lifecycle are tightly coupled.
+- `api/routes.py` has orchestration responsibilities: it fetches ERP data,
+  creates runs, and starts agent/shell tasks. A service layer could make route
+  handlers thinner if the API grows.
+- `models.py` mixes Phoenix DTOs with internal run/event DTOs. Splitting external
+  contracts from internal contracts would reduce shared-kernel blast radius.
+- Frontend TypeScript interfaces manually duplicate backend Pydantic models.
+  Contract drift is a real risk.
 
-## Test And Quality Gaps
+## Testing Gaps
 
-- No frontend unit/component tests.
-- No browser e2e tests for the ticket/run/approval/activity workflow.
-- No FastAPI route tests or WebSocket protocol tests.
-- No coverage tooling or coverage thresholds.
-- No lint scripts for backend or frontend.
-- No CI workflow is present.
+- Backend pytest coverage is broad, but no coverage tool or threshold is
+  configured.
+- `api/ws.py` WebSocket replay/inbound-message behavior is not directly tested.
+- Frontend has no unit/component tests and no browser end-to-end tests.
+- No contract tests validate REST/WebSocket payload alignment between backend
+  models and frontend `src/api/client.ts`.
+- Real Phoenix, SSH, and OpenRouter paths are intentionally excluded from default
+  tests; this is correct for offline reliability but leaves live integration risk.
 
-## Repository Hygiene
+## Security And Safety
 
-- The working tree contains ignored runtime/development artifacts such as `.env`,
-  `.env.bak`, key files, pycache, local venvs, audit logs, `.DS_Store`, and TypeScript
-  build info. They are ignored by Git, but raw scanners can still include them unless
-  explicitly filtered.
-- `.planning/codebase/STACK.md` was manually cleaned because Draht's initial file-tree
-  snapshot included ignored files and venv contents from the local checkout.
+- The safety boundary is deterministic and well tested, but the interactive PTY
+  is intentionally a trusted technician channel and does not classify raw human
+  keystrokes command-by-command.
+- Audit and resolution files are local filesystem persistence; deployment must
+  ensure the audit directory is mounted and protected.
+- `.env`, `.env.bak`, generated audit logs, virtualenvs, frontend `dist`, and
+  other local runtime artifacts exist in the worktree. Keep them excluded from
+  commits and secret scans.
 
-## Security Notes
+## Operational
 
-- `.env.example` contains placeholder values only, and `.gitignore` excludes `.env`,
-  `.env.bak`, key files, audit logs, and private key extensions.
-- Command redaction covers common token, key, URI, password, JWT, PEM, and shadow-hash
-  patterns, but new secret formats should be added as they appear.
-- Phoenix token, OpenRouter key, and SSH key paths remain backend-only by design.
+- Run state is in memory. Active runs do not survive backend process restarts;
+  only submitted resolution activity persists locally.
+- `make test` runs backend pytest only. Frontend type checking and any future
+  browser tests need an explicit verification command.
+- No CI workflow is present to enforce backend tests, frontend type checking,
+  coverage, or contract checks.
