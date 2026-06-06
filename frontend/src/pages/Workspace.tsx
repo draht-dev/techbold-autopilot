@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ActivityDraft,
+  AgentDecision,
+  AgentMessage,
   Hypothesis,
   RunEvent,
   Ticket,
@@ -13,10 +15,14 @@ import HypothesisList from "../components/HypothesisList";
 import ApprovalPrompt, { Approval } from "../components/ApprovalPrompt";
 import RunControls from "../components/RunControls";
 import ActivityReview from "../components/ActivityReview";
+import AgentStream from "../components/AgentStream";
+import DecisionPrompt from "../components/DecisionPrompt";
 
 const BUSY_PHASES = [
   "CONNECTING",
   "RECON",
+  "REPRODUCING",
+  "INVESTIGATING",
   "CHECK",
   "APPLY",
   "VALIDATE",
@@ -37,6 +43,8 @@ export default function Workspace() {
   const [logEvents, setLogEvents] = useState<RunEvent[]>([]);
   const [hypotheses, setHypotheses] = useState<Hypothesis[]>([]);
   const [approval, setApproval] = useState<Approval | null>(null);
+  const [decision, setDecision] = useState<AgentDecision | null>(null);
+  const [agentMessages, setAgentMessages] = useState<AgentMessage[]>([]);
   const [activityDraft, setActivityDraft] = useState<ActivityDraft | null>(null);
   const [submittedId, setSubmittedId] = useState<number | null>(null);
   const [connError, setConnError] = useState<string | null>(null);
@@ -100,6 +108,32 @@ export default function Workspace() {
       case "approval.resolved":
         setApproval((prev) => (prev && prev.id === ev.id ? null : prev));
         break;
+      case "agent.message":
+        setAgentMessages((prev) => [
+          ...prev,
+          {
+            ts: ev.ts,
+            kind: ev.kind,
+            text: ev.text || "",
+            reasoning: ev.reasoning,
+            tool_calls: ev.tool_calls,
+            name: ev.name,
+            context_tokens: ev.context_tokens,
+            compactions: ev.compactions,
+          },
+        ]);
+        break;
+      case "decision.request":
+        setDecision({
+          id: ev.id,
+          question: ev.question,
+          options: ev.options || [],
+          context: ev.context,
+        });
+        break;
+      case "decision.resolved":
+        setDecision((prev) => (prev && prev.id === ev.id ? null : prev));
+        break;
       case "activity.draft":
         setActivityDraft(ev.draft);
         break;
@@ -135,6 +169,11 @@ export default function Workspace() {
     if (!approval) return;
     send({ type: "approval.decision", id: approval.id, approved, edited });
     setApproval(null);
+  }
+
+  function chooseDecision(choice: string) {
+    send({ type: "decision", choice });
+    setDecision(null);
   }
 
   function toggleReads(value: boolean) {
@@ -217,6 +256,7 @@ export default function Workspace() {
               send({ type: "terminal.resize", cols, rows });
             }}
           />
+          <AgentStream messages={agentMessages} />
           <div className="panel">
             <div className="panel-header">
               <h2>Agent Activity</h2>
@@ -231,6 +271,7 @@ export default function Workspace() {
         </div>
 
         <div>
+          {decision && <DecisionPrompt decision={decision} onChoose={chooseDecision} />}
           {approval && <ApprovalPrompt approval={approval} onDecide={decideApproval} />}
           {hypothesisPanel}
           {activityDraft && (
@@ -240,7 +281,7 @@ export default function Workspace() {
               onSubmit={submitActivity}
             />
           )}
-          {!approval && !hypothesisPanel && !activityDraft && (
+          {!decision && !approval && !hypothesisPanel && !activityDraft && (
             <div className="notice">{phaseHint(phase)}</div>
           )}
         </div>
@@ -270,6 +311,12 @@ function phaseHint(phase: string): string {
       return "Waiting to connect to the customer VM…";
     case "RECON":
       return "Agent is gathering read-only diagnostics…";
+    case "REPRODUCING":
+      return "Agent is trying to reproduce the reported problem…";
+    case "INVESTIGATING":
+      return "Agent is investigating autonomously — watch the Agent Stream…";
+    case "AWAITING_INPUT":
+      return "Agent is waiting for your decision…";
     case "CHECK":
       return "Agent is checking the selected hypothesis…";
     case "FIX_PROPOSE":

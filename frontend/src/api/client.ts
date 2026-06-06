@@ -76,6 +76,30 @@ export interface RunEvent {
   [key: string]: any;
 }
 
+export interface AgentToolCall {
+  name: string;
+  args: Record<string, any>;
+}
+
+export interface AgentMessage {
+  ts: string;
+  /** "assistant" = the model's thinking/tool intentions; "tool_result" = output. */
+  kind: "assistant" | "tool_result";
+  text: string;
+  reasoning?: string;
+  tool_calls?: AgentToolCall[];
+  name?: string;
+  context_tokens?: number;
+  compactions?: number;
+}
+
+export interface AgentDecision {
+  id: string;
+  question: string;
+  options: string[];
+  context?: string;
+}
+
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json" },
