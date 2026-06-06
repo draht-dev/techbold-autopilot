@@ -109,6 +109,9 @@ class RunPhase(str, Enum):
     AWAITING_INPUT = "AWAITING_INPUT"
     ACTIVITY_DRAFT = "ACTIVITY_DRAFT"
     SUBMITTING = "SUBMITTING"
+    # A plain interactive SSH session opened by the technician with NO agent loop
+    # running (e.g. to inspect a ticket's machine after it is resolved).
+    SHELL = "SHELL"
     DONE = "DONE"
     STOPPED = "STOPPED"
     ERROR = "ERROR"

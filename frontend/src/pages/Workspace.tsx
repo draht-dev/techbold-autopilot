@@ -4,6 +4,7 @@ import {
   ActivityDraft,
   AgentDecision,
   AgentMessage,
+  FINAL_PHASES,
   Hypothesis,
   RunEvent,
   Ticket,
@@ -29,7 +30,6 @@ const BUSY_PHASES = [
   "PERSIST_VERIFY",
   "SUBMITTING",
 ];
-const FINAL_PHASES = ["DONE", "STOPPED", "ERROR"];
 
 export default function Workspace() {
   const { runId } = useParams();
@@ -60,7 +60,12 @@ export default function Workspace() {
     api
       .getRun(runId)
       .then((snap) => {
+        // Apply the authoritative run state from the snapshot immediately, so a
+        // reload/back-then-return reflects the real phase before WS replay arrives
+        // (rather than flashing the default "CONNECTING").
+        setPhase(snap.phase);
         setAutoApproveReads(snap.auto_approve_reads);
+        if (snap.error) setConnError(snap.error);
         return api.getTicket(snap.ticket_id);
       })
       .then(setTicket)
@@ -317,6 +322,8 @@ function phaseHint(phase: string): string {
       return "Agent is investigating autonomously — watch the Agent Stream…";
     case "AWAITING_INPUT":
       return "Agent is waiting for your decision…";
+    case "SHELL":
+      return "Plain SSH session — the agent is NOT running. Drive the terminal yourself.";
     case "CHECK":
       return "Agent is checking the selected hypothesis…";
     case "FIX_PROPOSE":

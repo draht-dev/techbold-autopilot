@@ -123,14 +123,36 @@ export interface RunSnapshot {
   id: string;
   ticket_id: number;
   phase: string;
+  /** "agent" = autonomous run; "shell" = a plain SSH session with no agent. */
+  kind?: string;
   auto_approve_reads: boolean;
   error?: string | null;
+  /** Final outcome of a resolving run (e.g. "fixed"), once it submitted activity. */
+  outcome?: string | null;
+  /** The submitted solution (how the ticket was fixed), or null if not resolved. */
+  submitted_activity?: ActivityDraft | null;
   events: RunEvent[];
 }
+
+export interface RunSummary {
+  id: string;
+  ticket_id: number;
+  phase: string;
+  active: boolean;
+  started_at?: string | null;
+  error?: string | null;
+}
+
+/** Phases in which a run is over: SSH released, no longer resumable. */
+export const FINAL_PHASES = ["DONE", "STOPPED", "ERROR"];
 
 export const api = {
   getMe: () => req<Employee>("/api/me"),
   getRun: (runId: string) => req<RunSnapshot>(`/api/runs/${runId}`),
+  listRuns: () => req<RunSummary[]>("/api/runs"),
+  /** The in-flight run for a ticket (resume target), or null. Lightweight summary. */
+  getActiveRun: (ticketId: number) =>
+    req<RunSummary | null>(`/api/tickets/${ticketId}/active-run`),
   listTickets: (params: { status?: string; priority?: string; sort?: string }) => {
     const q = new URLSearchParams();
     if (params.status) q.set("status", params.status);
@@ -141,10 +163,19 @@ export const api = {
   getTicket: (id: number) => req<Ticket>(`/api/tickets/${id}`),
   getCustomerSystem: (id: number) =>
     req<CustomerSystem>(`/api/tickets/${id}/customer-system`),
+  /** The finished run that resolved a ticket (solution + full log), or null. */
+  getResolution: (ticketId: number) =>
+    req<RunSnapshot | null>(`/api/tickets/${ticketId}/resolution`),
   startRun: (ticketId: number, autoApproveReads?: boolean) =>
     req<{ run_id: string; phase: string; auto_approve_reads: boolean }>("/api/runs", {
       method: "POST",
       body: JSON.stringify({ ticket_id: ticketId, auto_approve_reads: autoApproveReads }),
+    }),
+  /** Open a plain SSH session (no agent) — allowed even on a DONE ticket. */
+  startShell: (ticketId: number) =>
+    req<{ run_id: string; phase: string; kind: string }>("/api/runs/shell", {
+      method: "POST",
+      body: JSON.stringify({ ticket_id: ticketId }),
     }),
   stopRun: (runId: string) =>
     req<{ ok: boolean }>(`/api/runs/${runId}/stop`, { method: "POST" }),

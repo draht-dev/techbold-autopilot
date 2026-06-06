@@ -102,7 +102,12 @@ async def _connect(run: Run) -> None:
     if not decision.approved:
         run.info("Technician declined the SSH connection.")
         raise RunStopped()
+    await _open_ssh(run)
 
+
+async def _open_ssh(run: Run) -> None:
+    """Build the SSH connection for the run (shared by the agent and plain shell)."""
+    si = run.system_info
     key_path = run.settings.ssh_key_path_for_ticket(run.ticket_id)
     run.ssh = SSHRunner(
         host=si.ip,
@@ -119,6 +124,37 @@ async def _connect(run: Run) -> None:
     )
     await run.ssh.connect()
     run.info("SSH connection established.")
+
+
+async def run_shell(run: Run) -> None:
+    """A plain interactive SSH session with NO agent loop.
+
+    The technician opens this to inspect a machine directly (e.g. after the ticket
+    is resolved): we connect SSH and then idle, keeping the connection alive so the
+    interactive PTY (driven over the WebSocket) works. No recon, no LLM, no
+    auto-run commands — just a shell. The connection is explicit (the technician
+    clicked "open SSH"), so it skips the per-command approval gate's connect prompt.
+    """
+    try:
+        run.set_phase(RunPhase.CONNECTING)
+        await _open_ssh(run)
+        run.set_phase(RunPhase.SHELL)
+        run.info("Plain SSH session ready — the agent is NOT running. Use the terminal below.")
+        await run.stop_event.wait()  # idle until the technician closes the session
+    except RunStopped:
+        pass
+    except SSHError as exc:
+        _fail(run, str(exc))
+        return
+    except Exception as exc:  # noqa: BLE001 - never crash the event loop
+        _fail(run, f"Unexpected error: {exc}")
+        return
+    finally:
+        await run.close_shell()
+        if run.ssh:
+            await run.ssh.close()
+    if run.phase != RunPhase.ERROR:
+        run.set_phase(RunPhase.STOPPED)
 
 
 async def _recon(run: Run) -> str:
@@ -517,6 +553,10 @@ async def _finalize(run: Run, llm: LLM, args: dict[str, Any]) -> None:
         _fail(run, f"Failed to submit activity: {exc}")
         return
 
+    # Persist the solution on the run so the ticket page can show how it was fixed
+    # after the run finishes (the run stays in memory until GC'd past the cap).
+    run.submitted_activity = dict(fields)
+    run.outcome = outcome
     run.audit.record("activity_submitted", activity_id=getattr(created, "id", None), outcome=outcome)
     run.emit(EventType.ACTIVITY_SUBMITTED, activity_id=getattr(created, "id", None), outcome=outcome)
     # A validated fix marks the ticket DONE; anything else returns it to the queue.
