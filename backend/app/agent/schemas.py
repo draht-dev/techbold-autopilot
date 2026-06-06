@@ -10,7 +10,11 @@ class HypothesisItem(BaseModel):
     title: str
     reasoning: str = ""
     evidence: str = ""
+    # One or more read-only commands that together confirm/deny this hypothesis.
+    proposed_checks: list[str] = Field(default_factory=list)
+    # Back-compat: some models still emit a single "proposed_check"; accepted too.
     proposed_check: str = ""
+    # Probability this is the root cause (0-1); normalised to a % across the set.
     likelihood: Optional[float] = None
 
 

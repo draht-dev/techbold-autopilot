@@ -14,7 +14,14 @@ from uuid import uuid4
 
 from app.audit import AuditLog
 from app.config import Settings
-from app.models import EventType, Hypothesis, RunPhase, make_event, utcnow_iso
+from app.models import (
+    EventType,
+    Hypothesis,
+    HypothesisComment,
+    RunPhase,
+    make_event,
+    utcnow_iso,
+)
 from app.ssh import SSHRunner
 
 
@@ -54,6 +61,8 @@ class Run:
         self.activity_future: Optional[asyncio.Future] = None
 
         self.ssh: Optional[SSHRunner] = None
+        self.shell: Any = None  # lazily-opened interactive PTY for the technician
+        self._shell_lock = asyncio.Lock()
         self.audit = AuditLog(run_id, settings.audit_dir)
 
         self.ticket: Any = None
@@ -156,7 +165,12 @@ class Run:
             return True
         return False
 
-    async def await_hypothesis_selection(self) -> str:
+    async def await_hypothesis_selection(self) -> dict[str, Any]:
+        """Block until the technician selects a ranked hypothesis OR submits their own.
+
+        Returns ``{"kind": "existing", "id": ...}`` or
+        ``{"kind": "custom", "title", "reasoning", "checks"}``.
+        """
         self.check_stop()
         fut = self._new_future()
         self.hypothesis_future = fut
@@ -168,9 +182,76 @@ class Run:
     def select_hypothesis(self, hypothesis_id: str) -> bool:
         fut = self.hypothesis_future
         if fut is not None and not fut.done():
-            fut.set_result(hypothesis_id)
+            fut.set_result({"kind": "existing", "id": hypothesis_id})
             return True
         return False
+
+    def submit_custom_hypothesis(self, payload: dict[str, Any]) -> bool:
+        """The technician proposes their OWN hypothesis instead of picking one."""
+        fut = self.hypothesis_future
+        if fut is not None and not fut.done():
+            checks = payload.get("checks")
+            if not checks and payload.get("proposed_check"):
+                checks = [payload["proposed_check"]]
+            fut.set_result(
+                {
+                    "kind": "custom",
+                    "title": payload.get("title", ""),
+                    "reasoning": payload.get("reasoning", ""),
+                    "checks": checks or [],
+                }
+            )
+            return True
+        return False
+
+    def comment_hypothesis(self, hypothesis_id: str, text: str, author: str = "technician") -> bool:
+        """Attach a steering comment to an agent-suggested hypothesis."""
+        text = (text or "").strip()
+        if not text:
+            return False
+        hyp = next((h for h in self.hypotheses if h.id == hypothesis_id), None)
+        if hyp is None:
+            return False
+        hyp.comments.append(HypothesisComment(author=author, text=text))
+        self.audit.record("hypothesis_comment", hypothesis=hypothesis_id, text=text)
+        self.emit(EventType.HYPOTHESES, items=[h.model_dump() for h in self.hypotheses])
+        return True
+
+    # ------------------------------------------------------------------ #
+    # Interactive terminal (PTY) for the technician — supports vim/htop/etc.
+    # ------------------------------------------------------------------ #
+    async def ensure_shell(self, cols: int = 120, rows: int = 30) -> Any:
+        async with self._shell_lock:
+            if self.shell is not None:
+                return self.shell
+            if self.ssh is None or not self.ssh.connected:
+                return None
+            self.shell = await self.ssh.open_shell(self._on_shell_data, cols=cols, rows=rows)
+            self.audit.record("shell_open")
+            return self.shell
+
+    def _on_shell_data(self, data: str) -> None:
+        # Mirror every byte of the interactive session into the UI terminal.
+        self.emit(EventType.TERM, data=data)
+
+    async def terminal_write(self, data: str, cols: Optional[int] = None, rows: Optional[int] = None) -> None:
+        shell = await self.ensure_shell(cols or 120, rows or 30)
+        if shell is None:
+            self.emit(EventType.TERM, data="[no SSH connection]\r\n")
+            return
+        shell.write(data)
+
+    async def terminal_resize(self, cols: int, rows: int) -> None:
+        if self.shell is not None:
+            self.shell.resize(cols, rows)
+
+    async def close_shell(self) -> None:
+        if self.shell is not None:
+            try:
+                self.shell.close()
+            except Exception:  # noqa: BLE001
+                pass
+            self.shell = None
 
     async def await_activity_submission(self) -> Optional[dict[str, Any]]:
         self.check_stop()
@@ -222,5 +303,6 @@ class RunManager:
             run.request_stop()
             if run.task and not run.task.done():
                 run.task.cancel()
+            await run.close_shell()
             if run.ssh:
                 await run.ssh.close()

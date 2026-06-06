@@ -63,6 +63,11 @@ async def _handle(run: Any, msg: dict[str, Any]) -> None:
     msg_type = msg.get("type")
     if msg_type == "select_hypothesis":
         run.select_hypothesis(msg.get("id"))
+    elif msg_type == "submit_hypothesis":
+        # Technician proposes their OWN hypothesis instead of picking a ranked one.
+        run.submit_custom_hypothesis(msg.get("hypothesis") or msg)
+    elif msg_type == "comment_hypothesis":
+        run.comment_hypothesis(msg.get("id"), msg.get("text"))
     elif msg_type == "approval.decision":
         run.resolve_approval(msg.get("id"), bool(msg.get("approved")), msg.get("edited"))
     elif msg_type == "mode.set":
@@ -72,7 +77,17 @@ async def _handle(run: Any, msg: dict[str, Any]) -> None:
         run.submit_activity(msg.get("activity"))
     elif msg_type == "stop":
         run.request_stop()
+    elif msg_type == "terminal.data":
+        # Raw keystrokes from the interactive xterm -> the VM's PTY (vim/htop/etc.).
+        asyncio.create_task(
+            run.terminal_write(msg.get("data") or "", msg.get("cols"), msg.get("rows"))
+        )
+    elif msg_type == "terminal.resize":
+        asyncio.create_task(
+            run.terminal_resize(int(msg.get("cols") or 120), int(msg.get("rows") or 30))
+        )
     elif msg_type == "terminal.input":
+        # Legacy one-shot command box: still routed through the gated/audited path.
         command = (msg.get("command") or "").strip()
         if command:
             asyncio.create_task(

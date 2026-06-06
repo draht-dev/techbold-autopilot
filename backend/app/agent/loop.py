@@ -7,6 +7,7 @@ draft activity (human reviews) -> submit + mark DONE. STOP unblocks at any point
 from __future__ import annotations
 
 import shlex
+from typing import Any, Optional
 
 from app.agent import prompts
 from app.agent.activity import draft_activity
@@ -43,6 +44,7 @@ async def run_agent(run: Run, llm: LLM) -> None:
     except Exception as exc:  # noqa: BLE001 - never crash the event loop
         _fail(run, f"Unexpected error: {exc}")
     finally:
+        await run.close_shell()
         if run.ssh:
             await run.ssh.close()
 
@@ -130,37 +132,44 @@ async def _diagnose(run: Run, llm: LLM, recon: str) -> None:
             run.info("No further hypotheses produced.")
             return
 
-        selected_id = await run.await_hypothesis_selection()
-        hyp = next((h for h in run.hypotheses if h.id == selected_id), None)
+        selection = await run.await_hypothesis_selection()
+        hyp = _resolve_selection(run, selection)
         if hyp is None:
             continue
         hyp.status = "checking"
-        run.audit.record("hypothesis_selected", text=hyp.title)
-        run.info(f"Checking hypothesis: {hyp.title}")
+        _emit_hypotheses(run)
+        run.audit.record("hypothesis_selected", text=hyp.title, source=hyp.source)
+        origin = "your" if hyp.source == "technician" else "ranked"
+        run.info(f"Checking {origin} hypothesis: {hyp.title}")
 
         run.set_phase(RunPhase.CHECK)
-        check_output = "(no check command provided)"
-        if hyp.proposed_check:
-            res = await execute_command(run, hyp.proposed_check, actor="agent", purpose="hypothesis check")
-            check_output = res.output
+        # A hypothesis can carry several read-only checks; run them all and aggregate.
+        check_blocks: list[str] = []
+        for cmd in hyp.checks:
+            res = await execute_command(run, cmd, actor="agent", purpose="hypothesis check")
+            check_blocks.append(f"$ {cmd}\n{res.output}".strip())
+        check_output = "\n\n".join(check_blocks) if check_blocks else "(no check command provided)"
+        comment_block = _format_comments(hyp)
 
         verdict = await llm.complete_json(
             prompts.CHECK_SYSTEM,
-            f"{context}\n\nSELECTED HYPOTHESIS: {hyp.title}\n{hyp.reasoning}\n\n"
-            f"CHECK COMMAND: {hyp.proposed_check}\nCHECK OUTPUT:\n{check_output}",
+            f"{context}\n\nSELECTED HYPOTHESIS: {hyp.title}\n{hyp.reasoning}\n{comment_block}\n\n"
+            f"CHECK COMMANDS:\n{chr(10).join(hyp.checks) or '(none)'}\nCHECK OUTPUT:\n{check_output}",
             model=llm.agent_model,
             schema=CheckOutput,
         )
 
         if not verdict.get("confirmed"):
             hyp.status = "rejected"
+            _emit_hypotheses(run)
             run.info(f"Hypothesis not confirmed: {verdict.get('reasoning', '')}")
             context += (
-                f"\n\nREJECTED hypothesis '{hyp.title}'. Check output:\n{check_output}"
+                f"\n\nREJECTED hypothesis '{hyp.title}'.{comment_block} Check output:\n{check_output}"
             )
             continue
 
         hyp.status = "confirmed"
+        _emit_hypotheses(run)
         run.info(f"Root cause confirmed: {hyp.title}")
         fix = verdict.get("proposed_fix") or {}
 
@@ -187,6 +196,9 @@ async def _hypotheses(run: Run, llm: LLM, context: str) -> list[Hypothesis]:
     raw = data.get("hypotheses") or []
     hyps: list[Hypothesis] = []
     for i, h in enumerate(raw[:5], start=1):
+        checks = [str(c).strip() for c in (h.get("proposed_checks") or []) if c and str(c).strip()]
+        if not checks and h.get("proposed_check"):
+            checks = [str(h["proposed_check"]).strip()]
         hyps.append(
             Hypothesis(
                 id=f"h{i}",
@@ -194,13 +206,82 @@ async def _hypotheses(run: Run, llm: LLM, context: str) -> list[Hypothesis]:
                 title=str(h.get("title", f"Hypothesis {i}")),
                 reasoning=str(h.get("reasoning", "")),
                 evidence=str(h.get("evidence", "")),
-                proposed_check=str(h.get("proposed_check", "")),
+                checks=checks,
                 likelihood=h.get("likelihood"),
+                source="agent",
             )
         )
+    _normalize_likelihoods(hyps)
     run.hypotheses = hyps
-    run.emit(EventType.HYPOTHESES, items=[h.model_dump() for h in hyps])
+    _emit_hypotheses(run)
     return hyps
+
+
+def _normalize_likelihoods(hyps: list[Hypothesis]) -> None:
+    """Turn raw model likelihoods into PERCENTAGES across the set, then rank by them.
+
+    The technician should see a relative ``%`` per hypothesis (not a fixed score).
+    Missing likelihoods get a rank-decayed share so every hypothesis still gets one.
+    """
+    if not hyps:
+        return
+    weights: list[float] = []
+    n = len(hyps)
+    for i, h in enumerate(hyps):
+        v = h.likelihood
+        try:
+            v = float(v) if v is not None else None
+        except (TypeError, ValueError):
+            v = None
+        if v is not None and v > 1:  # model already gave a percentage
+            v = v / 100.0
+        weights.append(v if (v is not None and v > 0) else (n - i) / n * 0.5)
+    total = sum(weights) or float(n)
+    for h, w in zip(hyps, weights):
+        h.likelihood = round(w / total * 100, 1)
+    hyps.sort(key=lambda h: h.likelihood or 0.0, reverse=True)
+    for i, h in enumerate(hyps, start=1):
+        h.rank = i
+
+
+def _emit_hypotheses(run: Run) -> None:
+    run.emit(EventType.HYPOTHESES, items=[h.model_dump() for h in run.hypotheses])
+
+
+def _format_comments(hyp: Hypothesis) -> str:
+    if not hyp.comments:
+        return ""
+    lines = "\n".join(f"- {c.text}" for c in hyp.comments if c.text)
+    return f"\nTECHNICIAN COMMENTS (treat as steering guidance):\n{lines}" if lines else ""
+
+
+def _resolve_selection(run: Run, selection: Any) -> Optional[Hypothesis]:
+    """Map a selection message to a Hypothesis.
+
+    ``{"kind": "existing", "id": ...}`` selects a ranked hypothesis;
+    ``{"kind": "custom", "title": ..., "reasoning": ..., "checks": [...]}`` adds the
+    technician's OWN hypothesis to the set and selects it.
+    """
+    if not isinstance(selection, dict):
+        # Back-compat: a bare id string selects an existing hypothesis.
+        return next((h for h in run.hypotheses if h.id == selection), None)
+    if selection.get("kind") == "custom":
+        checks = [str(c).strip() for c in (selection.get("checks") or []) if c and str(c).strip()]
+        new_id = f"t{sum(1 for h in run.hypotheses if h.source == 'technician') + 1}"
+        hyp = Hypothesis(
+            id=new_id,
+            rank=0,
+            title=str(selection.get("title") or "Technician hypothesis"),
+            reasoning=str(selection.get("reasoning") or ""),
+            evidence="Proposed by the technician.",
+            checks=checks,
+            likelihood=None,
+            source="technician",
+        )
+        run.hypotheses.append(hyp)
+        _emit_hypotheses(run)
+        return hyp
+    return next((h for h in run.hypotheses if h.id == selection.get("id")), None)
 
 
 async def _apply_fix(run: Run, fix: dict) -> bool:

@@ -111,15 +111,36 @@ class RunPhase(str, Enum):
     ERROR = "ERROR"
 
 
+class HypothesisComment(BaseModel):
+    """A free-text note a technician attaches to a hypothesis."""
+
+    author: str = "technician"
+    text: str
+    ts: str = Field(default_factory=utcnow_iso)
+
+
 class Hypothesis(BaseModel):
     id: str
     rank: int
     title: str
     reasoning: str = ""
     evidence: str = ""
-    proposed_check: str = ""
+    # A hypothesis is NOT limited to a single bash command: it carries an ordered
+    # list of read-only checks the agent runs (and aggregates) during the CHECK phase.
+    checks: list[str] = Field(default_factory=list)
+    # Relative likelihood as a PERCENTAGE (0-100), normalised across the ranked set
+    # so the technician sees how confident the agent is, not a fixed raw score.
     likelihood: Optional[float] = None
+    # Where the hypothesis came from: the agent, or a technician who typed their own.
+    source: Literal["agent", "technician"] = "agent"
+    # Technician comments steer the agent: they are fed into the check / re-rank context.
+    comments: list[HypothesisComment] = Field(default_factory=list)
     status: Literal["open", "checking", "confirmed", "rejected"] = "open"
+
+    @property
+    def proposed_check(self) -> str:
+        """First check command (back-compat convenience for single-command callers)."""
+        return self.checks[0] if self.checks else ""
 
 
 class StartRunRequest(BaseModel):

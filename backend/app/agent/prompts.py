@@ -25,8 +25,13 @@ HYPOTHESES_SYSTEM = (
 
 You are given the ticket, the customer system, and read-only recon output. Produce
 a RANKED list of 2-5 candidate root-cause hypotheses, most likely first. For each,
-give concrete reasoning tied to the evidence and ONE safe, read-only command that
-would confirm or deny it.
+give concrete reasoning tied to the evidence and ONE OR MORE safe, read-only commands
+that together confirm or deny it.
+
+"likelihood" is your probability (0.0-1.0) that this hypothesis is the actual root
+cause. Make the likelihoods RELATIVE across the list — they should roughly sum to 1.0
+so they read as a percentage split, not fixed scores. Order the list by likelihood,
+highest first.
 
 Respond as JSON only:
 {
@@ -35,7 +40,7 @@ Respond as JSON only:
       "title": "short root-cause statement",
       "reasoning": "why this is plausible, referencing the evidence",
       "evidence": "the specific recon line(s) that point here",
-      "proposed_check": "a single read-only shell command to confirm/deny",
+      "proposed_checks": ["read-only shell command", "optional second read-only command"],
       "likelihood": 0.0
     }
   ]
@@ -46,9 +51,10 @@ CHECK_SYSTEM = (
     SAFETY_PREAMBLE
     + """
 
-The technician selected one hypothesis and ran its check command. Given the check
-output, decide whether the hypothesis is CONFIRMED as the root cause. If confirmed,
-propose the minimal fix.
+The technician selected one hypothesis (or wrote their own) and ran its check
+command(s). Technician comments, when present, are steering guidance you should weigh.
+Given the check output, decide whether the hypothesis is CONFIRMED as the root cause.
+If confirmed, propose the minimal fix.
 
 Respond as JSON only:
 {
