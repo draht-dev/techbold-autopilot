@@ -27,9 +27,10 @@ export default function TicketDetail() {
     setStarting(true);
     try {
       const res = await api.startRun(ticketId, autoApproveReads);
-      navigate(`/runs/${res.run_id}`);
+      window.open(`/runs/${res.run_id}`, "_blank", "noopener,noreferrer");
     } catch (e: any) {
       setError(String(e.message || e));
+    } finally {
       setStarting(false);
     }
   }
