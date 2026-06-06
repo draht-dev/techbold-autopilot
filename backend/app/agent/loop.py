@@ -1,19 +1,30 @@
-"""Agent orchestration loop (Cursor Debug Mode style).
+"""Autonomous agent orchestration (Cursor / Claude-Code style).
 
-Phases: connect -> recon -> ranked hypotheses (human picks) -> check -> on confirm,
-propose minimal fix (human approves) -> apply -> validate -> verify persistence ->
-draft activity (human reviews) -> submit + mark DONE. STOP unblocks at any point.
+One troubleshooting run is ONE continuous agent conversation. After connecting and
+a cheap deterministic recon seed, the agent drives itself with tools: it runs as
+many commands as it wants, decides when to present hypotheses (a blocking human
+pick), asks the technician to decide when blocked, and finishes when the issue is
+resolved (or closed). Every command still flows through the gated/audited/redacted
+``execute_command`` choke point, so human approval and secret filtering are intact.
 """
 from __future__ import annotations
 
-import shlex
 from typing import Any, Optional
+
+from langchain_core.messages import AIMessage
 
 from app.agent import prompts
 from app.agent.activity import draft_activity
-from app.agent.llm import LLM, LLMError
-from app.agent.schemas import CheckOutput, HypothesesOutput, ValidationOutput
-from app.agent.tools import RECON_PLAYBOOK, execute_command
+from app.agent.agent_tools import (
+    AGENT_TOOLS,
+    FINISH,
+    PRESENT_HYPOTHESES,
+    REQUEST_DECISION,
+    RUN_COMMAND,
+)
+from app.agent.llm import LLM, LLMError, reasoning_text
+from app.agent.session import AgentSession
+from app.agent.tools import RECON_PLAYBOOK, ExecResult, execute_command
 from app.models import (
     ActivityCreate,
     EventType,
@@ -25,14 +36,16 @@ from app.models import (
 from app.runs.manager import Run, RunStopped
 from app.ssh import SSHError, SSHRunner
 
-MAX_HYPOTHESIS_ROUNDS = 6
+# Hard safety cap so a misbehaving model cannot loop forever; the agent is
+# otherwise free to make as many tool calls as it needs.
+_RESULT_SNIPPET = 1200
 
 
 async def run_agent(run: Run, llm: LLM) -> None:
     try:
         await _connect(run)
         recon = await _recon(run)
-        await _diagnose(run, llm, recon)
+        await _investigate(run, llm, recon)
     except RunStopped:
         run.set_phase(RunPhase.STOPPED)
         run.info("Run stopped by technician.")
@@ -106,6 +119,7 @@ async def _connect(run: Run) -> None:
 
 
 async def _recon(run: Run) -> str:
+    """Cheap, read-only evidence gathering to give the agent a head start."""
     run.set_phase(RunPhase.RECON)
     run.info("Gathering read-only diagnostics...")
     blocks: list[str] = []
@@ -116,7 +130,10 @@ async def _recon(run: Run) -> str:
     return "\n\n".join(blocks)
 
 
-async def _diagnose(run: Run, llm: LLM, recon: str) -> None:
+# --------------------------------------------------------------------------- #
+# The autonomous tool loop
+# --------------------------------------------------------------------------- #
+async def _investigate(run: Run, llm: LLM, recon: str) -> None:
     if not llm.configured:
         run.info(
             "No LLM configured (set OPENROUTER_API_KEY). Recon is complete; "
@@ -124,81 +141,118 @@ async def _diagnose(run: Run, llm: LLM, recon: str) -> None:
         )
         return
 
-    context = _ticket_context(run) + "\n\nRECON OUTPUT:\n" + recon
-    for _ in range(MAX_HYPOTHESIS_ROUNDS):
+    settings = run.settings
+    session = AgentSession(
+        llm,
+        prompts.AGENT_SYSTEM,
+        model=llm.agent_model,
+        max_tokens=settings.agent_context_max_tokens,
+        compact_threshold=settings.agent_context_compact_threshold,
+        keep_recent_messages=settings.agent_context_keep_recent_messages,
+        reasoning_effort=settings.agent_reasoning_effort or None,
+    )
+    session.add_user(
+        _ticket_context(run)
+        + "\n\nINITIAL READ-ONLY RECON:\n"
+        + recon
+        + "\n\nStart by reproducing the reported problem, then proceed."
+    )
+
+    run.set_phase(RunPhase.REPRODUCING)
+    for _ in range(settings.agent_max_iterations):
         run.check_stop()
-        hyps = await _hypotheses(run, llm, context)
-        if not hyps:
-            run.info("No further hypotheses produced.")
-            return
+        ai = await session.invoke(AGENT_TOOLS)
+        _stream_assistant(run, session, ai)
 
-        selection = await run.await_hypothesis_selection()
-        hyp = _resolve_selection(run, selection)
-        if hyp is None:
-            continue
-        hyp.status = "checking"
-        _emit_hypotheses(run)
-        run.audit.record("hypothesis_selected", text=hyp.title, source=hyp.source)
-        origin = "your" if hyp.source == "technician" else "ranked"
-        run.info(f"Checking {origin} hypothesis: {hyp.title}")
-
-        run.set_phase(RunPhase.CHECK)
-        # A hypothesis can carry several read-only checks; run them all and aggregate.
-        check_blocks: list[str] = []
-        for cmd in hyp.checks:
-            res = await execute_command(run, cmd, actor="agent", purpose="hypothesis check")
-            check_blocks.append(f"$ {cmd}\n{res.output}".strip())
-        check_output = "\n\n".join(check_blocks) if check_blocks else "(no check command provided)"
-        comment_block = _format_comments(hyp)
-
-        verdict = await llm.complete_json(
-            prompts.CHECK_SYSTEM,
-            f"{context}\n\nSELECTED HYPOTHESIS: {hyp.title}\n{hyp.reasoning}\n{comment_block}\n\n"
-            f"CHECK COMMANDS:\n{chr(10).join(hyp.checks) or '(none)'}\nCHECK OUTPUT:\n{check_output}",
-            model=llm.agent_model,
-            schema=CheckOutput,
-        )
-
-        if not verdict.get("confirmed"):
-            hyp.status = "rejected"
-            _emit_hypotheses(run)
-            run.info(f"Hypothesis not confirmed: {verdict.get('reasoning', '')}")
-            context += (
-                f"\n\nREJECTED hypothesis '{hyp.title}'.{comment_block} Check output:\n{check_output}"
+        if not ai.tool_calls:
+            # No tool call: nudge the agent to act (or finish) and keep going.
+            session.add_user(
+                "Continue the investigation. Use a tool (RunCommand / "
+                "PresentHypotheses / RequestDecision) or call Finish when done."
             )
             continue
 
-        hyp.status = "confirmed"
-        _emit_hypotheses(run)
-        run.info(f"Root cause confirmed: {hyp.title}")
-        fix = verdict.get("proposed_fix") or {}
+        for call in ai.tool_calls:
+            run.check_stop()
+            result, done = await _dispatch(run, llm, call)
+            session.add_tool_result(call.get("id", ""), result, name=call.get("name"))
+            run.stream_agent(kind="tool_result", text=_snippet(result), name=call.get("name"))
+            if done:
+                return
 
-        if not await _apply_fix(run, fix):
-            context += f"\n\nFix for '{hyp.title}' was rejected or blocked."
-            continue
-        if not await _validate(run, llm, fix):
-            context += f"\n\nFix for '{hyp.title}' applied but validation failed."
-            continue
-
-        await _persist_verify(run, llm, fix)
-        await _finalize(run, llm)
-        return
-
-    run.info("Hypothesis limit reached without a validated fix. Technician can take over.")
+    run.info("Agent reached the iteration limit without finishing. Technician can take over.")
 
 
-async def _hypotheses(run: Run, llm: LLM, context: str) -> list[Hypothesis]:
-    run.set_phase(RunPhase.HYPOTHESES)
-    run.info("Forming ranked hypotheses...")
-    data = await llm.complete_json(
-        prompts.HYPOTHESES_SYSTEM, context, model=llm.agent_model, schema=HypothesesOutput
+def _stream_assistant(run: Run, session: AgentSession, ai: AIMessage) -> None:
+    text = ai.content if isinstance(ai.content, str) else ""
+    if not text and isinstance(ai.content, list):
+        text = "".join(
+            b.get("text", "") if isinstance(b, dict) else str(b) for b in ai.content
+        )
+    run.stream_agent(
+        kind="assistant",
+        text=text or "",
+        reasoning=reasoning_text(ai),
+        tool_calls=[{"name": c.get("name"), "args": c.get("args", {})} for c in ai.tool_calls],
+        context_tokens=session.context_tokens,
+        compactions=session.compaction_count,
     )
-    raw = data.get("hypotheses") or []
+
+
+async def _dispatch(run: Run, llm: LLM, call: dict[str, Any]) -> tuple[str, bool]:
+    """Run one tool call. Returns ``(tool_result_text, finished)``."""
+    name = call.get("name")
+    args = call.get("args") or {}
+
+    if name == RUN_COMMAND:
+        command = str(args.get("command", "")).strip()
+        if not command:
+            return "No command provided.", False
+        purpose = str(args.get("purpose", "")) or "investigation"
+        res = await execute_command(run, command, actor="agent", purpose=purpose)
+        return _format_exec(res), False
+
+    if name == PRESENT_HYPOTHESES:
+        return await _present_hypotheses(run, args), False
+
+    if name == REQUEST_DECISION:
+        return await _request_decision(run, args), False
+
+    if name == FINISH:
+        await _finalize(run, llm, args)
+        return "Run finalized; activity handed to the technician.", True
+
+    return f"Unknown tool '{name}'.", False
+
+
+def _format_exec(res: ExecResult) -> str:
+    status = "ok"
+    if res.blocked:
+        status = f"BLOCKED ({res.reason})"
+    elif res.rejected:
+        status = "REJECTED by technician"
+    elif res.timed_out:
+        status = "timed out"
+    header = f"$ {res.command}\n[exit={res.exit_code} status={status}]"
+    body = res.output.strip()
+    return f"{header}\n{body}".strip()
+
+
+def _snippet(text: str) -> str:
+    text = (text or "").strip()
+    return text if len(text) <= _RESULT_SNIPPET else text[:_RESULT_SNIPPET] + "\n[...truncated...]"
+
+
+# --------------------------------------------------------------------------- #
+# Tool: present hypotheses (blocking human pick)
+# --------------------------------------------------------------------------- #
+async def _present_hypotheses(run: Run, args: dict[str, Any]) -> str:
+    raw = args.get("hypotheses") or []
     hyps: list[Hypothesis] = []
     for i, h in enumerate(raw[:5], start=1):
+        if not isinstance(h, dict):
+            continue
         checks = [str(c).strip() for c in (h.get("proposed_checks") or []) if c and str(c).strip()]
-        if not checks and h.get("proposed_check"):
-            checks = [str(h["proposed_check"]).strip()]
         hyps.append(
             Hypothesis(
                 id=f"h{i}",
@@ -211,10 +265,37 @@ async def _hypotheses(run: Run, llm: LLM, context: str) -> list[Hypothesis]:
                 source="agent",
             )
         )
+    if not hyps:
+        return "No hypotheses were provided; gather more evidence and try again."
+
     _normalize_likelihoods(hyps)
     run.hypotheses = hyps
     _emit_hypotheses(run)
-    return hyps
+
+    run.set_phase(RunPhase.HYPOTHESES)
+    run.info("Waiting for the technician to select a hypothesis...")
+    selection = await run.await_hypothesis_selection()
+    hyp = _resolve_selection(run, selection)
+    if hyp is None:
+        return "The technician did not select a usable hypothesis; propose a new list."
+
+    hyp.status = "checking"
+    _emit_hypotheses(run)
+    run.audit.record("hypothesis_selected", text=hyp.title, source=hyp.source)
+    origin = "their own" if hyp.source == "technician" else "a ranked"
+    run.info(f"Technician selected {origin} hypothesis: {hyp.title}")
+    run.set_phase(RunPhase.INVESTIGATING)
+
+    comment_block = _format_comments(hyp)
+    checks = "\n".join(f"- {c}" for c in hyp.checks) or "(none suggested)"
+    return (
+        f"The technician selected this hypothesis to investigate:\n"
+        f"Title: {hyp.title}\n"
+        f"Reasoning: {hyp.reasoning}\n"
+        f"Suggested read-only checks:\n{checks}{comment_block}\n\n"
+        f"Investigate it with RunCommand. Confirm or reject it from the evidence; "
+        f"if rejected, gather more evidence and call PresentHypotheses again."
+    )
 
 
 def _normalize_likelihoods(hyps: list[Hypothesis]) -> None:
@@ -263,7 +344,6 @@ def _resolve_selection(run: Run, selection: Any) -> Optional[Hypothesis]:
     technician's OWN hypothesis to the set and selects it.
     """
     if not isinstance(selection, dict):
-        # Back-compat: a bare id string selects an existing hypothesis.
         return next((h for h in run.hypotheses if h.id == selection), None)
     if selection.get("kind") == "custom":
         checks = [str(c).strip() for c in (selection.get("checks") or []) if c and str(c).strip()]
@@ -284,89 +364,46 @@ def _resolve_selection(run: Run, selection: Any) -> Optional[Hypothesis]:
     return next((h for h in run.hypotheses if h.id == selection.get("id")), None)
 
 
-async def _apply_fix(run: Run, fix: dict) -> bool:
-    commands = [c for c in (fix.get("commands") or []) if c and c.strip()]
-    run.set_phase(RunPhase.FIX_PROPOSE)
-    decision = await run.request_approval(
-        "fix",
-        {
-            "explanation": fix.get("explanation", ""),
-            "commands": commands,
-            "service": fix.get("service"),
-            "validation_command": fix.get("validation_command"),
-        },
-        "Apply the proposed fix",
+# --------------------------------------------------------------------------- #
+# Tool: request a technician decision (blocking)
+# --------------------------------------------------------------------------- #
+async def _request_decision(run: Run, args: dict[str, Any]) -> str:
+    question = str(args.get("question", "")).strip() or "How should I proceed?"
+    options = [str(o).strip() for o in (args.get("options") or []) if str(o).strip()]
+    if not options:
+        options = ["Continue investigating", "Stop"]
+    context = str(args.get("context", ""))
+
+    prev_phase = run.phase
+    run.set_phase(RunPhase.AWAITING_INPUT)
+    run.info(f"Waiting for a technician decision: {question}")
+    choice = await run.await_decision(question, options, context)
+    run.info(f"Technician decision: {choice}")
+    if prev_phase not in (RunPhase.CONNECTING, RunPhase.RECON):
+        run.set_phase(prev_phase)
+    else:
+        run.set_phase(RunPhase.INVESTIGATING)
+    return (
+        f"The technician chose: {choice}\n"
+        f"Act on this decision. If they chose to close the ticket, call Finish "
+        f"with the appropriate outcome."
     )
-    if not decision.approved:
-        run.info("Fix rejected by technician.")
-        return False
-    if decision.edited:
-        commands = [c for c in decision.edited.splitlines() if c.strip()]
-
-    run.set_phase(RunPhase.APPLY)
-    for cmd in commands:
-        res = await execute_command(run, cmd, actor="agent", purpose="apply fix", require_confirm=False)
-        if res.blocked:
-            run.info(f"Fix command blocked by safety layer: {res.reason}")
-            return False
-    return True
 
 
-async def _validate(run: Run, llm: LLM, fix: dict) -> bool:
-    run.set_phase(RunPhase.VALIDATE)
-    vcmd = fix.get("validation_command")
-    if not vcmd:
-        run.info("No validation command proposed; treating apply as success.")
-        return True
-    res = await execute_command(run, vcmd, actor="agent", purpose="validate fix", require_confirm=False)
-    verdict = await llm.complete_json(
-        prompts.VALIDATION_SYSTEM,
-        f"Validation command: {vcmd}\nOutput:\n{res.output}",
-        model=llm.fast_model,
-        schema=ValidationOutput,
-    )
-    success = bool(verdict.get("success"))
-    proof = str(verdict.get("validation_result", ""))
-    run.emit(EventType.VALIDATION, success=success, proof=proof, command=vcmd)
-    run.audit.record("validation", text=proof, success=success)
-    if not success:
-        run.info("Validation did not confirm the fix.")
-    return success
+# --------------------------------------------------------------------------- #
+# Tool: finish (draft activity -> human review -> submit)
+# --------------------------------------------------------------------------- #
+async def _finalize(run: Run, llm: LLM, args: dict[str, Any]) -> None:
+    outcome = str(args.get("outcome", "fixed"))
+    note = str(args.get("note", "")).strip()
+    if note:
+        run.audit.record("note", text=f"Agent closing note ({outcome}): {note}")
 
-
-async def _persist_verify(run: Run, llm: LLM, fix: dict) -> None:
-    run.set_phase(RunPhase.PERSIST_VERIFY)
-    service = fix.get("service")
-    if not service:
-        run.info("No service identified for a persistence check.")
-        return
-    run.info(f"Verifying persistence by restarting {service}...")
-    await execute_command(
-        run, f"systemctl restart {shlex.quote(str(service))}",
-        actor="agent", purpose="persistence restart", require_confirm=False,
-    )
-    vcmd = fix.get("validation_command")
-    if not vcmd:
-        return
-    res = await execute_command(run, vcmd, actor="agent", purpose="re-validate after restart", require_confirm=False)
-    verdict = await llm.complete_json(
-        prompts.VALIDATION_SYSTEM,
-        f"After restarting {service}. Command: {vcmd}\nOutput:\n{res.output}",
-        model=llm.fast_model,
-        schema=ValidationOutput,
-    )
-    success = bool(verdict.get("success"))
-    proof = str(verdict.get("validation_result", ""))
-    run.emit(EventType.VALIDATION, success=success, proof=proof, command=vcmd, after_restart=True)
-    run.audit.record("validation", text=proof, success=success, after_restart=True)
-
-
-async def _finalize(run: Run, llm: LLM) -> None:
     run.set_phase(RunPhase.ACTIVITY_DRAFT)
-    run.info("Drafting activity documentation...")
+    run.info(f"Drafting activity documentation (outcome: {outcome})...")
     draft = await draft_activity(run, llm)
     run.activity_draft = draft
-    run.emit(EventType.ACTIVITY_DRAFT, draft=draft)
+    run.emit(EventType.ACTIVITY_DRAFT, draft=draft, outcome=outcome)
 
     edited = await run.await_activity_submission()
     fields = edited or draft
@@ -389,8 +426,13 @@ async def _finalize(run: Run, llm: LLM) -> None:
         _fail(run, f"Failed to submit activity: {exc}")
         return
 
-    run.audit.record("activity_submitted", activity_id=getattr(created, "id", None))
-    run.emit(EventType.ACTIVITY_SUBMITTED, activity_id=getattr(created, "id", None))
-    await _safe_set_status(run, TicketStatus.DONE)
+    run.audit.record("activity_submitted", activity_id=getattr(created, "id", None), outcome=outcome)
+    run.emit(EventType.ACTIVITY_SUBMITTED, activity_id=getattr(created, "id", None), outcome=outcome)
+    # A validated fix marks the ticket DONE; anything else returns it to the queue.
+    final_status = TicketStatus.DONE if outcome == "fixed" else TicketStatus.PENDING
+    await _safe_set_status(run, final_status)
     run.set_phase(RunPhase.DONE)
-    run.info("Activity submitted and ticket marked DONE.")
+    run.info(
+        "Activity submitted and ticket marked "
+        f"{'DONE' if final_status == TicketStatus.DONE else 'PENDING'}."
+    )
