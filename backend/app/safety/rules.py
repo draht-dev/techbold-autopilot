@@ -94,6 +94,30 @@ SECURITY_UNITS = {"ufw", "firewalld", "auditd", "apparmor", "fail2ban", "ssh", "
 
 PREFIX_NOISE = {"sudo", "doas", "command", "nice", "ionice", "nohup", "time", "env"}
 
+# This is a strictly NON-INTERACTIVE session: every command runs without a TTY and
+# returns a single, bounded result. Programs that need a terminal (editors, pagers,
+# live monitors, REPLs, interactive DB/remote clients) would hang or be useless, so
+# they are blocked deterministically and cannot be overridden by a human.
+INTERACTIVE_PROGRAMS = {
+    # editors
+    "vi", "vim", "nvim", "view", "vimdiff", "rvim", "nano", "pico", "emacs",
+    "emacsclient", "ed", "joe", "jed", "mcedit", "micro",
+    # pagers
+    "less", "more", "most", "man",
+    # live / full-screen monitors (never exit on their own)
+    "top", "htop", "atop", "btop", "iotop", "iftop", "glances", "nmon", "watch",
+    # multiplexers / interactive remote / debuggers
+    "screen", "tmux", "ssh", "sftp", "telnet", "ftp", "mc", "gdb", "lldb",
+    "nc", "ncat", "socat",
+}
+
+# Language runtimes that drop into an interactive REPL when given no script/arg.
+REPL_PROGRAMS = {"python", "python3", "ipython", "node", "irb", "php", "perl", "ruby", "lua"}
+
+# DB clients that open an interactive prompt unless a query/file is supplied.
+DB_CLIENTS = {"mysql", "mariadb", "psql", "mongo", "mongosh", "redis-cli", "sqlite3"}
+_DB_NONINTERACTIVE_FLAGS = ("-e", "-c", "--execute", "--command", "-f", "--file", "--eval")
+
 
 class Category(IntEnum):
     SAFE_READ = 0
@@ -323,6 +347,8 @@ def classify_segment(argv: list[str]) -> Decision:
     if base == "journalctl":
         if any(a.startswith("--vacuum") or a == "--rotate" for a in args):
             return deny("rotating/vacuuming logs (audit tampering)")
+        if any(a in ("-f", "--follow") for a in args):
+            return deny("streaming journalctl --follow (non-interactive session)")
         return safe("journalctl read")
 
     # --- sed -i / tee / package installs are mutations --------------------- #
@@ -355,6 +381,24 @@ def classify_segment(argv: list[str]) -> Decision:
                 "userdel", "passwd", "visudo", "ln", "mv", "cp", "tee", "tar",
                 "unzip", "make", "git"):
         return confirm(f"state-changing command ({base})")
+
+    # --- non-interactive enforcement --------------------------------------- #
+    # The session has no TTY; interactive programs would hang until timeout.
+    # Block them deterministically (a human cannot override a DENY).
+    if base in INTERACTIVE_PROGRAMS:
+        return deny(f"interactive program '{base}' (this session is non-interactive)")
+    if base == "tail" and any(
+        a in ("-f", "-F", "--follow") or a.startswith("-f") or a.startswith("-F") for a in args
+    ):
+        return deny("streaming 'tail -f' (this session is non-interactive)")
+    if base in REPL_PROGRAMS and not paths and not any(
+        a in ("-c", "-e", "--eval") or a.startswith("-c") or a.startswith("-e") for a in args
+    ):
+        return deny(f"interactive {base} REPL (this session is non-interactive)")
+    if base in DB_CLIENTS and not paths and not any(
+        a == f or a.startswith(f) for a in args for f in _DB_NONINTERACTIVE_FLAGS
+    ):
+        return deny(f"interactive {base} client (pass a query, e.g. -e/-c, in a non-interactive session)")
 
     # --- known read-only ---------------------------------------------------- #
     if base in READ_ONLY_COMMANDS:

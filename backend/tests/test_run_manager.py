@@ -4,7 +4,7 @@ import asyncio
 import pytest
 
 from app.config import Settings
-from app.runs.manager import Run, RunStopped
+from app.runs.manager import HypothesisSelection, Run, RunStopped
 
 
 def make_run(tmp_path, auto: bool = True) -> Run:
@@ -47,7 +47,8 @@ async def test_hypothesis_selection(tmp_path):
 
     asyncio.create_task(select_later())
     selected = await run.await_hypothesis_selection()
-    assert selected == "h2"
+    assert isinstance(selected, HypothesisSelection)
+    assert selected.hypothesis_id == "h2"
 
 
 async def test_event_history_and_live_subscription(tmp_path):

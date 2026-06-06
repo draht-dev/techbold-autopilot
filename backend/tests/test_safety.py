@@ -45,6 +45,19 @@ CONFIRM_CASES = [
     "env",
 ]
 
+INTERACTIVE_DENY_CASES = [
+    "vim /etc/nginx/nginx.conf",
+    "less /var/log/syslog",
+    "top",
+    "htop",
+    "watch -n1 systemctl status nginx",
+    "tail -f /var/log/syslog",
+    "journalctl -f",
+    "python3",
+    "psql",
+    "mysql",
+]
+
 ALLOW_CASES = [
     "ls -la /var/www",
     "cat /var/log/syslog",
@@ -57,6 +70,11 @@ ALLOW_CASES = [
     "ps aux",
     "curl http://localhost:8080/health",
 ]
+
+
+@pytest.mark.parametrize("cmd", INTERACTIVE_DENY_CASES)
+def test_interactive_commands_denied(cmd):
+    assert decide(cmd, auto_approve_reads=True).action == "DENY", cmd
 
 
 @pytest.mark.parametrize("cmd", DENY_CASES)

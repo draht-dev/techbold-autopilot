@@ -7,11 +7,12 @@ draft activity (human reviews) -> submit + mark DONE. STOP unblocks at any point
 from __future__ import annotations
 
 import shlex
+from typing import Optional
 
 from app.agent import prompts
 from app.agent.activity import draft_activity
 from app.agent.llm import LLM, LLMError
-from app.agent.schemas import CheckOutput, HypothesesOutput, ValidationOutput
+from app.agent.schemas import CheckCommandOutput, CheckOutput, HypothesesOutput, ValidationOutput
 from app.agent.tools import RECON_PLAYBOOK, execute_command
 from app.models import (
     ActivityCreate,
@@ -21,7 +22,7 @@ from app.models import (
     TicketStatus,
     utcnow_iso,
 )
-from app.runs.manager import Run, RunStopped
+from app.runs.manager import HypothesisSelection, Run, RunStopped
 from app.ssh import SSHError, SSHRunner
 
 MAX_HYPOTHESIS_ROUNDS = 6
@@ -130,11 +131,12 @@ async def _diagnose(run: Run, llm: LLM, recon: str) -> None:
             run.info("No further hypotheses produced.")
             return
 
-        selected_id = await run.await_hypothesis_selection()
-        hyp = next((h for h in run.hypotheses if h.id == selected_id), None)
+        selection = await run.await_hypothesis_selection()
+        hyp = await _resolve_selection(run, llm, context, selection)
         if hyp is None:
             continue
         hyp.status = "checking"
+        run.emit(EventType.HYPOTHESES, items=[h.model_dump() for h in run.hypotheses])
         run.audit.record("hypothesis_selected", text=hyp.title)
         run.info(f"Checking hypothesis: {hyp.title}")
 
@@ -144,9 +146,10 @@ async def _diagnose(run: Run, llm: LLM, recon: str) -> None:
             res = await execute_command(run, hyp.proposed_check, actor="agent", purpose="hypothesis check")
             check_output = res.output
 
+        comment_line = f"\nTechnician comment: {hyp.comment}" if hyp.comment else ""
         verdict = await llm.complete_json(
             prompts.CHECK_SYSTEM,
-            f"{context}\n\nSELECTED HYPOTHESIS: {hyp.title}\n{hyp.reasoning}\n\n"
+            f"{context}\n\nSELECTED HYPOTHESIS: {hyp.title}\n{hyp.reasoning}{comment_line}\n\n"
             f"CHECK COMMAND: {hyp.proposed_check}\nCHECK OUTPUT:\n{check_output}",
             model=llm.agent_model,
             schema=CheckOutput,
@@ -178,11 +181,70 @@ async def _diagnose(run: Run, llm: LLM, recon: str) -> None:
     run.info("Hypothesis limit reached without a validated fix. Technician can take over.")
 
 
+def _technician_comments_block(hyps: list[Hypothesis]) -> str:
+    lines = [
+        f"- {h.title}: {h.comment}"
+        for h in hyps
+        if h.comment and h.source == "agent"
+    ]
+    if not lines:
+        return ""
+    return "\n\nTECHNICIAN COMMENTS ON PRIOR HYPOTHESES:\n" + "\n".join(lines)
+
+
+async def _derive_custom_check(
+    run: Run, llm: LLM, context: str, title: str, comment: Optional[str]
+) -> str:
+    extra = f"\nTechnician comment: {comment}" if comment else ""
+    data = await llm.complete_json(
+        prompts.CUSTOM_CHECK_SYSTEM,
+        f"{context}\n\nTECHNICIAN HYPOTHESIS: {title}{extra}",
+        model=llm.agent_model,
+        schema=CheckCommandOutput,
+    )
+    return str(data.get("proposed_check", "")).strip()
+
+
+async def _resolve_selection(
+    run: Run, llm: LLM, context: str, selection: HypothesisSelection
+) -> Optional[Hypothesis]:
+    if selection.hypothesis_id == "custom":
+        title = (selection.custom_title or "").strip()
+        if not title:
+            return None
+        proposed_check = await _derive_custom_check(
+            run, llm, context, title, selection.comment
+        )
+        hyp = Hypothesis(
+            id="custom",
+            rank=0,
+            title=title,
+            reasoning="Proposed by the technician.",
+            evidence="",
+            proposed_check=proposed_check,
+            source="technician",
+            comment=selection.comment,
+        )
+        run.hypotheses = [hyp]
+        return hyp
+
+    hyp = next((h for h in run.hypotheses if h.id == selection.hypothesis_id), None)
+    if hyp is None:
+        return None
+    if selection.comment:
+        hyp.comment = selection.comment
+    return hyp
+
+
 async def _hypotheses(run: Run, llm: LLM, context: str) -> list[Hypothesis]:
     run.set_phase(RunPhase.HYPOTHESES)
     run.info("Forming ranked hypotheses...")
+    prompt_context = context + _technician_comments_block(run.hypotheses)
     data = await llm.complete_json(
-        prompts.HYPOTHESES_SYSTEM, context, model=llm.agent_model, schema=HypothesesOutput
+        prompts.HYPOTHESES_SYSTEM,
+        prompt_context,
+        model=llm.agent_model,
+        schema=HypothesesOutput,
     )
     raw = data.get("hypotheses") or []
     hyps: list[Hypothesis] = []

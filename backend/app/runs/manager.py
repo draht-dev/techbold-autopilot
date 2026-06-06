@@ -28,6 +28,13 @@ class ApprovalDecision:
     edited: Optional[str] = None
 
 
+@dataclass
+class HypothesisSelection:
+    hypothesis_id: str
+    comment: Optional[str] = None
+    custom_title: Optional[str] = None
+
+
 class Run:
     def __init__(
         self,
@@ -156,7 +163,7 @@ class Run:
             return True
         return False
 
-    async def await_hypothesis_selection(self) -> str:
+    async def await_hypothesis_selection(self) -> HypothesisSelection:
         self.check_stop()
         fut = self._new_future()
         self.hypothesis_future = fut
@@ -165,11 +172,47 @@ class Run:
         finally:
             self.hypothesis_future = None
 
-    def select_hypothesis(self, hypothesis_id: str) -> bool:
+    def select_hypothesis(
+        self, hypothesis_id: str, comment: Optional[str] = None
+    ) -> bool:
         fut = self.hypothesis_future
         if fut is not None and not fut.done():
-            fut.set_result(hypothesis_id)
+            fut.set_result(
+                HypothesisSelection(
+                    hypothesis_id=hypothesis_id,
+                    comment=(comment or "").strip() or None,
+                )
+            )
             return True
+        return False
+
+    def submit_custom_hypothesis(
+        self, title: str, comment: Optional[str] = None
+    ) -> bool:
+        text = (title or "").strip()
+        if not text:
+            return False
+        fut = self.hypothesis_future
+        if fut is not None and not fut.done():
+            fut.set_result(
+                HypothesisSelection(
+                    hypothesis_id="custom",
+                    custom_title=text,
+                    comment=(comment or "").strip() or None,
+                )
+            )
+            return True
+        return False
+
+    def annotate_hypothesis(self, hypothesis_id: str, comment: str) -> bool:
+        for hyp in self.hypotheses:
+            if hyp.id == hypothesis_id:
+                hyp.comment = comment.strip() or None
+                self.emit(
+                    EventType.HYPOTHESES,
+                    items=[h.model_dump() for h in self.hypotheses],
+                )
+                return True
         return False
 
     async def await_activity_submission(self) -> Optional[dict[str, Any]]:

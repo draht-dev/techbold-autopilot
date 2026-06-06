@@ -49,6 +49,8 @@ export interface Hypothesis {
   proposed_check: string;
   likelihood?: number | null;
   status: "open" | "checking" | "confirmed" | "rejected";
+  source?: "agent" | "technician";
+  comment?: string | null;
 }
 
 export interface ActivityDraft {

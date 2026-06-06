@@ -88,6 +88,10 @@ async def execute_command(
                 EventType.COMMAND, command=command, actor=actor, rejected=True,
                 exit_code=None, output_redacted="[rejected by technician]",
             )
+            run.emit(
+                EventType.TERM,
+                data=f"$ {command}\r\n[REJECTED by technician]\r\n",
+            )
             return ExecResult(command, None, "[rejected by technician]", rejected=True)
         if dec.edited:
             command = dec.edited.strip()

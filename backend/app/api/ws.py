@@ -62,7 +62,11 @@ async def _sender(websocket: WebSocket, queue: asyncio.Queue) -> None:
 async def _handle(run: Any, msg: dict[str, Any]) -> None:
     msg_type = msg.get("type")
     if msg_type == "select_hypothesis":
-        run.select_hypothesis(msg.get("id"))
+        run.select_hypothesis(msg.get("id"), comment=msg.get("comment"))
+    elif msg_type == "submit_custom_hypothesis":
+        run.submit_custom_hypothesis(msg.get("title"), comment=msg.get("comment"))
+    elif msg_type == "hypothesis.comment":
+        run.annotate_hypothesis(msg.get("id"), msg.get("comment") or "")
     elif msg_type == "approval.decision":
         run.resolve_approval(msg.get("id"), bool(msg.get("approved")), msg.get("edited"))
     elif msg_type == "mode.set":

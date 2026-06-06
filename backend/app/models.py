@@ -120,6 +120,8 @@ class Hypothesis(BaseModel):
     proposed_check: str = ""
     likelihood: Optional[float] = None
     status: Literal["open", "checking", "confirmed", "rejected"] = "open"
+    source: Literal["agent", "technician"] = "agent"
+    comment: Optional[str] = None
 
 
 class StartRunRequest(BaseModel):

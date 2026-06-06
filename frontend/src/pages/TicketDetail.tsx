@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { useNavigate, useParams } from "react-router-dom";
+import remarkGfm from "remark-gfm";
 import { api, CustomerSystem, Ticket } from "../api/client";
 
 export default function TicketDetail() {
@@ -61,7 +63,9 @@ export default function TicketDetail() {
                 <dt>Tags</dt>
                 <dd>{ticket.tags?.join(", ") || "—"}</dd>
               </dl>
-              <p style={{ marginTop: 12 }}>{ticket.description}</p>
+              <div className="ticket-markdown" style={{ marginTop: 12 }}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{ticket.description}</ReactMarkdown>
+              </div>
             </div>
           </div>
         </div>

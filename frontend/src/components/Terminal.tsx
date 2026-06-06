@@ -69,7 +69,9 @@ export default function TerminalView({ chunks, enabled, onCommand }: Props) {
       <div className="panel-header">
         <h2>Terminal</h2>
         <span className="muted" style={{ fontSize: 12 }}>
-          {enabled ? "you can run commands" : "agent is working…"}
+          {enabled
+            ? "non-interactive — one command at a time"
+            : "agent is working…"}
         </span>
       </div>
       <div ref={containerRef} style={{ height: 360, padding: 8, background: "#1e1e1e" }} />

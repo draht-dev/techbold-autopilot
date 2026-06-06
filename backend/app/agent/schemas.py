@@ -18,6 +18,12 @@ class HypothesesOutput(BaseModel):
     hypotheses: list[HypothesisItem] = Field(default_factory=list)
 
 
+class CheckCommandOutput(BaseModel):
+    """A single read-only command to confirm/deny a technician-supplied hypothesis."""
+
+    proposed_check: str = ""
+
+
 class ProposedFix(BaseModel):
     explanation: str = ""
     commands: list[str] = Field(default_factory=list)

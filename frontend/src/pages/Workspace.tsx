@@ -17,13 +17,22 @@ import ActivityReview from "../components/ActivityReview";
 const BUSY_PHASES = [
   "CONNECTING",
   "RECON",
+  "HYPOTHESES",
   "CHECK",
+  "FIX_PROPOSE",
   "APPLY",
   "VALIDATE",
   "PERSIST_VERIFY",
   "SUBMITTING",
 ];
 const FINAL_PHASES = ["DONE", "STOPPED", "ERROR"];
+const ACTIVE_HYPOTHESIS_PHASES = [
+  "CHECK",
+  "FIX_PROPOSE",
+  "APPLY",
+  "VALIDATE",
+  "PERSIST_VERIFY",
+];
 
 export default function Workspace() {
   const { runId } = useParams();
@@ -93,7 +102,9 @@ export default function Workspace() {
         break;
       case "hypotheses":
         setHypotheses(ev.items || []);
-        setAwaitingSelection(true);
+        setAwaitingSelection(
+          (ev.items || []).some((h: Hypothesis) => h.status === "open")
+        );
         break;
       case "approval.request":
         setApproval({ id: ev.id, kind: ev.kind, payload: ev.payload, purpose: ev.purpose });
@@ -117,11 +128,38 @@ export default function Workspace() {
     }
   }
 
-  function selectHypothesis(id: string) {
-    send({ type: "select_hypothesis", id });
+  function selectHypothesis(id: string, comment?: string) {
+    send({ type: "select_hypothesis", id, comment });
     setAwaitingSelection(false);
     setHypotheses((prev) =>
-      prev.map((h) => (h.id === id ? { ...h, status: "checking" } : h))
+      prev.map((h) =>
+        h.id === id ? { ...h, status: "checking", comment: comment ?? h.comment } : h
+      )
+    );
+  }
+
+  function submitCustomHypothesis(title: string, comment?: string) {
+    send({ type: "submit_custom_hypothesis", title, comment });
+    setAwaitingSelection(false);
+    setHypotheses([
+      {
+        id: "custom",
+        rank: 0,
+        title,
+        reasoning: "Proposed by the technician.",
+        evidence: "",
+        proposed_check: "",
+        status: "checking",
+        source: "technician",
+        comment: comment ?? null,
+      },
+    ]);
+  }
+
+  function annotateHypothesis(id: string, comment: string) {
+    send({ type: "hypothesis.comment", id, comment });
+    setHypotheses((prev) =>
+      prev.map((h) => (h.id === id ? { ...h, comment: comment || null } : h))
     );
   }
 
@@ -143,6 +181,18 @@ export default function Workspace() {
   const busy = BUSY_PHASES.includes(phase);
   const terminalEnabled = !!approval || !busy;
   const runActive = !FINAL_PHASES.includes(phase);
+
+  const visibleHypotheses = (() => {
+    if (phase === "HYPOTHESES" && awaitingSelection) return hypotheses;
+    if (ACTIVE_HYPOTHESIS_PHASES.includes(phase)) {
+      const active = hypotheses.find(
+        (h) => h.status === "checking" || h.status === "confirmed"
+      );
+      return active ? [active] : [];
+    }
+    return [];
+  })();
+  const showHypothesisPanel = visibleHypotheses.length > 0;
 
   return (
     <div>
@@ -185,11 +235,14 @@ export default function Workspace() {
 
         <div>
           {approval && <ApprovalPrompt approval={approval} onDecide={decideApproval} />}
-          {hypotheses.length > 0 && (
+          {showHypothesisPanel && (
             <HypothesisList
-              hypotheses={hypotheses}
+              hypotheses={visibleHypotheses}
               selectable={awaitingSelection && !approval}
+              compact={!awaitingSelection}
               onSelect={selectHypothesis}
+              onSubmitCustom={submitCustomHypothesis}
+              onComment={annotateHypothesis}
             />
           )}
           {activityDraft && (
@@ -199,7 +252,7 @@ export default function Workspace() {
               onSubmit={submitActivity}
             />
           )}
-          {!approval && !awaitingSelection && !activityDraft && (
+          {!approval && !awaitingSelection && !activityDraft && !showHypothesisPanel && (
             <div className="notice">{phaseHint(phase)}</div>
           )}
         </div>
@@ -229,8 +282,12 @@ function phaseHint(phase: string): string {
       return "Waiting to connect to the customer VM…";
     case "RECON":
       return "Agent is gathering read-only diagnostics…";
+    case "HYPOTHESES":
+      return "Review ranked hypotheses and select one to check, or propose your own.";
     case "CHECK":
       return "Agent is checking the selected hypothesis…";
+    case "FIX_PROPOSE":
+      return "Review and approve the proposed fix…";
     case "APPLY":
       return "Agent is applying the approved fix…";
     case "VALIDATE":
