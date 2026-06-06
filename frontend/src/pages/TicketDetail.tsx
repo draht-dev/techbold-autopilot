@@ -142,6 +142,59 @@ export default function TicketDetail() {
               )}
             </div>
           </div>
+
+          {done ? (
+            // A resolved ticket: no agent re-run. Plain, agent-free SSH access stays
+            // available so the technician can inspect the machine directly.
+            <div className="panel">
+              <div className="panel-body">
+                <p className="muted" style={{ marginTop: 0 }}>
+                  This ticket is <strong>DONE</strong>. The AI troubleshooting agent cannot be
+                  re-run. You can still open a plain SSH session to inspect the machine — no
+                  agent runs, and you drive the terminal yourself.
+                </p>
+                <button className="primary" disabled={starting || !system} onClick={openShell}>
+                  {starting ? "Connecting…" : "Open SSH terminal (no agent)"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="panel">
+              <div className="panel-body">
+                <div className="field">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={autoApproveReads}
+                      onChange={(e) => setAutoApproveReads(e.target.checked)}
+                      style={{ width: "auto", marginRight: 8 }}
+                    />
+                    Auto-approve safe read-only commands (mutations always require approval)
+                  </label>
+                </div>
+                <button className="primary" disabled={starting || !system} onClick={start}>
+                  {starting
+                    ? "Starting…"
+                    : resumable
+                      ? "Start a new run (replaces the current one)"
+                      : "Start AI troubleshooting run"}
+                </button>
+                <button
+                  className="ghost"
+                  style={{ marginLeft: 8 }}
+                  disabled={starting || !system}
+                  onClick={openShell}
+                >
+                  Open SSH terminal (no agent)
+                </button>
+                <p className="muted" style={{ marginTop: 8 }}>
+                  {resumable
+                    ? "Starting a new run will stop the in-progress run above and close its SSH session."
+                    : "You will be asked to approve the SSH connection and every action that changes the system."}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -159,61 +212,8 @@ export default function TicketDetail() {
           </button>
         </div>
       )}
-
       {resolution && <Resolution resolution={resolution} />}
 
-      {done ? (
-        // A resolved ticket: no agent re-run. Plain, agent-free SSH access stays
-        // available so the technician can inspect the machine directly.
-        <div className="panel">
-          <div className="panel-body">
-            <p className="muted" style={{ marginTop: 0 }}>
-              This ticket is <strong>DONE</strong>. The AI troubleshooting agent cannot be
-              re-run. You can still open a plain SSH session to inspect the machine — no
-              agent runs, and you drive the terminal yourself.
-            </p>
-            <button className="primary" disabled={starting || !system} onClick={openShell}>
-              {starting ? "Connecting…" : "Open SSH terminal (no agent)"}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="panel">
-          <div className="panel-body">
-            <div className="field">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={autoApproveReads}
-                  onChange={(e) => setAutoApproveReads(e.target.checked)}
-                  style={{ width: "auto", marginRight: 8 }}
-                />
-                Auto-approve safe read-only commands (mutations always require approval)
-              </label>
-            </div>
-            <button className="primary" disabled={starting || !system} onClick={start}>
-              {starting
-                ? "Starting…"
-                : resumable
-                ? "Start a new run (replaces the current one)"
-                : "Start AI troubleshooting run"}
-            </button>
-            <button
-              className="ghost"
-              style={{ marginLeft: 8 }}
-              disabled={starting || !system}
-              onClick={openShell}
-            >
-              Open SSH terminal (no agent)
-            </button>
-            <p className="muted" style={{ marginTop: 8 }}>
-              {resumable
-                ? "Starting a new run will stop the in-progress run above and close its SSH session."
-                : "You will be asked to approve the SSH connection and every action that changes the system."}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
