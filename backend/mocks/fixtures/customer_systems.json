@@ -1,0 +1,68 @@
+{
+  "7001": {
+    "ticket_id": 7001,
+    "customer_id": 5001,
+    "system": {
+      "ip": "203.0.113.11",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Public web tier: nginx reverse proxy (port 80/443) forwarding to a gunicorn app on :8000. App user: webapp. App lives under /srv/portal. Static assets served directly by nginx from /srv/portal/static."
+    }
+  },
+  "7002": {
+    "ticket_id": 7002,
+    "customer_id": 5001,
+    "system": {
+      "ip": "203.0.113.12",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Internal fleet status API: Python FastAPI app managed by systemd unit 'fleet-api.service'. Runs on :8080. App user: fleetapi. App directory: /opt/fleet-api. Uses a PostgreSQL 14 database on localhost:5432."
+    }
+  },
+  "7003": {
+    "ticket_id": 7003,
+    "customer_id": 5002,
+    "system": {
+      "ip": "203.0.113.21",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Booking portal: nginx (port 443, TLS) terminating SSL, proxying to a Node.js Express app on :3000. App user: booking. App directory: /srv/booking. TLS certificates stored under /etc/ssl/booking/."
+    }
+  },
+  "7004": {
+    "ticket_id": 7004,
+    "customer_id": 5003,
+    "system": {
+      "ip": "10.0.1.50",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Backup server: runs a custom backup script via systemd timer 'nightly-backup.timer' / 'nightly-backup.service'. Backup destination: /mnt/backupvol (NFS or block volume mount). Script path: /opt/backup/run_backup.sh. Backup user: backupagent."
+    }
+  },
+  "7005": {
+    "ticket_id": 7005,
+    "customer_id": 5004,
+    "system": {
+      "ip": "203.0.113.41",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Employee login portal: nginx (port 443) with TLS termination. TLS cert and key under /etc/nginx/ssl/. Backend app on :4000 managed by systemd unit 'employee-portal.service'. App user: empportal."
+    }
+  },
+  "7006": {
+    "ticket_id": 7006,
+    "customer_id": 5002,
+    "system": {
+      "ip": "203.0.113.22",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Reporting service: Python service managed by systemd unit 'reporting.service'. Connects to a PostgreSQL 14 database on localhost:5432, db name 'reports'. App user: reportinguser. Output directory: /srv/reports/monthly."
+    }
+  }
+}

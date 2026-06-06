@@ -1,0 +1,74 @@
+[
+  {
+    "id": 7001,
+    "title": "Public website returning 502 Bad Gateway",
+    "description": "Our public website has been returning 502 Bad Gateway errors since early this morning. Customers cannot access our online portal at all. The issue started around 07:30 CET.",
+    "priority": "high",
+    "status": "OPEN",
+    "customer_id": 5001,
+    "customer_name": "Nordlicht Logistik GmbH",
+    "tags": ["web", "nginx", "502", "customer-facing"],
+    "sla_due_at": "2026-06-06T14:00:00Z",
+    "created_at": "2026-06-06T07:45:00Z"
+  },
+  {
+    "id": 7002,
+    "title": "Internal status API intermittently unavailable",
+    "description": "Our internal fleet status API has been intermittently returning 503 errors or timing out since yesterday evening. Operations staff are unable to reliably check vehicle status. The problem comes and goes every few minutes.",
+    "priority": "high",
+    "status": "OPEN",
+    "customer_id": 5001,
+    "customer_name": "Nordlicht Logistik GmbH",
+    "tags": ["api", "backend", "intermittent", "503"],
+    "sla_due_at": "2026-06-06T18:00:00Z",
+    "created_at": "2026-06-05T21:15:00Z"
+  },
+  {
+    "id": 7003,
+    "title": "Booking portal unreachable for customers",
+    "description": "Customers are unable to reach our online booking portal. They get a connection timeout or a TLS warning in the browser. This started after the scheduled maintenance window last night.",
+    "priority": "high",
+    "status": "PENDING",
+    "customer_id": 5002,
+    "customer_name": "Alpentech AG",
+    "tags": ["booking", "tls", "portal", "customer-facing"],
+    "sla_due_at": "2026-06-06T12:00:00Z",
+    "created_at": "2026-06-06T01:30:00Z"
+  },
+  {
+    "id": 7004,
+    "title": "Nightly backup job failing — cannot write to data volume",
+    "description": "The automated nightly backup job has been failing for the past three nights. The error message in the backup report says it cannot write to the data volume. No backups have completed successfully since June 3rd.",
+    "priority": "medium",
+    "status": "OPEN",
+    "customer_id": 5003,
+    "customer_name": "Donau Handel GmbH",
+    "tags": ["backup", "storage", "disk", "nightly-job"],
+    "sla_due_at": "2026-06-07T09:00:00Z",
+    "created_at": "2026-06-04T06:05:00Z"
+  },
+  {
+    "id": 7005,
+    "title": "Login page showing TLS certificate warning",
+    "description": "Users trying to log in to the employee portal are seeing a browser TLS/SSL certificate warning. Some users are clicking through anyway but security-conscious employees are refusing to proceed. Affects all browsers.",
+    "priority": "medium",
+    "status": "OPEN",
+    "customer_id": 5004,
+    "customer_name": "Rheingold Versicherung GmbH",
+    "tags": ["tls", "certificate", "login", "security"],
+    "sla_due_at": "2026-06-07T17:00:00Z",
+    "created_at": "2026-06-05T09:20:00Z"
+  },
+  {
+    "id": 7006,
+    "title": "Database-backed reporting service not starting",
+    "description": "The monthly reporting service fails to start and produces no reports. Operations noticed this morning when the scheduled monthly report was missing from the shared drive. The service appears to crash immediately on startup.",
+    "priority": "low",
+    "status": "DONE",
+    "customer_id": 5002,
+    "customer_name": "Alpentech AG",
+    "tags": ["reporting", "database", "service-crash"],
+    "sla_due_at": "2026-06-05T17:00:00Z",
+    "created_at": "2026-06-03T08:00:00Z"
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "5001": {
+    "id": 5001,
+    "company_name": "Nordlicht Logistik GmbH",
+    "firstname": "Petra",
+    "lastname": "Sundqvist",
+    "system": {
+      "ip": "203.0.113.11",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Primary production server hosting the customer portal and internal fleet status API. Two separate VMs; portal at 203.0.113.11, fleet API at 203.0.113.12."
+    }
+  },
+  "5002": {
+    "id": 5002,
+    "company_name": "Alpentech AG",
+    "firstname": "Markus",
+    "lastname": "Brunner",
+    "system": {
+      "ip": "203.0.113.21",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Production infrastructure: booking portal VM at 203.0.113.21, reporting service VM at 203.0.113.22."
+    }
+  },
+  "5003": {
+    "id": 5003,
+    "company_name": "Donau Handel GmbH",
+    "firstname": "Anneliese",
+    "lastname": "Gruber",
+    "system": {
+      "ip": "10.0.1.50",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Internal backup server on private network. Connected to NFS backup volume. Handles nightly automated backups of business data."
+    }
+  },
+  "5004": {
+    "id": 5004,
+    "company_name": "Rheingold Versicherung GmbH",
+    "firstname": "Thomas",
+    "lastname": "Kramer",
+    "system": {
+      "ip": "203.0.113.41",
+      "port": 22,
+      "username": "azureuser",
+      "os": "Ubuntu 22.04 LTS",
+      "notes": "Employee-facing web portal server. Handles login and HR self-service. TLS termination at nginx layer."
+    }
+  }
+}
