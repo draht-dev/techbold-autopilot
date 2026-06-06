@@ -29,7 +29,8 @@ async def run_ws(websocket: WebSocket, run_id: str) -> None:
         return
 
     queue = run.subscribe()
-    for event in list(run.events):  # replay history
+    # Replay full semantic history + the bounded terminal tail (see Run.replay_events).
+    for event in run.replay_events():
         await websocket.send_json(event)
 
     sender = asyncio.create_task(_sender(websocket, queue))

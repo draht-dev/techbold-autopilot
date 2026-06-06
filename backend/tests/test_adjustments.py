@@ -227,7 +227,7 @@ async def test_no_hidden_cells_every_command_is_echoed(monkeypatch, tmp_path):
         asyncio.gather(_drive_selecting(run, lambda r: r.select_hypothesis(r.hypotheses[0].id)), run.task),
         timeout=15,
     )
-    term_text = "".join(e.get("data", "") for e in run.events if e["type"] == "term.data")
+    term_text = run.terminal_text()
     executed = [c["command"] for c in run.audit.commands()
                 if not c.get("blocked") and not c.get("rejected")]
     assert executed  # sanity: the agent actually ran commands
@@ -298,7 +298,7 @@ async def test_run_terminal_write_opens_pty_and_mirrors_output(tmp_path):
     run.ssh.connected = True
     await run.terminal_write("vim /etc/nginx/nginx.conf\n", cols=100, rows=30)
     await asyncio.sleep(0.02)
-    term = "".join(e.get("data", "") for e in run.events if e["type"] == "term.data")
+    term = run.terminal_text()
     assert "# customer-vm" in term  # live PTY output is mirrored into the terminal
     assert run.ssh.shell_size == (100, 30)  # opened at the client's terminal size
     await run.close_shell()

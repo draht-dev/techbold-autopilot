@@ -56,6 +56,16 @@ class Settings(BaseSettings):
     # always require approval. Toggle per-run from the UI ("auto-approve reads").
     auto_approve_reads_default: bool = True
 
+    # ---- Run registry bounds (in-memory; no DB) ----
+    # Terminal scrollback retained per run for late-joiner replay, in CHARACTERS
+    # (decoded str length, not raw UTF-8 bytes). Semantic events (phases, hypotheses,
+    # approvals) are always kept in full; only the high-volume PTY/character stream is
+    # bounded so a long session can't grow forever.
+    term_replay_max_chars: int = 200_000
+    # Max runs kept in memory. Finished runs beyond this are garbage-collected
+    # (active runs are never evicted).
+    max_retained_runs: int = 50
+
     @property
     def llm_configured(self) -> bool:
         return bool(self.openrouter_api_key)
