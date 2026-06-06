@@ -15,8 +15,11 @@ class Settings(BaseSettings):
     of the field name, which pydantic-settings resolves automatically.
     """
 
+    # Look for .env in the backend dir (local: uvicorn runs from backend/) and
+    # at the repo root (one .env serves both local and Docker). Real process
+    # env vars still take precedence over either file.
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", "../.env"),
         extra="ignore",
         case_sensitive=False,
     )
