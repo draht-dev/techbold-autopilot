@@ -23,7 +23,11 @@ servers:
     description: Phoenix mock base URL (provided on Builder Base)
     variables:
       baseUrl:
-        default: http://host.docker.internal:8000
+        default: http://68.210.101.85:8000
+        enum:
+          - http://68.210.101.85:8000
+          - http://host.docker.internal:8000
+          - http://localhost:8000
 
 security:
   - bearerAuth: []
