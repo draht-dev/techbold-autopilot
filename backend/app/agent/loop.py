@@ -567,8 +567,9 @@ async def _finalize(run: Run, llm: LLM, args: dict[str, Any]) -> None:
         "Activity submitted and ticket marked "
         f"{'DONE' if final_status == TicketStatus.DONE else 'PENDING'}."
     )
-    # Durably persist the resolution (solution + full event log), keyed by ticket,
-    # so it survives this run being GC'd and the backend restarting. Phoenix accepts
-    # the activity but offers no read-back, so this on-disk copy is the only way the
-    # ticket page can retrieve the resolution later.
-    ResolutionStore(run.settings.audit_dir).save(run.ticket_id, run.snapshot())
+    # Durably persist the solution (activity), keyed by ticket, so it survives this
+    # run being GC'd and the backend restarting. Phoenix accepts the activity but
+    # offers no read-back, so this on-disk copy is the only way the ticket page can
+    # retrieve the resolution later. The full event log is NOT persisted (kept in
+    # memory only) — the activity is the durable record.
+    ResolutionStore(run.settings.audit_dir).save(run.ticket_id, run.resolution_record())

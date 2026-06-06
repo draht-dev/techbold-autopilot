@@ -150,7 +150,11 @@ def test_resolution_returns_submitted_activity_and_log(client):
 
 
 def test_resolution_survives_run_eviction(client):
-    """The DONE ticket page still shows the solution + log after the run is gone."""
+    """The DONE ticket page still shows the solution after the run is gone.
+
+    The activity (solution) is durable; the full log is in-memory only (empty once
+    the run is evicted / the backend restarts).
+    """
     run_id = client.post("/api/runs", json={"ticket_id": 7004}).json()["run_id"]
     run = client.mgr.get(run_id)
     run.info("Unmasked and started the unit; public-test.sh passed")
@@ -163,4 +167,4 @@ def test_resolution_survives_run_eviction(client):
 
     res = client.get("/api/tickets/7004/resolution").json()
     assert res["submitted_activity"]["summary"] == "Unmasked the systemd unit"
-    assert any("public-test.sh" in e.get("text", "") for e in res["events"])
+    assert res["events"] == []  # log not persisted — in-memory only

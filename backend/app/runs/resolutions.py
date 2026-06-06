@@ -11,8 +11,11 @@ One JSON file per ticket; the most recent resolution for a ticket wins.
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any, Optional
+
+logger = logging.getLogger(__name__)
 
 
 class ResolutionStore:
@@ -32,8 +35,11 @@ class ResolutionStore:
         try:
             tmp.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
             tmp.replace(path)
-        except OSError:
-            pass
+        except OSError as exc:
+            # Don't crash the run, but make the failure visible — a silently
+            # unwritable volume is exactly how "it's lost on restart" happens.
+            logger.warning("Failed to persist resolution for ticket %s at %s: %s",
+                           ticket_id, path, exc)
 
     def load(self, ticket_id: int) -> Optional[dict[str, Any]]:
         path = self._path(ticket_id)

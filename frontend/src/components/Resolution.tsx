@@ -44,33 +44,41 @@ export default function Resolution({ resolution }: Props) {
           )}
         </dl>
 
-        <button
-          className="ghost"
-          style={{ marginTop: 12 }}
-          onClick={() => setShowLog((v) => !v)}
-        >
-          {showLog ? "Hide" : "Show"} full troubleshooting log ({resolution.events.length})
-        </button>
+        {resolution.events.length > 0 ? (
+          <>
+            <button
+              className="ghost"
+              style={{ marginTop: 12 }}
+              onClick={() => setShowLog((v) => !v)}
+            >
+              {showLog ? "Hide" : "Show"} full troubleshooting log ({resolution.events.length})
+            </button>
 
-        {showLog && (
-          <div
-            className="panel-body"
-            style={{
-              marginTop: 8,
-              maxHeight: 360,
-              overflow: "auto",
-              background: "var(--bg, #0d1117)",
-              borderRadius: 6,
-              fontSize: 13,
-            }}
-          >
-            {resolution.events.length === 0 && (
-              <div className="muted">No log entries were recorded.</div>
+            {showLog && (
+              <div
+                className="panel-body"
+                style={{
+                  marginTop: 8,
+                  maxHeight: 360,
+                  overflow: "auto",
+                  background: "var(--bg, #0d1117)",
+                  borderRadius: 6,
+                  fontSize: 13,
+                }}
+              >
+                {resolution.events.map((ev, i) => (
+                  <LogLine key={i} ev={ev} />
+                ))}
+              </div>
             )}
-            {resolution.events.map((ev, i) => (
-              <LogLine key={i} ev={ev} />
-            ))}
-          </div>
+          </>
+        ) : (
+          // The activity is persisted; the full log is kept in memory only and is
+          // not retained once the run leaves memory / the backend restarts.
+          <p className="muted" style={{ marginTop: 12, fontSize: 13 }}>
+            The full troubleshooting log is kept in memory only and isn’t available
+            after a backend restart.
+          </p>
         )}
       </div>
     </div>

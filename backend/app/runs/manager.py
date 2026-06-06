@@ -392,6 +392,22 @@ class Run:
             "events": self.events,
         }
 
+    def resolution_record(self) -> dict[str, Any]:
+        """The durable part of a resolution: the submitted solution (activity),
+        NOT the full event log. The log is high-volume and kept in memory only —
+        the activity is what must survive a backend restart so a DONE ticket can
+        always show how it was fixed. ``events`` is added back (from memory) by the
+        caller when the run is still resident."""
+        return {
+            "id": self.id,
+            "ticket_id": self.ticket_id,
+            "phase": self.phase.value,
+            "kind": self.kind,
+            "outcome": self.outcome,
+            "submitted_activity": self.submitted_activity,
+            "started_at": self.started_at,
+        }
+
 
 class RunManager:
     def __init__(self, settings: Settings) -> None:
@@ -481,20 +497,28 @@ class RunManager:
         return max(candidates, key=lambda r: r.started_at)
 
     def save_resolution(self, run: Run) -> None:
-        """Durably persist a finished run's solution + full log, keyed by ticket."""
-        self.resolutions.save(run.ticket_id, run.snapshot())
+        """Durably persist a finished run's solution (activity), keyed by ticket.
+
+        Only the compact activity is persisted; the full event log stays in memory.
+        """
+        self.resolutions.save(run.ticket_id, run.resolution_record())
 
     def resolution_for_ticket(self, ticket_id: int) -> Optional[dict[str, Any]]:
-        """The resolution snapshot (solution + full log) for a ticket, or None.
+        """The resolution for a ticket, or None.
 
-        Prefers the in-memory run (freshest), falling back to the durable store so
-        a DONE ticket still shows how it was fixed after the run is GC'd or the
-        backend restarts.
+        Prefers the in-memory run — which carries the full live event log — and
+        falls back to the durable store (activity only; the log is not retained
+        after the run leaves memory / the backend restarts). ``events`` is always
+        present so the frontend can render uniformly (empty after a restart).
         """
         run = self.resolved_run_for_ticket(ticket_id)
         if run is not None:
             return run.snapshot()
-        return self.resolutions.load(ticket_id)
+        record = self.resolutions.load(ticket_id)
+        if record is None:
+            return None
+        record.setdefault("events", [])  # log is in-memory only; gone after restart
+        return record
 
     @staticmethod
     def summarize(run: Run) -> dict[str, Any]:

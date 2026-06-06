@@ -248,7 +248,11 @@ def test_resolution_store_roundtrip(tmp_path):
 
 
 async def test_resolution_for_ticket_falls_back_to_disk(tmp_path):
-    """A DONE ticket shows its solution even after the run is GC'd / restart loses it."""
+    """A DONE ticket shows its solution even after the run is GC'd / restart loses it.
+
+    The activity (solution) is durable; the full event log is in-memory only, so it
+    is empty once the run is gone.
+    """
     mgr = RunManager(_settings(tmp_path))
     run = await mgr.create_run(7001, True)
     run.info("Restarted the status API and validated it")
@@ -262,7 +266,8 @@ async def test_resolution_for_ticket_falls_back_to_disk(tmp_path):
     res = mgr.resolution_for_ticket(7001)
     assert res is not None
     assert res["submitted_activity"]["summary"] == "Restarted the status API service"
-    assert any(e["type"] == "info" for e in res["events"])  # full log survived too
+    assert res["outcome"] == "fixed"
+    assert res["events"] == []  # log not persisted — in-memory only, gone on restart
 
 
 async def test_resolution_for_ticket_prefers_memory_and_is_none_when_absent(tmp_path):
