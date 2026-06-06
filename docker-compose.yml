@@ -9,6 +9,10 @@ services:
     volumes:
       # Your SSH private key(s). Put your .pem in ./keys (git-ignored).
       - ./keys:/keys:ro
+      # Persist audit logs + ticket resolutions (the solution + full log shown on a
+      # DONE ticket) across container rebuilds/restarts. Without this, the on-disk
+      # store lives only inside the container and is wiped on every `up --build`.
+      - ./backend/audit_logs:/app/audit_logs
     extra_hosts:
       # Lets the container reach a Phoenix mock running on the host, if you run one.
       - "host.docker.internal:host-gateway"
