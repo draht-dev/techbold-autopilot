@@ -15,13 +15,15 @@ Cursor-Debug-Mode-style loop, then writes a clean activity back to the ERP.
 
 ```
 load ticket -> read customer system -> approve SSH connect -> read-only recon
-   -> ranked hypotheses (technician picks one) -> check -> on confirm, propose a
+   -> ranked hypotheses with % likelihood (pick one, comment, or write your own)
+   -> check (runs every check command of the hypothesis) -> on confirm, propose a
    minimal fix (technician approves) -> apply -> validate (concrete proof)
    -> verify persistence (restart + re-check) -> review & submit activity -> DONE
 ```
 
 The technician can edit any proposed command, reject it, toggle "auto-approve safe
-reads", run their own commands in the terminal, and **STOP** at any point.
+reads", drop into a **fully interactive terminal** (real PTY — vim/htop/less work),
+and **STOP** at any point.
 
 ---
 
@@ -55,6 +57,44 @@ The modules are kept separate on purpose (ERP client, SSH runner, agent, safety
 layer, activity generator). The safety gate lives in the orchestrator/tool layer,
 and the dangerous-command denylist is also enforced at the lowest level (defense
 in depth) — the LLM is never the security boundary.
+
+---
+
+## 2a. Merge origin & adjustments (master-merge)
+
+This branch is the **best-of-both-worlds merge** of two independent rewrites. The
+leaner, cleaner `SAP-VERSION` is the structural base (clean module layout, real
+`@xterm/xterm` terminal, WebSocket transport, run-manager gates). From the
+`feat/ai-service-desk-autopilot` branch we grafted depth: the root-cause-families
+doctrine in the hypotheses prompt, the markdown-rich 6-incident mock fixtures, and
+the `dev.sh` / `Makefile` one-command runners. (SAP's `decide()/redact()` safety
+choke point was kept as-is rather than rewriting it to feat's `classify()` API.)
+
+On top of that base, the requested adjustments:
+
+1. **Interactive terminal (xterm-js).** The xterm pane is now a real PTY on the VM
+   (`asyncssh.create_process`), with keystrokes and resize streamed over the
+   WebSocket (`terminal.data` / `terminal.resize`) — so **vim, htop, less** work.
+   Agent commands still run through the gated `execute_command` choke point and are
+   echoed into the same terminal; the interactive PTY is the technician's own
+   trusted channel (human input is outside per-command classification by design).
+2. **Likelihood as a percentage.** Hypothesis likelihoods are normalised to a
+   relative **%** across the ranked set (not a fixed score) and re-ranked by it;
+   the UI shows a percentage bar per hypothesis.
+3. **No hidden cells.** Every command the agent runs is echoed to the terminal —
+   `ssh.run_command` is only ever called from `execute_command`, which emits the
+   `$ command` + redacted output as `term.data`. Guarded by a regression test.
+4. **Your own hypothesis + comments.** Instead of only picking a ranked hypothesis,
+   the technician can **write their own** (title + reasoning + check commands) or
+   attach a **comment** to an agent one; comments are fed into the check/re-rank
+   context (`submit_hypothesis` / `comment_hypothesis`).
+5. **Phase-adaptive right panel.** The full ranked list shows only while choosing
+   (HYPOTHESES); during CHECK only the **active** hypothesis remains; during
+   fix/validate/etc. the list is hidden.
+6. **Multiple checks per hypothesis.** A hypothesis carries a list of check
+   commands (not one); the CHECK phase runs and aggregates them all.
+7. **Markdown ticket view.** Ticket descriptions render as GitHub-flavoured
+   markdown (react-markdown + remark-gfm); the mock seeds markdown reports.
 
 ---
 
@@ -115,9 +155,14 @@ cd backend
 # in .env: PHOENIX_API_BASE_URL=http://localhost:8009  (any non-empty token works)
 ```
 
-The mock serves two demo tickets, customer systems, the activity schema, and the
-reset endpoint. SSH actions still need a reachable VM (use a local Ubuntu
-container or a VM) — without one the run stops cleanly at the connect step.
+The mock serves six demo tickets (7001–7006) with markdown reports, per-ticket
+customer systems, the activity schema, and the reset endpoint. SSH actions still
+need a reachable VM (use a local Ubuntu container or a VM) — without one the run
+stops cleanly at the connect step.
+
+> Shortcut: `./dev.sh --mock` (or `make mock`) starts the backend, frontend, and
+> mock ERP together; `./dev.sh` / `make dev` runs backend + frontend against your
+> real Phoenix from `.env`.
 
 ---
 
@@ -151,8 +196,12 @@ cd backend && .venv/bin/python -m pytest
 
 - `test_safety.py` — hard-fail denylist, mutation gating, reads, redaction.
 - `test_erp_client.py` — Phoenix client against the in-process mock (auth/404/activity).
-- `test_run_manager.py` — approval/stop/hypothesis async coordination.
+- `test_run_manager.py` — approval/stop/hypothesis selection, custom hypothesis, comments.
 - `test_agent_loop.py` — full run end-to-end with fakes (the walking skeleton).
+- `test_adjustments.py` — likelihood %, multi-check, own-hypothesis, no-hidden-cells,
+  and the interactive PTY shell wiring.
+
+Or `make test`. **81 tests pass offline** (no credentials needed).
 
 ---
 
