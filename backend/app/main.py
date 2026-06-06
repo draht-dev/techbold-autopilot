@@ -1,15 +1,49 @@
-"""FastAPI entrypoint — skeleton.
+"""FastAPI entrypoint for the AI Service Desk Autopilot backend.
 
-This is intentionally minimal. Build your own API here for the frontend to call,
-and consume the Phoenix ERP mock from your backend (see docs/phoenix-openapi.yaml).
-Keep the ERP token and the SSH key on the backend — never in the browser.
+Wires the Phoenix ERP client, the OpenRouter LLM, and the run manager into the
+app state, and mounts the REST + WebSocket API. The ERP token and SSH key stay
+on the backend and are never exposed to the browser.
 """
+from __future__ import annotations
+
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="techbold AI Service Desk Autopilot — Team Backend")
+from app.agent.llm import LLM
+from app.api.routes import router as api_router
+from app.api.ws import router as ws_router
+from app.config import get_settings
+from app.erp import PhoenixClient
+from app.runs import RunManager
 
-# Open CORS for local dev so your React app can call this backend.
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings = get_settings()
+    app.state.settings = settings
+    app.state.erp = PhoenixClient(
+        base_url=settings.phoenix_api_base_url,
+        token=settings.phoenix_api_token,
+        timeout=settings.request_timeout,
+    )
+    app.state.llm = LLM(settings)
+    manager = RunManager(settings)
+    manager.erp = app.state.erp
+    app.state.manager = manager
+    try:
+        yield
+    finally:
+        await manager.shutdown()
+        await app.state.erp.aclose()
+
+
+app = FastAPI(
+    title="techbold AI Service Desk Autopilot — Team Backend",
+    lifespan=lifespan,
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,13 +53,14 @@ app.add_middleware(
 
 
 @app.get("/health")
-def health():
-    return {"status": "ok"}
+def health() -> dict[str, object]:
+    settings = get_settings()
+    return {
+        "status": "ok",
+        "phoenix_configured": bool(settings.phoenix_api_token),
+        "llm_configured": settings.llm_configured,
+    }
 
 
-# TODO: add your routes. A typical shape (yours may differ):
-#   GET  /api/tickets              -> list tickets (via your Phoenix client)
-#   GET  /api/tickets/{id}         -> ticket + customer system
-#   POST /api/runs                 -> start an agent troubleshooting run
-#   POST /api/runs/{id}/approve    -> run the approved command over SSH
-#   POST /api/runs/{id}/activity   -> submit the activity to the ERP
+app.include_router(api_router)
+app.include_router(ws_router)

@@ -1,7 +1,12 @@
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
 pydantic-settings==2.7.1
-# You will likely add these as you implement the case:
-# httpx        # call the Phoenix ERP REST API
-# paramiko     # SSH to the customer VMs
-# openai       # Azure OpenAI
+httpx==0.28.1
+asyncssh==2.18.0
+langchain-core==0.3.29
+langchain-openai==0.2.14
+websockets==14.1
+
+# Tests
+pytest==8.3.4
+pytest-asyncio==0.25.2

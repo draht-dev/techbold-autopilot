@@ -12,6 +12,11 @@ __pycache__/
 venv/
 .pytest_cache/
 
+# Runtime audit logs (may contain redacted command output)
+backend/audit_logs/
+audit_logs/
+backend/data/
+
 # Node
 node_modules/
 frontend/dist/
