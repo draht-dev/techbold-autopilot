@@ -205,6 +205,58 @@ button.ghost {
   flex-wrap: wrap;
 }
 
+/* ---- Inline "play"/resume action (sits in a table row) ---- */
+.play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  color: var(--accent);
+  line-height: 0;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease;
+}
+.play-btn:hover {
+  background: var(--accent);
+  color: var(--text-inverse);
+  transform: scale(1.08);
+}
+.play-btn:active {
+  transform: scale(0.96);
+}
+.play-btn svg {
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+  display: block;
+  /* nudge the triangle to feel optically centred in the circle */
+  margin-left: 1px;
+}
+/* a live, resumable SSH session gently pulses to draw the eye */
+.play-btn.live {
+  animation: play-pulse 2s ease-out infinite;
+}
+@keyframes play-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(10, 110, 209, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(10, 110, 209, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(10, 110, 209, 0);
+  }
+}
+.col-action {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
 /* ---- Status badges (the only colour) ---- */
 .badge {
   display: inline-block;
