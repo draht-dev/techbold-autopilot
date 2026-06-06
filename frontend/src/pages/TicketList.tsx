@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, Ticket, TicketStatus } from "../api/client";
+import { api, RunSummary, Ticket, TicketStatus } from "../api/client";
 
 const SORTS = [
   { value: "date", label: "Date" },
@@ -15,6 +15,7 @@ function StatusBadge({ status }: { status: TicketStatus }) {
 export default function TicketList() {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [activeRuns, setActiveRuns] = useState<RunSummary[]>([]);
   const [sort, setSort] = useState("date");
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
@@ -31,9 +32,63 @@ export default function TicketList() {
       .finally(() => setLoading(false));
   }, [sort, status, priority]);
 
+  useEffect(() => {
+    // In-flight runs are discoverable here even if the run URL was lost on reload.
+    // Polled so the list stays fresh while the dashboard is left open.
+    const load = () =>
+      api
+        .listRuns()
+        .then((rs) => setActiveRuns(rs.filter((r) => r.active)))
+        .catch(() => setActiveRuns([]));
+    load();
+    const t = setInterval(load, 5000);
+    return () => clearInterval(t);
+  }, []);
+
   return (
     <div>
       <h1>My Open Tickets</h1>
+
+      {activeRuns.length > 0 && (
+        <div className="panel" style={{ marginBottom: 16 }}>
+          <div className="panel-header">
+            <h2>In-progress runs</h2>
+            <span className="muted" style={{ fontSize: 12 }}>
+              live SSH sessions you can resume
+            </span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Phase</th>
+                <th>Run</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {activeRuns.map((r) => (
+                <tr key={r.id} onClick={() => navigate(`/runs/${r.id}`)}>
+                  <td className="mono">#{r.ticket_id}</td>
+                  <td>{r.phase}</td>
+                  <td className="mono">{r.id}</td>
+                  <td>
+                    <button
+                      className="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/runs/${r.id}`);
+                      }}
+                    >
+                      Resume →
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <div className="toolbar">
         <div>
           <label>Sort by</label>
