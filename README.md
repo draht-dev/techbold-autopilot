@@ -13,17 +13,35 @@ Cursor-Debug-Mode-style loop, then writes a clean activity back to the ERP.
 
 ## 1. The flow
 
+The run is **one continuous, autonomous agent** (Cursor / Claude-Code style) — a
+single conversation with a persistent memory that drives itself with tools and
+decides for itself when to iterate. It is not a fixed per-step pipeline.
+
 ```
-load ticket -> read customer system -> approve SSH connect -> read-only recon
-   -> ranked hypotheses with % likelihood (pick one, comment, or write your own)
-   -> check (runs every check command of the hypothesis) -> on confirm, propose a
-   minimal fix (technician approves) -> apply -> validate (concrete proof)
-   -> verify persistence (restart + re-check) -> review & submit activity -> DONE
+load ticket -> read customer system -> approve SSH connect -> read-only recon seed
+   -> the agent (one continuous conversation) runs as many tools as it needs:
+        1. REPRODUCE the reported problem first (it sometimes doesn't exist ->
+           the agent asks the technician how to proceed)
+        2. present ranked hypotheses (% likelihood) -> technician picks one,
+           comments, or writes their own  [blocking gate]
+        3. investigate with arbitrarily many commands; decide confirm/reject and
+           loop back to new hypotheses whenever it wants
+        4. apply the minimal, persistent fix (each mutation approved by the human)
+        5. validate (concrete proof) + verify persistence
+   -> review & submit activity -> DONE  (or PENDING if not reproducible / escalated)
 ```
 
-The technician can edit any proposed command, reject it, toggle "auto-approve safe
-reads", drop into a **fully interactive terminal** (real PTY — vim/htop/less work),
-and **STOP** at any point.
+Every command still flows through the gated/audited/redacted choke point, so human
+approval and secret filtering are intact. The technician can edit any proposed
+command, reject it, toggle "auto-approve safe reads", steer with hypothesis
+comments, drop into a **fully interactive terminal** (real PTY — vim/htop/less
+work), and **STOP** at any point. The agent's live thinking + tool calls stream
+into an **Agent Stream** window in the dashboard for development visibility.
+
+> **Context compaction.** The agent keeps one growing history; when it approaches
+> ~200k tokens it self-summarises older turns (keeping tool-call pairs intact).
+> OpenRouter's only provider-side option is lossy "middle-out" truncation, so we
+> summarise app-side with the fast model instead.
 
 ---
 
@@ -44,8 +62,10 @@ backend/app/
   safety/rules.py         deterministic deny/confirm/allow + secret redaction
   audit/log.py            append-only JSONL audit log (redaction before persist)
   agent/tools.py          gated tool layer (safety + approval + audit choke point)
-  agent/loop.py           the hypothesis-driven state machine
-  agent/llm.py            OpenRouter (OpenAI-compatible) client
+  agent/agent_tools.py    tool schemas the agent calls (run command, hypotheses, …)
+  agent/session.py        continuous conversation + token-based auto-compaction
+  agent/loop.py           the autonomous tool-calling orchestration loop
+  agent/llm.py            OpenRouter (OpenAI-compatible) client (tool calls + reasoning)
   agent/activity.py       activity generator (fast model)
   agent/prompts.py        system prompts
   runs/manager.py         run registry + async human-in-the-loop coordination
@@ -117,8 +137,11 @@ cp /path/to/your-key.pem keys/your-key.pem
 | `PHOENIX_API_BASE_URL`, `PHOENIX_API_TOKEN` | The ERP mock and your team token |
 | `SSH_PRIVATE_KEY_PATH`, `SSH_USERNAME` | SSH to the customer VM (`azureuser`) |
 | `OPENROUTER_API_KEY`, `OPENROUTER_BASE_URL` | Bring-your-own LLM gateway |
-| `AGENT_MODEL` | Strong reasoning model (hypotheses, fix planning) |
-| `FAST_MODEL` | Fast model (validation interpretation, activity drafting) |
+| `AGENT_MODEL` | Strong reasoning model that drives the autonomous tool loop |
+| `FAST_MODEL` | Fast model (history compaction + activity drafting) |
+| `AGENT_CONTEXT_MAX_TOKENS`, `AGENT_CONTEXT_COMPACT_THRESHOLD`, `AGENT_CONTEXT_KEEP_RECENT_MESSAGES` | Continuous-history size + when/how to compact |
+| `AGENT_MAX_ITERATIONS` | Hard cap on tool-call rounds (runaway-loop safety net) |
+| `AGENT_REASONING_EFFORT` | OpenRouter reasoning effort: `low`/`medium`/`high` (empty disables) |
 | `AUTO_APPROVE_READS_DEFAULT` | Default for the per-run "auto-approve safe reads" toggle |
 | `VITE_API_BASE` | URL the browser uses to reach the backend |
 
