@@ -70,6 +70,10 @@ async def _handle(run: Any, msg: dict[str, Any]) -> None:
         run.comment_hypothesis(msg.get("id"), msg.get("text"))
     elif msg_type == "approval.decision":
         run.resolve_approval(msg.get("id"), bool(msg.get("approved")), msg.get("edited"))
+    elif msg_type == "decision":
+        # Technician answers an agent RequestDecision (e.g. how to proceed when the
+        # reported bug cannot be reproduced).
+        run.resolve_decision(msg.get("choice"))
     elif msg_type == "mode.set":
         run.auto_approve_reads = bool(msg.get("auto_approve_reads"))
         run.info(f"Auto-approve safe reads: {run.auto_approve_reads}")

@@ -58,6 +58,7 @@ class Run:
         self.stop_event = asyncio.Event()
         self.pending_approvals: dict[str, asyncio.Future] = {}
         self.hypothesis_future: Optional[asyncio.Future] = None
+        self.decision_future: Optional[asyncio.Future] = None
         self.activity_future: Optional[asyncio.Future] = None
 
         self.ssh: Optional[SSHRunner] = None
@@ -92,6 +93,29 @@ class Run:
 
     def info(self, text: str) -> None:
         self.emit(EventType.INFO, text=text)
+
+    def stream_agent(
+        self,
+        *,
+        kind: str = "assistant",
+        text: str = "",
+        reasoning: str = "",
+        tool_calls: Optional[list[dict[str, Any]]] = None,
+        **extra: Any,
+    ) -> None:
+        """Stream a step of the continuous agent's thinking into the dev window.
+
+        This is purely for visibility (it is not part of the audited command
+        trail), so a late WebSocket joiner can replay the agent's reasoning.
+        """
+        self.emit(
+            EventType.AGENT_MESSAGE,
+            kind=kind,
+            text=text,
+            reasoning=reasoning,
+            tool_calls=tool_calls or [],
+            **extra,
+        )
 
     def subscribe(self) -> asyncio.Queue:
         q: asyncio.Queue = asyncio.Queue(maxsize=2000)
@@ -216,6 +240,41 @@ class Run:
         self.audit.record("hypothesis_comment", hypothesis=hypothesis_id, text=text)
         self.emit(EventType.HYPOTHESES, items=[h.model_dump() for h in self.hypotheses])
         return True
+
+    async def await_decision(
+        self, question: str, options: list[str], context: str = ""
+    ) -> str:
+        """Block until the technician chooses one of ``options``.
+
+        Used when the agent is blocked (e.g. it cannot reproduce the problem) and
+        needs a human judgement call. Returns the chosen option string.
+        """
+        self.check_stop()
+        decision_id = uuid4().hex[:8]
+        fut = self._new_future()
+        self.decision_future = fut
+        self.emit(
+            EventType.DECISION_REQUEST,
+            id=decision_id,
+            question=question,
+            options=options,
+            context=context,
+        )
+        self.audit.record("decision_request", text=question, options=options)
+        try:
+            choice = await self._await_or_stop(fut)
+        finally:
+            self.decision_future = None
+        self.emit(EventType.DECISION_RESOLVED, id=decision_id, choice=choice)
+        self.audit.record("decision", text=choice)
+        return choice
+
+    def resolve_decision(self, choice: str) -> bool:
+        fut = self.decision_future
+        if fut is not None and not fut.done():
+            fut.set_result(choice)
+            return True
+        return False
 
     # ------------------------------------------------------------------ #
     # Interactive terminal (PTY) for the technician — supports vim/htop/etc.
