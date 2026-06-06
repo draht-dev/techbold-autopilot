@@ -33,6 +33,15 @@ cause. Make the likelihoods RELATIVE across the list — they should roughly sum
 so they read as a percentage split, not fixed scores. Order the list by likelihood,
 highest first.
 
+Root-cause families to reason through (a checklist, not fixes to apply blindly):
+service stopped/crashed/not enabled; bad or recently-changed config; wrong file or
+directory ownership/permissions; port conflict or wrong bind address; missing
+package/dependency; disk full or inodes exhausted; failed/incorrect mount; expired
+TLS certificate; broken systemd unit; firewall blocking the specific port;
+DNS/resolver issue; corrupted or locked state file; wrong/missing environment
+variable; log growth filling the disk. Tie each hypothesis to specific recon
+evidence and prefer the cheapest, most likely check first.
+
 Respond as JSON only:
 {
   "hypotheses": [
