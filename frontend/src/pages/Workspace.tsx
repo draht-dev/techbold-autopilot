@@ -319,7 +319,7 @@ function phaseHint(phase: string): string {
     case "REPRODUCING":
       return "Agent is trying to reproduce the reported problem…";
     case "INVESTIGATING":
-      return "Agent is investigating autonomously — watch the Agent Stream…";
+      return "Agent is investigating autonomously — watch the terminal…";
     case "AWAITING_INPUT":
       return "Agent is waiting for your decision…";
     case "SHELL":
