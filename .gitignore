@@ -12,6 +12,9 @@ __pycache__/
 venv/
 .pytest_cache/
 
+# Persisted runtime data (audit logs, sessions) — never commit
+backend/data/
+
 # Node
 node_modules/
 frontend/dist/
