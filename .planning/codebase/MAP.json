@@ -1,0 +1,4681 @@
+{
+  "schemaVersion": 3,
+  "generatedAt": "2026-06-06T18:51:33.160Z",
+  "buildMs": 25,
+  "root": "techbold",
+  "stats": {
+    "files": 130,
+    "totalLoc": 9300,
+    "languages": {
+      "other": 72,
+      "markdown": 2,
+      "shell": 1,
+      "yaml": 2,
+      "html": 1,
+      "json": 3,
+      "typescript": 13,
+      "css": 2,
+      "python": 34
+    },
+    "packages": 0,
+    "containers": 6,
+    "groups": 2,
+    "edges": 36,
+    "callEdges": 5,
+    "containerEdges": 0,
+    "entryPoints": 3,
+    "sinkModules": 2,
+    "layers": {
+      "support": 94,
+      "application": 29,
+      "infrastructure": 1,
+      "presentation": 6
+    }
+  },
+  "packages": [],
+  "groups": [
+    {
+      "id": "group:frontend",
+      "name": "Frontend",
+      "color": "#79c0ff",
+      "description": "User-facing web surfaces",
+      "members": [
+        "dir:frontend"
+      ],
+      "source": "auto",
+      "moduleCount": 22
+    },
+    {
+      "id": "group:other",
+      "name": "Other",
+      "color": "#8b949e",
+      "description": "Packages not yet classified",
+      "members": [
+        "dir:LICENSE",
+        "dir:Makefile",
+        "dir:keys",
+        "dir:docs",
+        "dir:backend"
+      ],
+      "source": "auto",
+      "moduleCount": 99
+    }
+  ],
+  "containers": [
+    {
+      "id": "dir:LICENSE",
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 0,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "LICENSE",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        }
+      ]
+    },
+    {
+      "id": "dir:Makefile",
+      "name": "Makefile",
+      "path": "Makefile",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 0,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "Makefile",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        }
+      ]
+    },
+    {
+      "id": "dir:keys",
+      "name": "keys",
+      "path": "keys",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 6,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "keys/.gitkeep",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case1_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case2_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case3_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case4_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        }
+      ]
+    },
+    {
+      "id": "dir:frontend",
+      "name": "frontend",
+      "path": "frontend",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 22,
+      "groupId": "group:frontend",
+      "topFiles": [
+        {
+          "path": "frontend/src/pages/Workspace.tsx",
+          "reason": "largest",
+          "score": 12,
+          "loc": 291
+        },
+        {
+          "path": "frontend/package-lock.json",
+          "reason": "largest",
+          "score": 11.67,
+          "loc": 3255
+        },
+        {
+          "path": "frontend/src/api/client.ts",
+          "reason": "most depended-on",
+          "score": 9.87,
+          "loc": 133
+        },
+        {
+          "path": "frontend/src/components/HypothesisList.tsx",
+          "reason": "largest",
+          "score": 9.8,
+          "loc": 222
+        },
+        {
+          "path": "frontend/src/pages/TicketDetail.tsx",
+          "reason": "largest",
+          "score": 9.55,
+          "loc": 124
+        }
+      ]
+    },
+    {
+      "id": "dir:docs",
+      "name": "docs",
+      "path": "docs",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 2,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "docs/phoenix-openapi.yaml",
+          "reason": "core file",
+          "score": 8.44,
+          "loc": 346
+        },
+        {
+          "path": "docs/scoring.md",
+          "reason": "core file",
+          "score": 6.32,
+          "loc": 79
+        }
+      ]
+    },
+    {
+      "id": "dir:backend",
+      "name": "backend",
+      "path": "backend",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 91,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "backend/app/mock/phoenix.py",
+          "reason": "HTTP handler",
+          "score": 17.08,
+          "loc": 270
+        },
+        {
+          "path": "backend/app/api/routes.py",
+          "reason": "HTTP handler",
+          "score": 15.87,
+          "loc": 116
+        },
+        {
+          "path": "backend/app/main.py",
+          "reason": "HTTP handler",
+          "score": 15.09,
+          "loc": 67
+        },
+        {
+          "path": "backend/app/safety/rules.py",
+          "reason": "largest",
+          "score": 10.8,
+          "loc": 446
+        },
+        {
+          "path": "backend/app/agent/loop.py",
+          "reason": "largest",
+          "score": 10.64,
+          "loc": 397
+        }
+      ]
+    }
+  ],
+  "boundedContexts": [
+    {
+      "id": "dir:LICENSE",
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 0,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "LICENSE",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        }
+      ]
+    },
+    {
+      "id": "dir:Makefile",
+      "name": "Makefile",
+      "path": "Makefile",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 0,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "Makefile",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        }
+      ]
+    },
+    {
+      "id": "dir:keys",
+      "name": "keys",
+      "path": "keys",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 6,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "keys/.gitkeep",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case1_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case2_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case3_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        },
+        {
+          "path": "keys/case4_key.pem",
+          "reason": "core file",
+          "score": 0,
+          "loc": 0
+        }
+      ]
+    },
+    {
+      "id": "dir:frontend",
+      "name": "frontend",
+      "path": "frontend",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 22,
+      "groupId": "group:frontend",
+      "topFiles": [
+        {
+          "path": "frontend/src/pages/Workspace.tsx",
+          "reason": "largest",
+          "score": 12,
+          "loc": 291
+        },
+        {
+          "path": "frontend/package-lock.json",
+          "reason": "largest",
+          "score": 11.67,
+          "loc": 3255
+        },
+        {
+          "path": "frontend/src/api/client.ts",
+          "reason": "most depended-on",
+          "score": 9.87,
+          "loc": 133
+        },
+        {
+          "path": "frontend/src/components/HypothesisList.tsx",
+          "reason": "largest",
+          "score": 9.8,
+          "loc": 222
+        },
+        {
+          "path": "frontend/src/pages/TicketDetail.tsx",
+          "reason": "largest",
+          "score": 9.55,
+          "loc": 124
+        }
+      ]
+    },
+    {
+      "id": "dir:docs",
+      "name": "docs",
+      "path": "docs",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 2,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "docs/phoenix-openapi.yaml",
+          "reason": "core file",
+          "score": 8.44,
+          "loc": 346
+        },
+        {
+          "path": "docs/scoring.md",
+          "reason": "core file",
+          "score": 6.32,
+          "loc": 79
+        }
+      ]
+    },
+    {
+      "id": "dir:backend",
+      "name": "backend",
+      "path": "backend",
+      "kind": "directory",
+      "description": null,
+      "moduleCount": 91,
+      "groupId": "group:other",
+      "topFiles": [
+        {
+          "path": "backend/app/mock/phoenix.py",
+          "reason": "HTTP handler",
+          "score": 17.08,
+          "loc": 270
+        },
+        {
+          "path": "backend/app/api/routes.py",
+          "reason": "HTTP handler",
+          "score": 15.87,
+          "loc": 116
+        },
+        {
+          "path": "backend/app/main.py",
+          "reason": "HTTP handler",
+          "score": 15.09,
+          "loc": 67
+        },
+        {
+          "path": "backend/app/safety/rules.py",
+          "reason": "largest",
+          "score": 10.8,
+          "loc": 446
+        },
+        {
+          "path": "backend/app/agent/loop.py",
+          "reason": "largest",
+          "score": 10.64,
+          "loc": 397
+        }
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": ".env",
+      "path": ".env",
+      "language": "other",
+      "size": 663,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": ".env.bak",
+      "path": ".env.bak",
+      "language": "other",
+      "size": 1708,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": ".env.example",
+      "path": ".env.example",
+      "language": "other",
+      "size": 1317,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": ".gitignore",
+      "path": ".gitignore",
+      "language": "other",
+      "size": 353,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "LICENSE",
+      "path": "LICENSE",
+      "language": "other",
+      "size": 1068,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "Makefile",
+      "path": "Makefile",
+      "language": "other",
+      "size": 1046,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "README.md",
+      "path": "README.md",
+      "language": "markdown",
+      "size": 10464,
+      "loc": 236,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "dev.sh",
+      "path": "dev.sh",
+      "language": "shell",
+      "size": 2274,
+      "loc": 69,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "docker-compose.yml",
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "size": 608,
+      "loc": 24,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "keys/.gitkeep",
+      "path": "keys/.gitkeep",
+      "language": "other",
+      "size": 137,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "keys/case1_key.pem",
+      "path": "keys/case1_key.pem",
+      "language": "other",
+      "size": 2494,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "keys/case2_key.pem",
+      "path": "keys/case2_key.pem",
+      "language": "other",
+      "size": 2498,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "keys/case3_key.pem",
+      "path": "keys/case3_key.pem",
+      "language": "other",
+      "size": 2494,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "keys/case4_key.pem",
+      "path": "keys/case4_key.pem",
+      "language": "other",
+      "size": 2494,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "keys/case5_key.pem",
+      "path": "keys/case5_key.pem",
+      "language": "other",
+      "size": 2498,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/.dockerignore",
+      "path": "frontend/.dockerignore",
+      "language": "other",
+      "size": 29,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/Dockerfile",
+      "path": "frontend/Dockerfile",
+      "language": "other",
+      "size": 115,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/index.html",
+      "path": "frontend/index.html",
+      "language": "html",
+      "size": 312,
+      "loc": 13,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/package-lock.json",
+      "path": "frontend/package-lock.json",
+      "language": "json",
+      "size": 117280,
+      "loc": 3255,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/package.json",
+      "path": "frontend/package.json",
+      "language": "json",
+      "size": 680,
+      "loc": 28,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/tsconfig.json",
+      "path": "frontend/tsconfig.json",
+      "language": "json",
+      "size": 470,
+      "loc": 20,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/tsconfig.tsbuildinfo",
+      "path": "frontend/tsconfig.tsbuildinfo",
+      "language": "other",
+      "size": 384,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/vite.config.ts",
+      "path": "frontend/vite.config.ts",
+      "language": "typescript",
+      "size": 179,
+      "loc": 8,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "default",
+          "kind": "default",
+          "line": 4,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/App.tsx",
+      "path": "frontend/src/App.tsx",
+      "language": "typescript",
+      "size": 1172,
+      "loc": 41,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "App",
+          "kind": "function",
+          "line": 8,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/index.css",
+      "path": "frontend/src/index.css",
+      "language": "css",
+      "size": 140,
+      "loc": 4,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/main.tsx",
+      "path": "frontend/src/main.tsx",
+      "language": "typescript",
+      "size": 445,
+      "loc": 14,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/theme.css",
+      "path": "frontend/src/theme.css",
+      "language": "css",
+      "size": 7738,
+      "loc": 448,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/pages/TicketDetail.tsx",
+      "path": "frontend/src/pages/TicketDetail.tsx",
+      "language": "typescript",
+      "size": 4151,
+      "loc": 124,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "TicketDetail",
+          "kind": "function",
+          "line": 6,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/pages/TicketList.tsx",
+      "path": "frontend/src/pages/TicketList.tsx",
+      "language": "typescript",
+      "size": 3412,
+      "loc": 105,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "TicketList",
+          "kind": "function",
+          "line": 15,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/pages/Workspace.tsx",
+      "path": "frontend/src/pages/Workspace.tsx",
+      "language": "typescript",
+      "size": 8684,
+      "loc": 291,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "Workspace",
+          "kind": "function",
+          "line": 28,
+          "doc": null
+        }
+      ],
+      "sinks": [
+        "net:http"
+      ],
+      "sinkSites": [
+        {
+          "kind": "net:http",
+          "line": 63,
+          "snippet": "const ws = new WebSocket(runSocketUrl(runId));",
+          "inFunction": "send"
+        }
+      ],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "infrastructure",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/ActivityReview.tsx",
+      "path": "frontend/src/components/ActivityReview.tsx",
+      "language": "typescript",
+      "size": 1938,
+      "loc": 60,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "ActivityReview",
+          "kind": "function",
+          "line": 19,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/ApprovalPrompt.tsx",
+      "path": "frontend/src/components/ApprovalPrompt.tsx",
+      "language": "typescript",
+      "size": 3201,
+      "loc": 101,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "Approval",
+          "kind": "interface",
+          "line": 3,
+          "doc": null
+        },
+        {
+          "name": "ApprovalPrompt",
+          "kind": "function",
+          "line": 15,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/HypothesisList.tsx",
+      "path": "frontend/src/components/HypothesisList.tsx",
+      "language": "typescript",
+      "size": 6352,
+      "loc": 222,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "HypothesisList",
+          "kind": "function",
+          "line": 13,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/Markdown.tsx",
+      "path": "frontend/src/components/Markdown.tsx",
+      "language": "typescript",
+      "size": 372,
+      "loc": 12,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "Markdown",
+          "kind": "function",
+          "line": 5,
+          "doc": "Renders GitHub-flavoured markdown (tables, lists, code, links) safely."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/RunControls.tsx",
+      "path": "frontend/src/components/RunControls.tsx",
+      "language": "typescript",
+      "size": 1015,
+      "loc": 41,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "RunControls",
+          "kind": "function",
+          "line": 9,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/components/Terminal.tsx",
+      "path": "frontend/src/components/Terminal.tsx",
+      "language": "typescript",
+      "size": 2973,
+      "loc": 95,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "TerminalView",
+          "kind": "function",
+          "line": 14,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "frontend/src/api/client.ts",
+      "path": "frontend/src/api/client.ts",
+      "language": "typescript",
+      "size": 3471,
+      "loc": 133,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "API_BASE",
+          "kind": "const",
+          "line": 3,
+          "doc": null
+        },
+        {
+          "name": "TicketStatus",
+          "kind": "type",
+          "line": 6,
+          "doc": null
+        },
+        {
+          "name": "Ticket",
+          "kind": "interface",
+          "line": 8,
+          "doc": null
+        },
+        {
+          "name": "SystemInfo",
+          "kind": "interface",
+          "line": 21,
+          "doc": null
+        },
+        {
+          "name": "CustomerSystem",
+          "kind": "interface",
+          "line": 29,
+          "doc": null
+        },
+        {
+          "name": "Employee",
+          "kind": "interface",
+          "line": 35,
+          "doc": null
+        },
+        {
+          "name": "HypothesisComment",
+          "kind": "interface",
+          "line": 43,
+          "doc": null
+        },
+        {
+          "name": "Hypothesis",
+          "kind": "interface",
+          "line": 49,
+          "doc": null
+        },
+        {
+          "name": "ActivityDraft",
+          "kind": "interface",
+          "line": 64,
+          "doc": null
+        },
+        {
+          "name": "RunEvent",
+          "kind": "interface",
+          "line": 73,
+          "doc": null
+        },
+        {
+          "name": "RunSnapshot",
+          "kind": "interface",
+          "line": 98,
+          "doc": null
+        },
+        {
+          "name": "api",
+          "kind": "const",
+          "line": 107,
+          "doc": null
+        },
+        {
+          "name": "runSocketUrl",
+          "kind": "function",
+          "line": 129,
+          "doc": null
+        }
+      ],
+      "sinks": [
+        "net:fetch"
+      ],
+      "sinkSites": [
+        {
+          "kind": "net:fetch",
+          "line": 80,
+          "snippet": "const res = await fetch(`${API_BASE}${path}`, {",
+          "inFunction": "req"
+        }
+      ],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "presentation",
+      "depth": null
+    },
+    {
+      "id": "docs/phoenix-openapi.yaml",
+      "path": "docs/phoenix-openapi.yaml",
+      "language": "yaml",
+      "size": 11796,
+      "loc": 346,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "docs/scoring.md",
+      "path": "docs/scoring.md",
+      "language": "markdown",
+      "size": 4651,
+      "loc": 79,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/.dockerignore",
+      "path": "backend/.dockerignore",
+      "language": "other",
+      "size": 66,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/Dockerfile",
+      "path": "backend/Dockerfile",
+      "language": "other",
+      "size": 208,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/pytest.ini",
+      "path": "backend/pytest.ini",
+      "language": "other",
+      "size": 156,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/requirements.txt",
+      "path": "backend/requirements.txt",
+      "language": "other",
+      "size": 210,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/__init__.py",
+      "path": "backend/tests/__init__.py",
+      "language": "python",
+      "size": 0,
+      "loc": 1,
+      "isTest": true,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_adjustments.py",
+      "path": "backend/tests/test_adjustments.py",
+      "language": "python",
+      "size": 9402,
+      "loc": 240,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "FakeSSH",
+          "kind": "class",
+          "line": 19,
+          "doc": null
+        },
+        {
+          "name": "FakeERP",
+          "kind": "class",
+          "line": 35,
+          "doc": null
+        },
+        {
+          "name": "TwoCheckLLM",
+          "kind": "class",
+          "line": 52,
+          "doc": "Returns one hypothesis with TWO check commands."
+        },
+        {
+          "name": "_make_run",
+          "kind": "def",
+          "line": 79,
+          "doc": null
+        },
+        {
+          "name": "test_likelihood_is_normalised_to_percentages",
+          "kind": "def",
+          "line": 89,
+          "doc": null
+        },
+        {
+          "name": "test_percentages_handle_values_already_in_percent",
+          "kind": "def",
+          "line": 104,
+          "doc": null
+        },
+        {
+          "name": "FakeStdout",
+          "kind": "class",
+          "line": 175,
+          "doc": null
+        },
+        {
+          "name": "FakeStdin",
+          "kind": "class",
+          "line": 183,
+          "doc": null
+        },
+        {
+          "name": "FakeProcess",
+          "kind": "class",
+          "line": 191,
+          "doc": null
+        },
+        {
+          "name": "ShellSSH",
+          "kind": "class",
+          "line": 221,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_agent_loop.py",
+      "path": "backend/tests/test_agent_loop.py",
+      "language": "python",
+      "size": 4621,
+      "loc": 128,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "FakeSSH",
+          "kind": "class",
+          "line": 16,
+          "doc": null
+        },
+        {
+          "name": "FakeERP",
+          "kind": "class",
+          "line": 30,
+          "doc": null
+        },
+        {
+          "name": "FakeLLM",
+          "kind": "class",
+          "line": 49,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_config.py",
+      "path": "backend/tests/test_config.py",
+      "language": "python",
+      "size": 536,
+      "loc": 13,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "test_ssh_key_per_ticket",
+          "kind": "def",
+          "line": 6,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_erp_client.py",
+      "path": "backend/tests/test_erp_client.py",
+      "language": "python",
+      "size": 2247,
+      "loc": 71,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "make_client",
+          "kind": "def",
+          "line": 10,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_llm.py",
+      "path": "backend/tests/test_llm.py",
+      "language": "python",
+      "size": 696,
+      "loc": 24,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "test_extract_first_json_with_trailing_text",
+          "kind": "def",
+          "line": 5,
+          "doc": null
+        },
+        {
+          "name": "test_extract_from_markdown_fence",
+          "kind": "def",
+          "line": 17,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_run_manager.py",
+      "path": "backend/tests/test_run_manager.py",
+      "language": "python",
+      "size": 3052,
+      "loc": 91,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "make_run",
+          "kind": "def",
+          "line": 10,
+          "doc": null
+        },
+        {
+          "name": "test_comment_hypothesis",
+          "kind": "def",
+          "line": 69,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/tests/test_safety.py",
+      "path": "backend/tests/test_safety.py",
+      "language": "python",
+      "size": 2802,
+      "loc": 102,
+      "isTest": true,
+      "package": null,
+      "exports": [
+        {
+          "name": "test_dangerous_commands_denied",
+          "kind": "def",
+          "line": 63,
+          "doc": null
+        },
+        {
+          "name": "test_mutations_require_confirmation",
+          "kind": "def",
+          "line": 68,
+          "doc": null
+        },
+        {
+          "name": "test_reads_allowed_in_auto_mode",
+          "kind": "def",
+          "line": 73,
+          "doc": null
+        },
+        {
+          "name": "test_reads_confirm_in_manual_mode",
+          "kind": "def",
+          "line": 78,
+          "doc": null
+        },
+        {
+          "name": "test_compound_command_takes_worst_category",
+          "kind": "def",
+          "line": 82,
+          "doc": null
+        },
+        {
+          "name": "test_redaction_of_assignments_and_keys",
+          "kind": "def",
+          "line": 87,
+          "doc": null
+        },
+        {
+          "name": "test_redaction_of_private_key_block",
+          "kind": "def",
+          "line": 97,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/064d524094be4b99ba351e8696887fbf.jsonl",
+      "path": "backend/data/audit/064d524094be4b99ba351e8696887fbf.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/0a5a79e6b43f49ac9bc6e1ae12d84850.jsonl",
+      "path": "backend/data/audit/0a5a79e6b43f49ac9bc6e1ae12d84850.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/0cb3c4ac24c44946bf1ffbda84760faf.jsonl",
+      "path": "backend/data/audit/0cb3c4ac24c44946bf1ffbda84760faf.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/10d20164965f43ec91419de34339a61a.jsonl",
+      "path": "backend/data/audit/10d20164965f43ec91419de34339a61a.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/16453f7455cb43b1b62df88ac89c9b5f.jsonl",
+      "path": "backend/data/audit/16453f7455cb43b1b62df88ac89c9b5f.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/1aa997e527dd45c684232656489599e6.jsonl",
+      "path": "backend/data/audit/1aa997e527dd45c684232656489599e6.jsonl",
+      "language": "other",
+      "size": 3099,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/1c9e04446f2b4ac482ef1ae777e998b0.jsonl",
+      "path": "backend/data/audit/1c9e04446f2b4ac482ef1ae777e998b0.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/29e2fe28ffab42bb993a5356b3acdf05.jsonl",
+      "path": "backend/data/audit/29e2fe28ffab42bb993a5356b3acdf05.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/2c445780cc00478ab190b662e5397af0.jsonl",
+      "path": "backend/data/audit/2c445780cc00478ab190b662e5397af0.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/3aa088ac8e53436c99d97891b58f72f0.jsonl",
+      "path": "backend/data/audit/3aa088ac8e53436c99d97891b58f72f0.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/3d609dbbbd9748aabbecf82ed7a91fe8.jsonl",
+      "path": "backend/data/audit/3d609dbbbd9748aabbecf82ed7a91fe8.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/407796e01120442986c122e03ec279b7.jsonl",
+      "path": "backend/data/audit/407796e01120442986c122e03ec279b7.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/420793edbfe747839951eecd7e23f380.jsonl",
+      "path": "backend/data/audit/420793edbfe747839951eecd7e23f380.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/4416bdb1020f49f193f6db2566342387.jsonl",
+      "path": "backend/data/audit/4416bdb1020f49f193f6db2566342387.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/47c0b0a45dbc4e529cbf7ae2ad6e68b0.jsonl",
+      "path": "backend/data/audit/47c0b0a45dbc4e529cbf7ae2ad6e68b0.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/4e8a66f8650a4e2ea265a58d87036b1d.jsonl",
+      "path": "backend/data/audit/4e8a66f8650a4e2ea265a58d87036b1d.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/508558eb10ce4c97b2da86bba09ac7c9.jsonl",
+      "path": "backend/data/audit/508558eb10ce4c97b2da86bba09ac7c9.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/50a32113e6a846adbae9127188bd904d.jsonl",
+      "path": "backend/data/audit/50a32113e6a846adbae9127188bd904d.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/53fe1afa550347329ce4ae37235efa27.jsonl",
+      "path": "backend/data/audit/53fe1afa550347329ce4ae37235efa27.jsonl",
+      "language": "other",
+      "size": 526,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/60c84a8d2ba24451a7c2b34f1ee6db79.jsonl",
+      "path": "backend/data/audit/60c84a8d2ba24451a7c2b34f1ee6db79.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/67ebb1b354d04441847992dc5d5d5f5a.jsonl",
+      "path": "backend/data/audit/67ebb1b354d04441847992dc5d5d5f5a.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/6cb52d78527f438e95390fa4116d5f7f.jsonl",
+      "path": "backend/data/audit/6cb52d78527f438e95390fa4116d5f7f.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/7320edbbf29d48dead3c01ae838ba803.jsonl",
+      "path": "backend/data/audit/7320edbbf29d48dead3c01ae838ba803.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/73494a44c35f476494e01550991c9e00.jsonl",
+      "path": "backend/data/audit/73494a44c35f476494e01550991c9e00.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/74202031308844f5abffa963c4f909a4.jsonl",
+      "path": "backend/data/audit/74202031308844f5abffa963c4f909a4.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/77c2b35f020449368782e86c29fa7596.jsonl",
+      "path": "backend/data/audit/77c2b35f020449368782e86c29fa7596.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/88f69ceb18004690a3c61a1708def5f5.jsonl",
+      "path": "backend/data/audit/88f69ceb18004690a3c61a1708def5f5.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/8a16f08aec054094a98bfc6a8263fbea.jsonl",
+      "path": "backend/data/audit/8a16f08aec054094a98bfc6a8263fbea.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/90c81826e6bc48e495b38f02f323573c.jsonl",
+      "path": "backend/data/audit/90c81826e6bc48e495b38f02f323573c.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/a0925fb06f594c6cbd013d7aa4924205.jsonl",
+      "path": "backend/data/audit/a0925fb06f594c6cbd013d7aa4924205.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/a77d952e0f0d435ea5eccecd119e7e0f.jsonl",
+      "path": "backend/data/audit/a77d952e0f0d435ea5eccecd119e7e0f.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/a899d193670d4bb5bdbaa30a6915de4a.jsonl",
+      "path": "backend/data/audit/a899d193670d4bb5bdbaa30a6915de4a.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/abf24a97b97e4688983d0a9de128072a.jsonl",
+      "path": "backend/data/audit/abf24a97b97e4688983d0a9de128072a.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/ae2d1e6142a445deb1868e885b3d8074.jsonl",
+      "path": "backend/data/audit/ae2d1e6142a445deb1868e885b3d8074.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/b39c57f302464704ba6b4ef213737855.jsonl",
+      "path": "backend/data/audit/b39c57f302464704ba6b4ef213737855.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/b91622f429cc4a80942fba4ed7cfcc80.jsonl",
+      "path": "backend/data/audit/b91622f429cc4a80942fba4ed7cfcc80.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/b92ac14489484874b1ffb907277652cf.jsonl",
+      "path": "backend/data/audit/b92ac14489484874b1ffb907277652cf.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/baeb5789cc3c436e943a3fbf92cb0d04.jsonl",
+      "path": "backend/data/audit/baeb5789cc3c436e943a3fbf92cb0d04.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/c911e1bde6cd4992a288a255bdd7338f.jsonl",
+      "path": "backend/data/audit/c911e1bde6cd4992a288a255bdd7338f.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/e24547377da94c2c887f8d8cb30c8179.jsonl",
+      "path": "backend/data/audit/e24547377da94c2c887f8d8cb30c8179.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/e31b98ad619e4c058b5ed10e2c1a12bd.jsonl",
+      "path": "backend/data/audit/e31b98ad619e4c058b5ed10e2c1a12bd.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/e37c5c4cad904eb5ab46fe0acc4a9245.jsonl",
+      "path": "backend/data/audit/e37c5c4cad904eb5ab46fe0acc4a9245.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/e3dd05720b62432e98647d2a96a8df7e.jsonl",
+      "path": "backend/data/audit/e3dd05720b62432e98647d2a96a8df7e.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/e3f9385b10144ef39d74d97ad04e1a55.jsonl",
+      "path": "backend/data/audit/e3f9385b10144ef39d74d97ad04e1a55.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/eb2528cb3d74412296186b112a260187.jsonl",
+      "path": "backend/data/audit/eb2528cb3d74412296186b112a260187.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/f4c4e674e8fb4796888ef415029d0c2a.jsonl",
+      "path": "backend/data/audit/f4c4e674e8fb4796888ef415029d0c2a.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/f56eccc29223424194de4adce5ab56cb.jsonl",
+      "path": "backend/data/audit/f56eccc29223424194de4adce5ab56cb.jsonl",
+      "language": "other",
+      "size": 3398,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/f57b699fc6f647e28ee5e38530982ba1.jsonl",
+      "path": "backend/data/audit/f57b699fc6f647e28ee5e38530982ba1.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/f58f0d9d9bae4478a71bcd1c3696e3b7.jsonl",
+      "path": "backend/data/audit/f58f0d9d9bae4478a71bcd1c3696e3b7.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/f5c2ba34389245a8938f0aa6ee6c855d.jsonl",
+      "path": "backend/data/audit/f5c2ba34389245a8938f0aa6ee6c855d.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/data/audit/fb3370a41f4e44cb9211a796c8672174.jsonl",
+      "path": "backend/data/audit/fb3370a41f4e44cb9211a796c8672174.jsonl",
+      "language": "other",
+      "size": 3404,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/audit_logs/df9c2c1dc750.jsonl",
+      "path": "backend/audit_logs/df9c2c1dc750.jsonl",
+      "language": "other",
+      "size": 215,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/audit_logs/edfbc8cb1cd2.jsonl",
+      "path": "backend/audit_logs/edfbc8cb1cd2.jsonl",
+      "language": "other",
+      "size": 215,
+      "loc": 0,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/__init__.py",
+      "path": "backend/app/__init__.py",
+      "language": "python",
+      "size": 0,
+      "loc": 1,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/config.py",
+      "path": "backend/app/config.py",
+      "language": "python",
+      "size": 2568,
+      "loc": 71,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "Settings",
+          "kind": "class",
+          "line": 14,
+          "doc": null
+        },
+        {
+          "name": "get_settings",
+          "kind": "def",
+          "line": 69,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/main.py",
+      "path": "backend/app/main.py",
+      "language": "python",
+      "size": 1730,
+      "loc": 67,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "health",
+          "kind": "def",
+          "line": 56,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/health"
+        }
+      ],
+      "entryPoint": {
+        "kind": "http",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/health"
+          }
+        ]
+      },
+      "layer": "presentation",
+      "depth": 0
+    },
+    {
+      "id": "backend/app/models.py",
+      "path": "backend/app/models.py",
+      "language": "python",
+      "size": 4791,
+      "loc": 174,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "utcnow_iso",
+          "kind": "def",
+          "line": 15,
+          "doc": null
+        },
+        {
+          "name": "TicketStatus",
+          "kind": "class",
+          "line": 22,
+          "doc": null
+        },
+        {
+          "name": "Employee",
+          "kind": "class",
+          "line": 28,
+          "doc": null
+        },
+        {
+          "name": "Ticket",
+          "kind": "class",
+          "line": 36,
+          "doc": null
+        },
+        {
+          "name": "SystemInfo",
+          "kind": "class",
+          "line": 49,
+          "doc": null
+        },
+        {
+          "name": "CustomerSystem",
+          "kind": "class",
+          "line": 57,
+          "doc": null
+        },
+        {
+          "name": "Customer",
+          "kind": "class",
+          "line": 63,
+          "doc": null
+        },
+        {
+          "name": "StatusUpdate",
+          "kind": "class",
+          "line": 71,
+          "doc": null
+        },
+        {
+          "name": "ActivityCreate",
+          "kind": "class",
+          "line": 75,
+          "doc": null
+        },
+        {
+          "name": "Activity",
+          "kind": "class",
+          "line": 87,
+          "doc": null
+        },
+        {
+          "name": "RunPhase",
+          "kind": "class",
+          "line": 98,
+          "doc": null
+        },
+        {
+          "name": "HypothesisComment",
+          "kind": "class",
+          "line": 114,
+          "doc": "A free-text note a technician attaches to a hypothesis."
+        },
+        {
+          "name": "Hypothesis",
+          "kind": "class",
+          "line": 122,
+          "doc": null
+        },
+        {
+          "name": "StartRunRequest",
+          "kind": "class",
+          "line": 146,
+          "doc": null
+        },
+        {
+          "name": "EventType",
+          "kind": "class",
+          "line": 154,
+          "doc": null
+        },
+        {
+          "name": "make_event",
+          "kind": "def",
+          "line": 168,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/ssh/__init__.py",
+      "path": "backend/app/ssh/__init__.py",
+      "language": "python",
+      "size": 109,
+      "loc": 4,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/ssh/runner.py",
+      "path": "backend/app/ssh/runner.py",
+      "language": "python",
+      "size": 5869,
+      "loc": 170,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "SSHError",
+          "kind": "class",
+          "line": 19,
+          "doc": "A live PTY session on the VM, so the technician can use vim/htop/less."
+        },
+        {
+          "name": "InteractiveShell",
+          "kind": "class",
+          "line": 23,
+          "doc": "A live PTY session on the VM, so the technician can use vim/htop/less."
+        },
+        {
+          "name": "CommandResult",
+          "kind": "class",
+          "line": 70,
+          "doc": null
+        },
+        {
+          "name": "SSHRunner",
+          "kind": "class",
+          "line": 90,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/safety/__init__.py",
+      "path": "backend/app/safety/__init__.py",
+      "language": "python",
+      "size": 132,
+      "loc": 4,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/safety/rules.py",
+      "path": "backend/app/safety/rules.py",
+      "language": "python",
+      "size": 17453,
+      "loc": 446,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "Category",
+          "kind": "class",
+          "line": 98,
+          "doc": null
+        },
+        {
+          "name": "Decision",
+          "kind": "class",
+          "line": 105,
+          "doc": null
+        },
+        {
+          "name": "split_segments",
+          "kind": "def",
+          "line": 118,
+          "doc": "Split a (possibly compound) command into argv-style segments."
+        },
+        {
+          "name": "_strip_prefixes",
+          "kind": "def",
+          "line": 147,
+          "doc": "Drop sudo/env/VAR=val prefixes to find the real command base."
+        },
+        {
+          "name": "_is_protected",
+          "kind": "def",
+          "line": 174,
+          "doc": null
+        },
+        {
+          "name": "_touches_protected",
+          "kind": "def",
+          "line": 185,
+          "doc": null
+        },
+        {
+          "name": "_is_secret_path",
+          "kind": "def",
+          "line": 194,
+          "doc": null
+        },
+        {
+          "name": "_is_redirect",
+          "kind": "def",
+          "line": 201,
+          "doc": "True for shell redirection tokens like `2>/dev/null`, `>>file`, `&>`."
+        },
+        {
+          "name": "classify_segment",
+          "kind": "def",
+          "line": 209,
+          "doc": null
+        },
+        {
+          "name": "classify",
+          "kind": "def",
+          "line": 373,
+          "doc": "Return the worst-category decision across all segments of the command."
+        },
+        {
+          "name": "decide",
+          "kind": "def",
+          "line": 393,
+          "doc": "Resolve the final action given the run's auto-approve-reads setting."
+        },
+        {
+          "name": "redact",
+          "kind": "def",
+          "line": 425,
+          "doc": "Return (scrubbed_text, number_of_redactions)."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/runs/__init__.py",
+      "path": "backend/app/runs/__init__.py",
+      "language": "python",
+      "size": 134,
+      "loc": 4,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/runs/manager.py",
+      "path": "backend/app/runs/manager.py",
+      "language": "python",
+      "size": 10962,
+      "loc": 309,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "RunStopped",
+          "kind": "class",
+          "line": 28,
+          "doc": "Raised inside the agent loop when the technician hits STOP."
+        },
+        {
+          "name": "ApprovalDecision",
+          "kind": "class",
+          "line": 33,
+          "doc": null
+        },
+        {
+          "name": "Run",
+          "kind": "class",
+          "line": 38,
+          "doc": null
+        },
+        {
+          "name": "RunManager",
+          "kind": "class",
+          "line": 284,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/mock/__init__.py",
+      "path": "backend/app/mock/__init__.py",
+      "language": "python",
+      "size": 0,
+      "loc": 1,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/mock/phoenix.py",
+      "path": "backend/app/mock/phoenix.py",
+      "language": "python",
+      "size": 11908,
+      "loc": 270,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "_now",
+          "kind": "def",
+          "line": 167,
+          "doc": null
+        },
+        {
+          "name": "create_app",
+          "kind": "def",
+          "line": 171,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/api/v1/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/me/tickets"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/tickets/{ticket_id}"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/tickets/{ticket_id}/customer-system"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/customers/{customer_id}"
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/tickets/{ticket_id}/status"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/activities/create"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/me/reset"
+        }
+      ],
+      "entryPoint": {
+        "kind": "http",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/v1/me"
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/me/tickets"
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/tickets/{ticket_id}"
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/tickets/{ticket_id}/customer-system"
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/customers/{customer_id}"
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/v1/tickets/{ticket_id}/status"
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/activities/create"
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/me/reset"
+          }
+        ]
+      },
+      "layer": "presentation",
+      "depth": 0
+    },
+    {
+      "id": "backend/app/erp/__init__.py",
+      "path": "backend/app/erp/__init__.py",
+      "language": "python",
+      "size": 93,
+      "loc": 4,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/erp/client.py",
+      "path": "backend/app/erp/client.py",
+      "language": "python",
+      "size": 5241,
+      "loc": 146,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "PhoenixError",
+          "kind": "class",
+          "line": 25,
+          "doc": null
+        },
+        {
+          "name": "PhoenixClient",
+          "kind": "class",
+          "line": 32,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/audit/__init__.py",
+      "path": "backend/app/audit/__init__.py",
+      "language": "python",
+      "size": 50,
+      "loc": 4,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/audit/log.py",
+      "path": "backend/app/audit/log.py",
+      "language": "python",
+      "size": 2623,
+      "loc": 70,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "AuditLog",
+          "kind": "class",
+          "line": 20,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/api/__init__.py",
+      "path": "backend/app/api/__init__.py",
+      "language": "python",
+      "size": 0,
+      "loc": 1,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "presentation",
+      "depth": null
+    },
+    {
+      "id": "backend/app/api/routes.py",
+      "path": "backend/app/api/routes.py",
+      "language": "python",
+      "size": 3505,
+      "loc": 116,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "_erp",
+          "kind": "def",
+          "line": 21,
+          "doc": null
+        },
+        {
+          "name": "_mgr",
+          "kind": "def",
+          "line": 25,
+          "doc": null
+        },
+        {
+          "name": "_llm",
+          "kind": "def",
+          "line": 29,
+          "doc": null
+        },
+        {
+          "name": "_raise",
+          "kind": "def",
+          "line": 33,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/me"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}/customer-system"
+        },
+        {
+          "method": "POST",
+          "path": "/runs"
+        },
+        {
+          "method": "GET",
+          "path": "/runs/{run_id}"
+        },
+        {
+          "method": "POST",
+          "path": "/runs/{run_id}/stop"
+        },
+        {
+          "method": "POST",
+          "path": "/runs/{run_id}/activity"
+        }
+      ],
+      "entryPoint": {
+        "kind": "http",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/me"
+          },
+          {
+            "method": "GET",
+            "path": "/tickets"
+          },
+          {
+            "method": "GET",
+            "path": "/tickets/{ticket_id}"
+          },
+          {
+            "method": "GET",
+            "path": "/tickets/{ticket_id}/customer-system"
+          },
+          {
+            "method": "POST",
+            "path": "/runs"
+          },
+          {
+            "method": "GET",
+            "path": "/runs/{run_id}"
+          },
+          {
+            "method": "POST",
+            "path": "/runs/{run_id}/stop"
+          },
+          {
+            "method": "POST",
+            "path": "/runs/{run_id}/activity"
+          }
+        ]
+      },
+      "layer": "presentation",
+      "depth": 0
+    },
+    {
+      "id": "backend/app/api/ws.py",
+      "path": "backend/app/api/ws.py",
+      "language": "python",
+      "size": 3440,
+      "loc": 96,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "presentation",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/__init__.py",
+      "path": "backend/app/agent/__init__.py",
+      "language": "python",
+      "size": 0,
+      "loc": 1,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/activity.py",
+      "path": "backend/app/agent/activity.py",
+      "language": "python",
+      "size": 2289,
+      "loc": 57,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "_normalise",
+          "kind": "def",
+          "line": 37,
+          "doc": null
+        },
+        {
+          "name": "_fallback",
+          "kind": "def",
+          "line": 43,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/llm.py",
+      "path": "backend/app/agent/llm.py",
+      "language": "python",
+      "size": 4798,
+      "loc": 139,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "LLMError",
+          "kind": "class",
+          "line": 20,
+          "doc": "Parse the first JSON object from model text (handles trailing junk)."
+        },
+        {
+          "name": "_extract_first_json_object",
+          "kind": "def",
+          "line": 24,
+          "doc": "Parse the first JSON object from model text (handles trailing junk)."
+        },
+        {
+          "name": "LLM",
+          "kind": "class",
+          "line": 55,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/loop.py",
+      "path": "backend/app/agent/loop.py",
+      "language": "python",
+      "size": 14931,
+      "loc": 397,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "_fail",
+          "kind": "def",
+          "line": 53,
+          "doc": null
+        },
+        {
+          "name": "_ticket_context",
+          "kind": "def",
+          "line": 59,
+          "doc": null
+        },
+        {
+          "name": "_normalize_likelihoods",
+          "kind": "def",
+          "line": 220,
+          "doc": "Turn raw model likelihoods into PERCENTAGES across the set, then rank by them."
+        },
+        {
+          "name": "_emit_hypotheses",
+          "kind": "def",
+          "line": 247,
+          "doc": null
+        },
+        {
+          "name": "_format_comments",
+          "kind": "def",
+          "line": 251,
+          "doc": null
+        },
+        {
+          "name": "_resolve_selection",
+          "kind": "def",
+          "line": 258,
+          "doc": "Map a selection message to a Hypothesis."
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/prompts.py",
+      "path": "backend/app/agent/prompts.py",
+      "language": "python",
+      "size": 4619,
+      "loc": 103,
+      "isTest": false,
+      "package": null,
+      "exports": [],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "support",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/schemas.py",
+      "path": "backend/app/agent/schemas.py",
+      "language": "python",
+      "size": 1340,
+      "loc": 50,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "HypothesisItem",
+          "kind": "class",
+          "line": 9,
+          "doc": null
+        },
+        {
+          "name": "HypothesesOutput",
+          "kind": "class",
+          "line": 21,
+          "doc": null
+        },
+        {
+          "name": "ProposedFix",
+          "kind": "class",
+          "line": 25,
+          "doc": null
+        },
+        {
+          "name": "CheckOutput",
+          "kind": "class",
+          "line": 32,
+          "doc": null
+        },
+        {
+          "name": "ValidationOutput",
+          "kind": "class",
+          "line": 38,
+          "doc": null
+        },
+        {
+          "name": "ActivityOutput",
+          "kind": "class",
+          "line": 43,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    },
+    {
+      "id": "backend/app/agent/tools.py",
+      "path": "backend/app/agent/tools.py",
+      "language": "python",
+      "size": 5128,
+      "loc": 156,
+      "isTest": false,
+      "package": null,
+      "exports": [
+        {
+          "name": "ExecResult",
+          "kind": "class",
+          "line": 22,
+          "doc": null
+        },
+        {
+          "name": "_blocked",
+          "kind": "def",
+          "line": 137,
+          "doc": null
+        },
+        {
+          "name": "quote_path",
+          "kind": "def",
+          "line": 154,
+          "doc": null
+        }
+      ],
+      "sinks": [],
+      "sinkSites": [],
+      "routes": [],
+      "entryPoint": null,
+      "layer": "application",
+      "depth": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "frontend/vite.config.ts",
+      "to": "vite",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/vite.config.ts",
+      "to": "@vitejs/plugin-react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "react-router-dom",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/TicketList.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/TicketDetail.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Workspace.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/main.tsx",
+      "to": "react-dom/client",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/main.tsx",
+      "to": "react-router-dom",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/main.tsx",
+      "to": "frontend/src/App.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/TicketDetail.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/pages/TicketDetail.tsx",
+      "to": "react-router-dom",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/pages/TicketDetail.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/TicketDetail.tsx",
+      "to": "frontend/src/components/Markdown.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/TicketList.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/pages/TicketList.tsx",
+      "to": "react-router-dom",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/pages/TicketList.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "react-router-dom",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/Terminal.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/HypothesisList.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/ApprovalPrompt.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/RunControls.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/components/ActivityReview.tsx",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/components/ActivityReview.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/ActivityReview.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/components/ApprovalPrompt.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/HypothesisList.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/HypothesisList.tsx",
+      "to": "frontend/src/api/client.ts",
+      "kind": "import"
+    },
+    {
+      "from": "frontend/src/components/Markdown.tsx",
+      "to": "react-markdown",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/Markdown.tsx",
+      "to": "remark-gfm",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/Terminal.tsx",
+      "to": "react",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/Terminal.tsx",
+      "to": "@xterm/xterm",
+      "kind": "external"
+    },
+    {
+      "from": "frontend/src/components/Terminal.tsx",
+      "to": "@xterm/addon-fit",
+      "kind": "external"
+    }
+  ],
+  "callEdges": [
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/api/client.ts",
+      "symbol": "api",
+      "count": 1
+    },
+    {
+      "from": "frontend/src/pages/TicketDetail.tsx",
+      "to": "frontend/src/api/client.ts",
+      "symbol": "api",
+      "count": 3
+    },
+    {
+      "from": "frontend/src/pages/TicketList.tsx",
+      "to": "frontend/src/api/client.ts",
+      "symbol": "api",
+      "count": 1
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/api/client.ts",
+      "symbol": "api",
+      "count": 2
+    },
+    {
+      "from": "frontend/src/pages/Workspace.tsx",
+      "to": "frontend/src/api/client.ts",
+      "symbol": "runSocketUrl",
+      "count": 1
+    }
+  ],
+  "containerEdges": [],
+  "entryPoints": [
+    {
+      "id": "backend/app/main.py",
+      "path": "backend/app/main.py",
+      "package": null,
+      "kind": "http",
+      "name": null,
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/health"
+        }
+      ]
+    },
+    {
+      "id": "backend/app/mock/phoenix.py",
+      "path": "backend/app/mock/phoenix.py",
+      "package": null,
+      "kind": "http",
+      "name": null,
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/api/v1/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/me/tickets"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/tickets/{ticket_id}"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/tickets/{ticket_id}/customer-system"
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/customers/{customer_id}"
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/tickets/{ticket_id}/status"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/activities/create"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/me/reset"
+        }
+      ]
+    },
+    {
+      "id": "backend/app/api/routes.py",
+      "path": "backend/app/api/routes.py",
+      "package": null,
+      "kind": "http",
+      "name": null,
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/me"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}"
+        },
+        {
+          "method": "GET",
+          "path": "/tickets/{ticket_id}/customer-system"
+        },
+        {
+          "method": "POST",
+          "path": "/runs"
+        },
+        {
+          "method": "GET",
+          "path": "/runs/{run_id}"
+        },
+        {
+          "method": "POST",
+          "path": "/runs/{run_id}/stop"
+        },
+        {
+          "method": "POST",
+          "path": "/runs/{run_id}/activity"
+        }
+      ]
+    }
+  ],
+  "sinks": [
+    {
+      "id": "frontend/src/pages/Workspace.tsx",
+      "path": "frontend/src/pages/Workspace.tsx",
+      "package": null,
+      "sinks": [
+        "net:http"
+      ]
+    },
+    {
+      "id": "frontend/src/api/client.ts",
+      "path": "frontend/src/api/client.ts",
+      "package": null,
+      "sinks": [
+        "net:fetch"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow:backend/app/main.py",
+      "name": "GET /health",
+      "description": "An incoming HTTP request flows through the handler, calls dependent services, and reaches downstream side effects.",
+      "entry": "backend/app/main.py",
+      "entryKind": "http",
+      "entryContainer": "dir:backend",
+      "steps": [
+        {
+          "n": 1,
+          "from": "actor:user",
+          "to": "dir:backend",
+          "title": "GET /health",
+          "description": "Incoming HTTP request GET /health hits the handler in backend/app/main.py.",
+          "fromFile": null,
+          "toFile": "backend/app/main.py",
+          "boxFrom": "actor:user",
+          "boxTo": "dir:backend"
+        }
+      ]
+    },
+    {
+      "id": "flow:backend/app/mock/phoenix.py",
+      "name": "GET /api/v1/me",
+      "description": "An incoming HTTP request flows through the handler, calls dependent services, and reaches downstream side effects.",
+      "entry": "backend/app/mock/phoenix.py",
+      "entryKind": "http",
+      "entryContainer": "dir:backend",
+      "steps": [
+        {
+          "n": 1,
+          "from": "actor:user",
+          "to": "dir:backend",
+          "title": "GET /api/v1/me",
+          "description": "Incoming HTTP request GET /api/v1/me hits the handler in backend/app/mock/phoenix.py.",
+          "fromFile": null,
+          "toFile": "backend/app/mock/phoenix.py",
+          "boxFrom": "actor:user",
+          "boxTo": "dir:backend"
+        }
+      ]
+    },
+    {
+      "id": "flow:backend/app/api/routes.py",
+      "name": "GET /me",
+      "description": "An incoming HTTP request flows through the handler, calls dependent services, and reaches downstream side effects.",
+      "entry": "backend/app/api/routes.py",
+      "entryKind": "http",
+      "entryContainer": "dir:backend",
+      "steps": [
+        {
+          "n": 1,
+          "from": "actor:user",
+          "to": "dir:backend",
+          "title": "GET /me",
+          "description": "Incoming HTTP request GET /me hits the handler in backend/app/api/routes.py.",
+          "fromFile": null,
+          "toFile": "backend/app/api/routes.py",
+          "boxFrom": "actor:user",
+          "boxTo": "dir:backend"
+        }
+      ]
+    }
+  ],
+  "lanes": [
+    {
+      "id": "actor",
+      "name": "Actors",
+      "color": "#ff9bd4"
+    },
+    {
+      "id": "presentation",
+      "name": "Presentation",
+      "color": "#79c0ff"
+    },
+    {
+      "id": "application",
+      "name": "Application",
+      "color": "#7ee787"
+    },
+    {
+      "id": "domain",
+      "name": "Domain",
+      "color": "#d2a8ff"
+    },
+    {
+      "id": "infrastructure",
+      "name": "Infrastructure",
+      "color": "#f0883e"
+    },
+    {
+      "id": "sinks",
+      "name": "Sinks",
+      "color": "#ff7b72"
+    }
+  ],
+  "boxes": [
+    {
+      "id": "actor:user",
+      "lane": "actor",
+      "title": "User",
+      "sublabel": "CLI / HTTP / library caller",
+      "color": "#ff9bd4"
+    },
+    {
+      "id": "dir:LICENSE",
+      "lane": "application",
+      "title": "LICENSE",
+      "sublabel": "1 modules",
+      "color": "#8b949e",
+      "kind": "package",
+      "moduleCount": 1,
+      "hasEntry": false,
+      "sinks": []
+    },
+    {
+      "id": "dir:Makefile",
+      "lane": "application",
+      "title": "Makefile",
+      "sublabel": "1 modules",
+      "color": "#8b949e",
+      "kind": "package",
+      "moduleCount": 1,
+      "hasEntry": false,
+      "sinks": []
+    },
+    {
+      "id": "dir:keys",
+      "lane": "application",
+      "title": "keys",
+      "sublabel": "6 modules",
+      "color": "#8b949e",
+      "kind": "package",
+      "moduleCount": 6,
+      "hasEntry": false,
+      "sinks": []
+    },
+    {
+      "id": "dir:frontend",
+      "lane": "application",
+      "title": "frontend",
+      "sublabel": "22 modules · net:http, net:fetch",
+      "color": "#7ee787",
+      "kind": "package",
+      "moduleCount": 22,
+      "hasEntry": false,
+      "sinks": [
+        "net:http",
+        "net:fetch"
+      ]
+    },
+    {
+      "id": "dir:docs",
+      "lane": "application",
+      "title": "docs",
+      "sublabel": "2 modules",
+      "color": "#8b949e",
+      "kind": "package",
+      "moduleCount": 2,
+      "hasEntry": false,
+      "sinks": []
+    },
+    {
+      "id": "dir:backend",
+      "lane": "application",
+      "title": "backend",
+      "sublabel": "91 modules · 3 entry",
+      "color": "#8b949e",
+      "kind": "package",
+      "moduleCount": 91,
+      "hasEntry": true,
+      "sinks": []
+    }
+  ],
+  "symbolIndex": [
+    {
+      "name": "default",
+      "kind": "default",
+      "file": "frontend/vite.config.ts",
+      "package": null
+    },
+    {
+      "name": "App",
+      "kind": "function",
+      "file": "frontend/src/App.tsx",
+      "package": null
+    },
+    {
+      "name": "TicketDetail",
+      "kind": "function",
+      "file": "frontend/src/pages/TicketDetail.tsx",
+      "package": null
+    },
+    {
+      "name": "TicketList",
+      "kind": "function",
+      "file": "frontend/src/pages/TicketList.tsx",
+      "package": null
+    },
+    {
+      "name": "Workspace",
+      "kind": "function",
+      "file": "frontend/src/pages/Workspace.tsx",
+      "package": null
+    },
+    {
+      "name": "ActivityReview",
+      "kind": "function",
+      "file": "frontend/src/components/ActivityReview.tsx",
+      "package": null
+    },
+    {
+      "name": "Approval",
+      "kind": "interface",
+      "file": "frontend/src/components/ApprovalPrompt.tsx",
+      "package": null
+    },
+    {
+      "name": "ApprovalPrompt",
+      "kind": "function",
+      "file": "frontend/src/components/ApprovalPrompt.tsx",
+      "package": null
+    },
+    {
+      "name": "HypothesisList",
+      "kind": "function",
+      "file": "frontend/src/components/HypothesisList.tsx",
+      "package": null
+    },
+    {
+      "name": "Markdown",
+      "kind": "function",
+      "file": "frontend/src/components/Markdown.tsx",
+      "package": null
+    },
+    {
+      "name": "RunControls",
+      "kind": "function",
+      "file": "frontend/src/components/RunControls.tsx",
+      "package": null
+    },
+    {
+      "name": "TerminalView",
+      "kind": "function",
+      "file": "frontend/src/components/Terminal.tsx",
+      "package": null
+    },
+    {
+      "name": "API_BASE",
+      "kind": "const",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "TicketStatus",
+      "kind": "type",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "Ticket",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "SystemInfo",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "CustomerSystem",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "Employee",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "HypothesisComment",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "Hypothesis",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "ActivityDraft",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "RunEvent",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "RunSnapshot",
+      "kind": "interface",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "api",
+      "kind": "const",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "runSocketUrl",
+      "kind": "function",
+      "file": "frontend/src/api/client.ts",
+      "package": null
+    },
+    {
+      "name": "FakeSSH",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "FakeERP",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "TwoCheckLLM",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "_make_run",
+      "kind": "def",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "test_likelihood_is_normalised_to_percentages",
+      "kind": "def",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "test_percentages_handle_values_already_in_percent",
+      "kind": "def",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "FakeStdout",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "FakeStdin",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "FakeProcess",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "ShellSSH",
+      "kind": "class",
+      "file": "backend/tests/test_adjustments.py",
+      "package": null
+    },
+    {
+      "name": "FakeSSH",
+      "kind": "class",
+      "file": "backend/tests/test_agent_loop.py",
+      "package": null
+    },
+    {
+      "name": "FakeERP",
+      "kind": "class",
+      "file": "backend/tests/test_agent_loop.py",
+      "package": null
+    },
+    {
+      "name": "FakeLLM",
+      "kind": "class",
+      "file": "backend/tests/test_agent_loop.py",
+      "package": null
+    },
+    {
+      "name": "test_ssh_key_per_ticket",
+      "kind": "def",
+      "file": "backend/tests/test_config.py",
+      "package": null
+    },
+    {
+      "name": "make_client",
+      "kind": "def",
+      "file": "backend/tests/test_erp_client.py",
+      "package": null
+    },
+    {
+      "name": "test_extract_first_json_with_trailing_text",
+      "kind": "def",
+      "file": "backend/tests/test_llm.py",
+      "package": null
+    },
+    {
+      "name": "test_extract_from_markdown_fence",
+      "kind": "def",
+      "file": "backend/tests/test_llm.py",
+      "package": null
+    },
+    {
+      "name": "make_run",
+      "kind": "def",
+      "file": "backend/tests/test_run_manager.py",
+      "package": null
+    },
+    {
+      "name": "test_comment_hypothesis",
+      "kind": "def",
+      "file": "backend/tests/test_run_manager.py",
+      "package": null
+    },
+    {
+      "name": "test_dangerous_commands_denied",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "test_mutations_require_confirmation",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "test_reads_allowed_in_auto_mode",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "test_reads_confirm_in_manual_mode",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "test_compound_command_takes_worst_category",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "test_redaction_of_assignments_and_keys",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "test_redaction_of_private_key_block",
+      "kind": "def",
+      "file": "backend/tests/test_safety.py",
+      "package": null
+    },
+    {
+      "name": "Settings",
+      "kind": "class",
+      "file": "backend/app/config.py",
+      "package": null
+    },
+    {
+      "name": "get_settings",
+      "kind": "def",
+      "file": "backend/app/config.py",
+      "package": null
+    },
+    {
+      "name": "health",
+      "kind": "def",
+      "file": "backend/app/main.py",
+      "package": null
+    },
+    {
+      "name": "utcnow_iso",
+      "kind": "def",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "TicketStatus",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "Employee",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "Ticket",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "SystemInfo",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "CustomerSystem",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "Customer",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "StatusUpdate",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "ActivityCreate",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "Activity",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "RunPhase",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "HypothesisComment",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "Hypothesis",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "StartRunRequest",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "EventType",
+      "kind": "class",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "make_event",
+      "kind": "def",
+      "file": "backend/app/models.py",
+      "package": null
+    },
+    {
+      "name": "SSHError",
+      "kind": "class",
+      "file": "backend/app/ssh/runner.py",
+      "package": null
+    },
+    {
+      "name": "InteractiveShell",
+      "kind": "class",
+      "file": "backend/app/ssh/runner.py",
+      "package": null
+    },
+    {
+      "name": "CommandResult",
+      "kind": "class",
+      "file": "backend/app/ssh/runner.py",
+      "package": null
+    },
+    {
+      "name": "SSHRunner",
+      "kind": "class",
+      "file": "backend/app/ssh/runner.py",
+      "package": null
+    },
+    {
+      "name": "Category",
+      "kind": "class",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "Decision",
+      "kind": "class",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "split_segments",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "_strip_prefixes",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "_is_protected",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "_touches_protected",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "_is_secret_path",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "_is_redirect",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "classify_segment",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "classify",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "decide",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "redact",
+      "kind": "def",
+      "file": "backend/app/safety/rules.py",
+      "package": null
+    },
+    {
+      "name": "RunStopped",
+      "kind": "class",
+      "file": "backend/app/runs/manager.py",
+      "package": null
+    },
+    {
+      "name": "ApprovalDecision",
+      "kind": "class",
+      "file": "backend/app/runs/manager.py",
+      "package": null
+    },
+    {
+      "name": "Run",
+      "kind": "class",
+      "file": "backend/app/runs/manager.py",
+      "package": null
+    },
+    {
+      "name": "RunManager",
+      "kind": "class",
+      "file": "backend/app/runs/manager.py",
+      "package": null
+    },
+    {
+      "name": "_now",
+      "kind": "def",
+      "file": "backend/app/mock/phoenix.py",
+      "package": null
+    },
+    {
+      "name": "create_app",
+      "kind": "def",
+      "file": "backend/app/mock/phoenix.py",
+      "package": null
+    },
+    {
+      "name": "PhoenixError",
+      "kind": "class",
+      "file": "backend/app/erp/client.py",
+      "package": null
+    },
+    {
+      "name": "PhoenixClient",
+      "kind": "class",
+      "file": "backend/app/erp/client.py",
+      "package": null
+    },
+    {
+      "name": "AuditLog",
+      "kind": "class",
+      "file": "backend/app/audit/log.py",
+      "package": null
+    },
+    {
+      "name": "_erp",
+      "kind": "def",
+      "file": "backend/app/api/routes.py",
+      "package": null
+    },
+    {
+      "name": "_mgr",
+      "kind": "def",
+      "file": "backend/app/api/routes.py",
+      "package": null
+    },
+    {
+      "name": "_llm",
+      "kind": "def",
+      "file": "backend/app/api/routes.py",
+      "package": null
+    },
+    {
+      "name": "_raise",
+      "kind": "def",
+      "file": "backend/app/api/routes.py",
+      "package": null
+    },
+    {
+      "name": "_normalise",
+      "kind": "def",
+      "file": "backend/app/agent/activity.py",
+      "package": null
+    },
+    {
+      "name": "_fallback",
+      "kind": "def",
+      "file": "backend/app/agent/activity.py",
+      "package": null
+    },
+    {
+      "name": "LLMError",
+      "kind": "class",
+      "file": "backend/app/agent/llm.py",
+      "package": null
+    },
+    {
+      "name": "_extract_first_json_object",
+      "kind": "def",
+      "file": "backend/app/agent/llm.py",
+      "package": null
+    },
+    {
+      "name": "LLM",
+      "kind": "class",
+      "file": "backend/app/agent/llm.py",
+      "package": null
+    },
+    {
+      "name": "_fail",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_ticket_context",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_normalize_likelihoods",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_emit_hypotheses",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_format_comments",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "_resolve_selection",
+      "kind": "def",
+      "file": "backend/app/agent/loop.py",
+      "package": null
+    },
+    {
+      "name": "HypothesisItem",
+      "kind": "class",
+      "file": "backend/app/agent/schemas.py",
+      "package": null
+    },
+    {
+      "name": "HypothesesOutput",
+      "kind": "class",
+      "file": "backend/app/agent/schemas.py",
+      "package": null
+    },
+    {
+      "name": "ProposedFix",
+      "kind": "class",
+      "file": "backend/app/agent/schemas.py",
+      "package": null
+    },
+    {
+      "name": "CheckOutput",
+      "kind": "class",
+      "file": "backend/app/agent/schemas.py",
+      "package": null
+    },
+    {
+      "name": "ValidationOutput",
+      "kind": "class",
+      "file": "backend/app/agent/schemas.py",
+      "package": null
+    },
+    {
+      "name": "ActivityOutput",
+      "kind": "class",
+      "file": "backend/app/agent/schemas.py",
+      "package": null
+    },
+    {
+      "name": "ExecResult",
+      "kind": "class",
+      "file": "backend/app/agent/tools.py",
+      "package": null
+    },
+    {
+      "name": "_blocked",
+      "kind": "def",
+      "file": "backend/app/agent/tools.py",
+      "package": null
+    },
+    {
+      "name": "quote_path",
+      "kind": "def",
+      "file": "backend/app/agent/tools.py",
+      "package": null
+    }
+  ],
+  "tests": {
+    "total": 8,
+    "byContainer": {
+      "LICENSE": 0,
+      "Makefile": 0,
+      "keys": 0,
+      "frontend": 0,
+      "docs": 0,
+      "backend": 8
+    }
+  },
+  "planning": {
+    "hasProject": false,
+    "hasRoadmap": false,
+    "hasDomain": false,
+    "currentState": null
+  },
+  "agentHints": {
+    "description": "Architecture map of this codebase. Read this BEFORE walking the file tree.",
+    "howToUse": [
+      "`groups` partitions packages into functional containers (Frontend, CLI & Runtime, Core, Domain Services, Workflows & Infra). Each group's `members` array lists `pkg:NAME` ids. Overridable via `.planning/codebase/GROUPS.json`.",
+      "`containers[*].groupId` links a package to its functional group; `containers[*].topFiles` is the 3-5 most relevant source files in the package (with a `reason` tag like `CLI entry` / `most depended-on` / `HTTP handler`).",
+      "`containerEdges[*].label` is the relationship verb between two packages (Calls / Uses / Sends Events / Renders / Updates / Reads State / Configures / Analyzes / Executes Actions / Persists). `containerEdges[*].symbolSamples` shows the top imported symbol names.",
+      "`entryPoints` lists every CLI command, HTTP route, and library main — these are where data flows in.",
+      "`sinks` lists modules that hit FS, network, DB, stdout, or run subprocesses — where data flows out.",
+      "`containers` describes packages/bounded contexts. `containerEdges` shows cross-package dataflow.",
+      "`callEdges` is symbol-level: each entry means caller-file uses callee-file's <symbol>.",
+      "`flows` is a list of named scenarios (CLI invocation, HTTP request, library call). Each flow has numbered `steps` going from `from` box → `to` box with a `description`. Boxes are packages (`pkg:NAME`), sinks (`sink:KIND`), or `actor:user`.",
+      "`lanes` + `boxes` give you swim-lane layout coordinates: each box belongs to a lane (presentation / application / domain / infrastructure / sinks / actors).",
+      "To curate flows or groups: write `.planning/codebase/FLOWS.json` or `.planning/codebase/GROUPS.json` — entries with matching `id` override auto-generated ones; new ids are appended.",
+      "`modules[*].layer` classifies each file as presentation / application / domain / infrastructure / support."
+    ]
+  }
+}
