@@ -28,6 +28,7 @@ const FINAL_PHASES = ["DONE", "STOPPED", "ERROR"];
 export default function Workspace() {
   const { runId } = useParams();
   const wsRef = useRef<WebSocket | null>(null);
+  const termSize = useRef({ cols: 120, rows: 30 });
 
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [phase, setPhase] = useState("CONNECTING");
@@ -35,7 +36,6 @@ export default function Workspace() {
   const [termChunks, setTermChunks] = useState<string[]>([]);
   const [logEvents, setLogEvents] = useState<RunEvent[]>([]);
   const [hypotheses, setHypotheses] = useState<Hypothesis[]>([]);
-  const [awaitingSelection, setAwaitingSelection] = useState(false);
   const [approval, setApproval] = useState<Approval | null>(null);
   const [activityDraft, setActivityDraft] = useState<ActivityDraft | null>(null);
   const [submittedId, setSubmittedId] = useState<number | null>(null);
@@ -93,7 +93,6 @@ export default function Workspace() {
         break;
       case "hypotheses":
         setHypotheses(ev.items || []);
-        setAwaitingSelection(true);
         break;
       case "approval.request":
         setApproval({ id: ev.id, kind: ev.kind, payload: ev.payload, purpose: ev.purpose });
@@ -119,10 +118,17 @@ export default function Workspace() {
 
   function selectHypothesis(id: string) {
     send({ type: "select_hypothesis", id });
-    setAwaitingSelection(false);
     setHypotheses((prev) =>
       prev.map((h) => (h.id === id ? { ...h, status: "checking" } : h))
     );
+  }
+
+  function commentHypothesis(id: string, text: string) {
+    send({ type: "comment_hypothesis", id, text });
+  }
+
+  function submitOwnHypothesis(h: { title: string; reasoning: string; checks: string[] }) {
+    send({ type: "submit_hypothesis", hypothesis: h });
   }
 
   function decideApproval(approved: boolean, edited?: string) {
@@ -143,6 +149,36 @@ export default function Workspace() {
   const busy = BUSY_PHASES.includes(phase);
   const terminalEnabled = !!approval || !busy;
   const runActive = !FINAL_PHASES.includes(phase);
+
+  // Right panel adapts to the phase: the full ranked list only while choosing a
+  // hypothesis; during CHECK just the active one; nothing during fix/validate/etc.
+  const awaitingSelection = phase === "HYPOTHESES";
+  const activeHypo =
+    hypotheses.find((h) => h.status === "checking") ||
+    hypotheses.find((h) => h.status === "confirmed");
+
+  let hypothesisPanel: JSX.Element | null = null;
+  if (awaitingSelection) {
+    hypothesisPanel = (
+      <HypothesisList
+        hypotheses={hypotheses}
+        mode="select"
+        onSelect={selectHypothesis}
+        onComment={commentHypothesis}
+        onSubmitOwn={submitOwnHypothesis}
+      />
+    );
+  } else if (phase === "CHECK" && activeHypo) {
+    hypothesisPanel = (
+      <HypothesisList
+        hypotheses={[activeHypo]}
+        mode="active"
+        onSelect={selectHypothesis}
+        onComment={commentHypothesis}
+        onSubmitOwn={submitOwnHypothesis}
+      />
+    );
+  }
 
   return (
     <div>
@@ -168,7 +204,18 @@ export default function Workspace() {
           <TerminalView
             chunks={termChunks}
             enabled={terminalEnabled}
-            onCommand={(cmd) => send({ type: "terminal.input", command: cmd })}
+            onData={(data) =>
+              send({
+                type: "terminal.data",
+                data,
+                cols: termSize.current.cols,
+                rows: termSize.current.rows,
+              })
+            }
+            onResize={(cols, rows) => {
+              termSize.current = { cols, rows };
+              send({ type: "terminal.resize", cols, rows });
+            }}
           />
           <div className="panel">
             <div className="panel-header">
@@ -185,13 +232,7 @@ export default function Workspace() {
 
         <div>
           {approval && <ApprovalPrompt approval={approval} onDecide={decideApproval} />}
-          {hypotheses.length > 0 && (
-            <HypothesisList
-              hypotheses={hypotheses}
-              selectable={awaitingSelection && !approval}
-              onSelect={selectHypothesis}
-            />
-          )}
+          {hypothesisPanel}
           {activityDraft && (
             <ActivityReview
               draft={activityDraft}
@@ -199,7 +240,7 @@ export default function Workspace() {
               onSubmit={submitActivity}
             />
           )}
-          {!approval && !awaitingSelection && !activityDraft && (
+          {!approval && !hypothesisPanel && !activityDraft && (
             <div className="notice">{phaseHint(phase)}</div>
           )}
         </div>
@@ -231,6 +272,7 @@ function phaseHint(phase: string): string {
       return "Agent is gathering read-only diagnostics…";
     case "CHECK":
       return "Agent is checking the selected hypothesis…";
+    case "FIX_PROPOSE":
     case "APPLY":
       return "Agent is applying the approved fix…";
     case "VALIDATE":

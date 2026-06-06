@@ -330,3 +330,118 @@ textarea {
   border-color: var(--success);
   background: #f1faf4;
 }
+
+/* ---- Hypothesis likelihood (percentage bar) ---- */
+.likelihood {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.likelihood-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-selected);
+  overflow: hidden;
+}
+.likelihood-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+.likelihood-pct {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 34px;
+  text-align: right;
+}
+
+/* ---- Technician comments on a hypothesis ---- */
+.comment {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+  border-left: 2px solid var(--accent);
+  padding: 2px 8px;
+  margin-top: 4px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* ---- Markdown rendering in the ticket view ---- */
+.markdown {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.markdown > :first-child {
+  margin-top: 0;
+}
+.markdown > :last-child {
+  margin-bottom: 0;
+}
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  margin: 12px 0 6px;
+  line-height: 1.3;
+}
+.markdown h1 {
+  font-size: 18px;
+}
+.markdown h2 {
+  font-size: 16px;
+}
+.markdown h3 {
+  font-size: 14px;
+}
+.markdown p {
+  margin: 6px 0;
+}
+.markdown ul,
+.markdown ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+.markdown code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+.markdown pre {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  overflow: auto;
+}
+.markdown pre code {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.markdown blockquote {
+  margin: 6px 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-secondary);
+}
+.markdown table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+}
+.markdown th,
+.markdown td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: left;
+}
+.markdown a {
+  color: var(--accent);
+}

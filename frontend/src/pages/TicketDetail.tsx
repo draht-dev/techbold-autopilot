@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, CustomerSystem, Ticket } from "../api/client";
+import Markdown from "../components/Markdown";
 
 export default function TicketDetail() {
   const { id } = useParams();
@@ -61,7 +62,9 @@ export default function TicketDetail() {
                 <dt>Tags</dt>
                 <dd>{ticket.tags?.join(", ") || "—"}</dd>
               </dl>
-              <p style={{ marginTop: 12 }}>{ticket.description}</p>
+              <div style={{ marginTop: 12 }}>
+                <Markdown>{ticket.description}</Markdown>
+              </div>
             </div>
           </div>
         </div>

@@ -40,14 +40,24 @@ export interface Employee {
   teamname: string;
 }
 
+export interface HypothesisComment {
+  author: string;
+  text: string;
+  ts: string;
+}
+
 export interface Hypothesis {
   id: string;
   rank: number;
   title: string;
   reasoning: string;
   evidence: string;
-  proposed_check: string;
+  /** One or more read-only check commands (a hypothesis is not limited to one). */
+  checks: string[];
+  /** Relative likelihood as a percentage (0-100), normalised across the set. */
   likelihood?: number | null;
+  source: "agent" | "technician";
+  comments: HypothesisComment[];
   status: "open" | "checking" | "confirmed" | "rejected";
 }
 
