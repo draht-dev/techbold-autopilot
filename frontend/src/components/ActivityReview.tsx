@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ActivityDraft } from "../api/client";
+import { ActivityDraft, TicketStatus } from "../api/client";
 
 interface Props {
   draft: ActivityDraft;
   submittedId: number | null;
+  submittedStatus?: TicketStatus;
   onSubmit: (edited: ActivityDraft) => void;
 }
 
@@ -16,7 +17,7 @@ const FIELDS: { key: keyof ActivityDraft; label: string; rows: number }[] = [
   { key: "description", label: "Description", rows: 3 },
 ];
 
-export default function ActivityReview({ draft, submittedId, onSubmit }: Props) {
+export default function ActivityReview({ draft, submittedId, submittedStatus, onSubmit }: Props) {
   const [fields, setFields] = useState<ActivityDraft>(draft);
 
   if (submittedId) {
@@ -27,7 +28,8 @@ export default function ActivityReview({ draft, submittedId, onSubmit }: Props) 
         </div>
         <div className="panel-body">
           <div className="notice success">
-            Activity #{submittedId} written to the ERP and ticket marked DONE.
+            Activity #{submittedId} written to the ERP and ticket marked{" "}
+            {submittedStatus || "DONE"}.
           </div>
         </div>
       </div>

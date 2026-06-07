@@ -13,7 +13,17 @@ from fastapi import APIRouter, HTTPException, Query, Request
 
 from app.agent.loop import run_agent, run_shell
 from app.erp import PhoenixError
-from app.models import ActivityCreate, StartRunRequest, TicketStatus
+from app.models import (
+    ActivityCreate,
+    EventType,
+    ManualReportRequest,
+    RunPhase,
+    StartRunRequest,
+    StatusUpdate,
+    TicketStatus,
+    utcnow_iso,
+)
+from app.runs.resolutions import ResolutionStore
 
 router = APIRouter(prefix="/api")
 
@@ -81,6 +91,15 @@ async def get_active_run(request: Request, ticket_id: int) -> Any:
     mgr = _mgr(request)
     run = mgr.active_run_for_ticket(ticket_id)
     return mgr.summarize(run) if run is not None else None
+
+
+@router.patch("/tickets/{ticket_id}/status")
+async def set_ticket_status(request: Request, ticket_id: int, body: StatusUpdate) -> Any:
+    """Let the technician override a ticket's ERP status from the overview."""
+    try:
+        return await _erp(request).set_status(ticket_id, body.status)
+    except PhoenixError as exc:
+        _raise(exc)
 
 
 @router.get("/tickets/{ticket_id}/resolution")
@@ -177,3 +196,63 @@ async def submit_activity(request: Request, run_id: str, body: dict) -> Any:
     if not run.submit_activity(body):
         raise HTTPException(status_code=409, detail="run is not awaiting an activity submission")
     return {"ok": True}
+
+
+@router.post("/runs/{run_id}/manual-report")
+async def submit_manual_report(
+    request: Request, run_id: str, body: ManualReportRequest
+) -> Any:
+    """Technician files an activity report without waiting for the agent draft."""
+    mgr = _mgr(request)
+    run = mgr.get(run_id)
+    if run is None:
+        raise HTTPException(status_code=404, detail="run not found")
+    if run.submitted_activity is not None:
+        raise HTTPException(status_code=409, detail="this run already has a submitted report")
+
+    fields = body.model_dump(exclude={"outcome"})
+    activity = ActivityCreate(
+        ticket_id=run.ticket_id,
+        start_datetime=run.started_at,
+        end_datetime=utcnow_iso(),
+        **fields,
+    )
+    try:
+        created = await _erp(request).create_activity(activity)
+    except PhoenixError as exc:
+        _raise(exc)
+
+    outcome = body.outcome
+    final_status = TicketStatus.DONE if outcome == "fixed" else TicketStatus.PENDING
+    try:
+        await _erp(request).set_status(run.ticket_id, final_status)
+    except PhoenixError as exc:
+        _raise(exc)
+
+    run.submitted_activity = fields
+    run.outcome = outcome
+    run.resolved_manually = True
+    run.activity_draft = fields
+    run.emit(
+        EventType.ACTIVITY_SUBMITTED,
+        activity_id=getattr(created, "id", None),
+        outcome=outcome,
+        manual=True,
+    )
+    run.set_phase(RunPhase.DONE)
+    run.info(
+        "Manual report submitted and ticket marked "
+        f"{'DONE' if final_status == TicketStatus.DONE else 'PENDING'}."
+    )
+
+    # Unblock the agent if it was waiting for activity review; then stop it.
+    run.submit_activity(fields)
+    run.request_stop()
+
+    ResolutionStore(mgr.settings.audit_dir).save(run.ticket_id, run.resolution_record())
+
+    return {
+        "activity_id": getattr(created, "id", None),
+        "status": final_status.value,
+        "outcome": outcome,
+    }

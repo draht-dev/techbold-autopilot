@@ -1,4 +1,38 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+
+/**
+ * A textarea that sizes itself to fit its content, so every command line is
+ * visible without scrolling or manual resizing. Still vertically resizable by
+ * the user (via the CSS `resize` handle) for very long fixes.
+ */
+function AutoTextarea({
+  value,
+  onChange,
+  className,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  className?: string;
+}) {
+  const ref = useRef<HTMLTextAreaElement | null>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      className={className}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      style={{ overflow: "hidden" }}
+    />
+  );
+}
 
 export interface Approval {
   id: string;
@@ -49,11 +83,7 @@ export default function ApprovalPrompt({ approval, onDecide }: Props) {
               </div>
             )}
             <label>Command (you may edit before approving)</label>
-            <textarea
-              rows={2}
-              value={editedCommand}
-              onChange={(e) => setEditedCommand(e.target.value)}
-            />
+            <AutoTextarea value={editedCommand} onChange={setEditedCommand} />
           </div>
         )}
 
@@ -66,11 +96,7 @@ export default function ApprovalPrompt({ approval, onDecide }: Props) {
               </div>
             )}
             <label style={{ marginTop: 8 }}>Fix commands (one per line, editable)</label>
-            <textarea
-              rows={Math.min(8, Math.max(2, (payload.commands || []).length + 1))}
-              value={editedFix}
-              onChange={(e) => setEditedFix(e.target.value)}
-            />
+            <AutoTextarea value={editedFix} onChange={setEditedFix} />
             {payload.validation_command && (
               <div className="mono" style={{ marginTop: 6, fontSize: 12 }}>
                 validation: {payload.validation_command}

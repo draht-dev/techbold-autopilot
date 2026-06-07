@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { api, CustomerSystem, RunSnapshot, RunSummary, Ticket } from "../api/client";
+import { api, CustomerSystem, RunSnapshot, RunSummary, Ticket, TicketStatus } from "../api/client";
 import Markdown from "../components/Markdown";
 import Resolution from "../components/Resolution";
+import StatusSelect from "../components/StatusSelect";
 
 export default function TicketDetail() {
   const { id } = useParams();
@@ -16,6 +17,21 @@ export default function TicketDetail() {
   const [error, setError] = useState<string | null>(null);
   const [autoApproveReads, setAutoApproveReads] = useState(true);
   const [starting, setStarting] = useState(false);
+  const [statusSaving, setStatusSaving] = useState(false);
+  const [statusError, setStatusError] = useState<string | null>(null);
+
+  async function updateStatus(next: TicketStatus) {
+    setStatusSaving(true);
+    setStatusError(null);
+    try {
+      const updated = await api.setTicketStatus(ticketId, next);
+      setTicket(updated);
+    } catch (e: any) {
+      setStatusError(String(e.message || e));
+    } finally {
+      setStatusSaving(false);
+    }
+  }
 
   function loadActiveRun() {
     // Surface an in-flight run for this ticket so it can be resumed instead of lost
@@ -100,9 +116,14 @@ export default function TicketDetail() {
           <div className="panel">
             <div className="panel-header">
               <h2>Customer Report</h2>
-              <span className={`badge ${ticket.status.toLowerCase()}`}>{ticket.status}</span>
+              <StatusSelect
+                status={ticket.status}
+                disabled={statusSaving}
+                onChange={updateStatus}
+              />
             </div>
             <div className="panel-body">
+              {statusError && <div className="notice error">{statusError}</div>}
               <dl className="kv">
                 <dt>Customer</dt>
                 <dd>{ticket.customer_name}</dd>

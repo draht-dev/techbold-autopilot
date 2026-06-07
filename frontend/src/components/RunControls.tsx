@@ -2,16 +2,20 @@ interface Props {
   phase: string;
   autoApproveReads: boolean;
   active: boolean;
+  reportDisabled?: boolean;
   onToggleReads: (value: boolean) => void;
   onStop: () => void;
+  onReport: () => void;
 }
 
 export default function RunControls({
   phase,
   autoApproveReads,
   active,
+  reportDisabled,
   onToggleReads,
   onStop,
+  onReport,
 }: Props) {
   return (
     <div className="panel">
@@ -31,9 +35,14 @@ export default function RunControls({
             Auto-approve safe reads
           </label>
         </div>
-        <button className="danger" onClick={onStop} disabled={!active}>
-          STOP
-        </button>
+        <div className="btn-row" style={{ marginLeft: "auto" }}>
+          <button onClick={onReport} disabled={reportDisabled}>
+            Report
+          </button>
+          <button className="danger" onClick={onStop} disabled={!active}>
+            STOP
+          </button>
+        </div>
       </div>
     </div>
   );
