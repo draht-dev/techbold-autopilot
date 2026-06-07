@@ -51,6 +51,8 @@ async def run_agent(run: Run, llm: LLM) -> None:
         recon = await _recon(run)
         await _investigate(run, llm, recon)
     except RunStopped:
+        if run.resolved_manually:
+            return
         run.set_phase(RunPhase.STOPPED)
         run.info("Run stopped by technician.")
         await _safe_set_status(run, TicketStatus.PENDING)

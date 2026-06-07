@@ -72,6 +72,19 @@ class StatusUpdate(BaseModel):
     status: TicketStatus
 
 
+class ManualReportRequest(BaseModel):
+    """Technician-submitted activity report, bypassing the agent draft flow."""
+
+    summary: str = ""
+    root_cause: str = ""
+    actions_taken: str = ""
+    commands_summary: str = ""
+    validation_result: str = ""
+    description: str = ""
+    # "fixed" marks the ticket DONE; anything else returns it to PENDING.
+    outcome: Literal["fixed", "pending"] = "pending"
+
+
 class ActivityCreate(BaseModel):
     ticket_id: int
     start_datetime: str

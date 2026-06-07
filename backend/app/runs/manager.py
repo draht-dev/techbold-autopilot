@@ -90,6 +90,9 @@ class Run:
         # documents how the ticket was resolved (survives the run finishing).
         self.submitted_activity: Optional[dict[str, Any]] = None
         self.outcome: Optional[str] = None
+        # Set when the technician files a manual report so STOP does not overwrite
+        # the ticket status we already wrote.
+        self.resolved_manually: bool = False
 
     # ------------------------------------------------------------------ #
     # Event stream
