@@ -9,11 +9,11 @@ Cursor-Debug-Mode-style loop, then writes a clean activity back to the ERP.
 
 ## Look
 
-<p align="center">
-  <img src="./pictures/Tickets-List.png" alt="Tickets list" width="30%" />
-  <img src="./pictures/Ticket.png" alt="Ticket detail" width="30%" />
-  <img src="./pictures/accept_command.png" alt="Command approval" width="30%" />
-</p>
+![Tickets list](./pictures/Tickets-List.png)
+
+![Ticket detail](./pictures/Ticket.png)
+
+![Command approval](./pictures/accept_command.png)
 
 ---
 
