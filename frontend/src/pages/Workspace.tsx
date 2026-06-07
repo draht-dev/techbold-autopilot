@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import {
   ActivityDraft,
   AgentDecision,
-  AgentMessage,
   FINAL_PHASES,
   Hypothesis,
   RunEvent,
@@ -16,7 +15,6 @@ import HypothesisList from "../components/HypothesisList";
 import ApprovalPrompt, { Approval } from "../components/ApprovalPrompt";
 import RunControls from "../components/RunControls";
 import ActivityReview from "../components/ActivityReview";
-import AgentStream from "../components/AgentStream";
 import DecisionPrompt from "../components/DecisionPrompt";
 
 const BUSY_PHASES = [
@@ -40,11 +38,13 @@ export default function Workspace() {
   const [phase, setPhase] = useState("CONNECTING");
   const [autoApproveReads, setAutoApproveReads] = useState(true);
   const [termChunks, setTermChunks] = useState<string[]>([]);
-  const [logEvents, setLogEvents] = useState<RunEvent[]>([]);
+  // One chronological stream of everything the agent does that's worth showing the
+  // technician: its thoughts, the commands it runs (gray, no output), and run
+  // milestones/errors. Raw tool-result output stays in the Terminal above.
+  const [activity, setActivity] = useState<RunEvent[]>([]);
   const [hypotheses, setHypotheses] = useState<Hypothesis[]>([]);
   const [approval, setApproval] = useState<Approval | null>(null);
   const [decision, setDecision] = useState<AgentDecision | null>(null);
-  const [agentMessages, setAgentMessages] = useState<AgentMessage[]>([]);
   const [activityDraft, setActivityDraft] = useState<ActivityDraft | null>(null);
   const [submittedId, setSubmittedId] = useState<number | null>(null);
   const [connError, setConnError] = useState<string | null>(null);
@@ -103,6 +103,12 @@ export default function Workspace() {
         break;
       case "run.state":
         setPhase(ev.phase);
+        // Surface phase transitions as dividers in the activity stream, but skip
+        // repeats (set_phase re-emits the same phase in some flows).
+        setActivity((prev) => {
+          const lastPhase = [...prev].reverse().find((e) => e.type === "run.state")?.phase;
+          return lastPhase === ev.phase ? prev : [...prev, ev];
+        });
         break;
       case "hypotheses":
         setHypotheses(ev.items || []);
@@ -112,21 +118,6 @@ export default function Workspace() {
         break;
       case "approval.resolved":
         setApproval((prev) => (prev && prev.id === ev.id ? null : prev));
-        break;
-      case "agent.message":
-        setAgentMessages((prev) => [
-          ...prev,
-          {
-            ts: ev.ts,
-            kind: ev.kind,
-            text: ev.text || "",
-            reasoning: ev.reasoning,
-            tool_calls: ev.tool_calls,
-            name: ev.name,
-            context_tokens: ev.context_tokens,
-            compactions: ev.compactions,
-          },
-        ]);
         break;
       case "decision.request":
         setDecision({
@@ -145,10 +136,12 @@ export default function Workspace() {
       case "activity.submitted":
         setSubmittedId(ev.activity_id ?? -1);
         break;
+      case "agent.message":
+      case "command.run":
       case "validation.result":
       case "info":
       case "error":
-        setLogEvents((prev) => [...prev, ev]);
+        setActivity((prev) => [...prev, ev]);
         break;
       default:
         break;
@@ -261,18 +254,7 @@ export default function Workspace() {
               send({ type: "terminal.resize", cols, rows });
             }}
           />
-          <AgentStream messages={agentMessages} />
-          <div className="panel">
-            <div className="panel-header">
-              <h2>Agent Activity</h2>
-            </div>
-            <div className="panel-body" style={{ maxHeight: 240, overflow: "auto" }}>
-              {logEvents.length === 0 && <div className="muted">No activity yet.</div>}
-              {logEvents.map((ev, i) => (
-                <LogLine key={i} ev={ev} />
-              ))}
-            </div>
-          </div>
+          <AgentActivity events={activity} />
         </div>
 
         <div>
@@ -295,19 +277,137 @@ export default function Workspace() {
   );
 }
 
-function LogLine({ ev }: { ev: RunEvent }) {
-  if (ev.type === "error") {
-    return <div className="notice error">{ev.message}</div>;
-  }
-  if (ev.type === "validation.result") {
-    return (
-      <div className={`notice ${ev.success ? "success" : "warning"}`}>
-        Validation {ev.after_restart ? "(after restart) " : ""}
-        {ev.success ? "passed" : "failed"}: {ev.proof}
+/**
+ * The single live stream of what the agent is doing, in the technician's words:
+ * its thoughts, the commands it runs (gray, no output), and run milestones. Raw
+ * command output and bare tool-call plumbing are intentionally left out — those
+ * live in the Terminal above. Auto-scrolls to the newest line.
+ */
+function AgentActivity({ events }: { events: RunEvent[] }) {
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [events]);
+
+  const tokens = [...events]
+    .reverse()
+    .find((e) => e.type === "agent.message" && e.context_tokens != null);
+
+  return (
+    <div className="panel">
+      <div className="panel-header">
+        <h2>Agent Activity</h2>
+        <span className="muted" style={{ fontSize: 12 }}>
+          {tokens?.context_tokens != null
+            ? `~${tokens.context_tokens.toLocaleString()} ctx tokens` +
+              (tokens.compactions ? ` · ${tokens.compactions} compaction(s)` : "")
+            : "continuous agent"}
+        </span>
       </div>
-    );
+      <div
+        ref={bodyRef}
+        className="panel-body"
+        style={{ maxHeight: 420, overflow: "auto", fontSize: 13 }}
+      >
+        {events.length === 0 && <div className="muted">No activity yet.</div>}
+        {events.map((ev, i) => (
+          <ActivityLine key={i} ev={ev} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ActivityLine({ ev }: { ev: RunEvent }) {
+  switch (ev.type) {
+    case "error":
+      return <div className="notice error">{ev.message}</div>;
+
+    case "validation.result":
+      return (
+        <div className={`notice ${ev.success ? "success" : "warning"}`}>
+          Validation {ev.after_restart ? "(after restart) " : ""}
+          {ev.success ? "passed" : "failed"}: {ev.proof}
+        </div>
+      );
+
+    case "command.run": {
+      // Show the command the agent ran, in gray — but never its output (that's
+      // the terminal's job). The agent tends to put its thinking in the command's
+      // `purpose`, so surface that as a thought line above the command (otherwise
+      // it would only ever appear in the approval card). Blocked/rejected commands
+      // get a small status tag.
+      if (!ev.command) return null;
+      const status = ev.blocked ? " (blocked)" : ev.rejected ? " (rejected)" : "";
+      const purpose = (ev.purpose || "").trim();
+      return (
+        <div style={{ margin: "6px 0", paddingLeft: 8, borderLeft: "2px solid var(--border)" }}>
+          {purpose && <div style={{ whiteSpace: "pre-wrap", marginBottom: 2 }}>{purpose}</div>}
+          <div
+            className="muted mono"
+            style={{
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              fontSize: 12,
+            }}
+          >
+            $ {ev.command}
+            {status}
+          </div>
+        </div>
+      );
+    }
+
+    case "agent.message": {
+      // The agent's user-facing narration + thinking. Raw tool results and bare
+      // tool-call intentions are deliberately omitted from this stream.
+      if (ev.kind === "tool_result") return null;
+      const reasoning = (ev.reasoning || "").trim();
+      const text = (ev.text || "").trim();
+      if (!reasoning && !text) return null;
+      return (
+        <div
+          style={{
+            margin: "6px 0",
+            paddingLeft: 8,
+            borderLeft: "2px solid var(--border)",
+          }}
+        >
+          {reasoning && (
+            <div className="muted" style={{ fontStyle: "italic", whiteSpace: "pre-wrap" }}>
+              🧠 {reasoning}
+            </div>
+          )}
+          {text && <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>}
+        </div>
+      );
+    }
+
+    case "run.state":
+      return (
+        <div
+          className="muted"
+          style={{
+            margin: "8px 0 4px",
+            paddingTop: 6,
+            borderTop: "1px solid var(--border)",
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: 0.5,
+          }}
+        >
+          Phase: {ev.phase}
+        </div>
+      );
+
+    case "info":
+      return <div style={{ padding: "2px 0" }}>{ev.text}</div>;
+
+    default:
+      return null;
   }
-  return <div style={{ padding: "2px 0" }}>{ev.text}</div>;
 }
 
 function phaseHint(phase: string): string {
