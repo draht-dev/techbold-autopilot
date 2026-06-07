@@ -163,9 +163,9 @@ export default function Workspace() {
     send({ type: "submit_hypothesis", hypothesis: h });
   }
 
-  function decideApproval(approved: boolean, edited?: string) {
+  function decideApproval(approved: boolean, edited?: string, reason?: string) {
     if (!approval) return;
-    send({ type: "approval.decision", id: approval.id, approved, edited });
+    send({ type: "approval.decision", id: approval.id, approved, edited, reason });
     setApproval(null);
   }
 
@@ -340,7 +340,13 @@ function ActivityLine({ ev }: { ev: RunEvent }) {
       // it would only ever appear in the approval card). Blocked/rejected commands
       // get a small status tag.
       if (!ev.command) return null;
-      const status = ev.blocked ? " (blocked)" : ev.rejected ? " (rejected)" : "";
+      const status = ev.blocked
+        ? " (blocked)"
+        : ev.rejected
+        ? " (rejected)"
+        : ev.edited_from
+        ? " (edited by you)"
+        : "";
       const purpose = (ev.purpose || "").trim();
       return (
         <div style={{ margin: "6px 0", paddingLeft: 8, borderLeft: "2px solid var(--border)" }}>
@@ -356,6 +362,16 @@ function ActivityLine({ ev }: { ev: RunEvent }) {
             $ {ev.command}
             {status}
           </div>
+          {ev.rejected && ev.reason && (
+            <div className="muted" style={{ fontSize: 11, marginTop: 2 }}>
+              reason: {ev.reason}
+            </div>
+          )}
+          {ev.edited_from && (
+            <div className="muted" style={{ fontSize: 11, marginTop: 2 }}>
+              was: <span className="mono">{ev.edited_from}</span>
+            </div>
+          )}
         </div>
       );
     }

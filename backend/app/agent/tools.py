@@ -27,6 +27,9 @@ class ExecResult:
     rejected: bool = False
     timed_out: bool = False
     reason: str = ""
+    # The command the agent originally requested, set only when the technician
+    # edited it before approving. Lets the loop tell the agent its command changed.
+    edited_from: Optional[str] = None
 
     @property
     def ok(self) -> bool:
@@ -57,12 +60,18 @@ async def execute_command(
     actor: str = "agent",
     purpose: str = "",
     require_confirm: bool = True,
+    original_command: Optional[str] = None,
 ) -> ExecResult:
     """Run a command through the safety + approval + audit pipeline.
 
     ``require_confirm=False`` skips the per-command approval prompt (used when a
     batch of commands was already approved, e.g. an approved fix plan). The DENY
     safety check ALWAYS applies regardless of this flag.
+
+    ``original_command`` is what the agent originally asked for, when the command
+    was already edited by the technician UPSTREAM (e.g. an edited fix plan, which
+    bypasses the per-command gate). It lets the UI/agent learn the command changed
+    even though no gate edit happened here. The per-command gate sets this itself.
     """
     run.check_stop()
     command = command.strip()
@@ -74,21 +83,26 @@ async def execute_command(
     if decision.action == "DENY":
         return _blocked(run, command, actor, decision.reason)
 
+    # What the agent asked for, before any human edit. An upstream edit (fix plan)
+    # passes the pre-edit text in; the per-command gate edit is detected below.
+    requested_command = (original_command or command).strip()
     approver = actor
     if decision.action == "CONFIRM" and actor == "agent" and require_confirm:
         dec = await run.request_approval(
             "command", {"command": command, "reason": decision.reason}, purpose
         )
         if not dec.approved:
+            reject_reason = (dec.reason or "").strip()
+            note = "[rejected by technician" + (f": {reject_reason}" if reject_reason else "") + "]"
             run.audit.record(
                 "command", command=command, actor=actor, approved=False,
-                rejected=True, exit_code=None,
+                rejected=True, reason=reject_reason, exit_code=None,
             )
             run.emit(
                 EventType.COMMAND, command=command, actor=actor, rejected=True,
-                exit_code=None, output_redacted="[rejected by technician]",
+                reason=reject_reason, exit_code=None, output_redacted=note,
             )
-            return ExecResult(command, None, "[rejected by technician]", rejected=True)
+            return ExecResult(command, None, note, rejected=True, reason=reject_reason)
         if dec.edited:
             command = dec.edited.strip()
             # Re-classify the edited command; a human can never push it past DENY.
@@ -96,8 +110,13 @@ async def execute_command(
                 return _blocked(run, command, actor, "edited command is unsafe")
         approver = "technician"
 
+    # Non-empty only when the technician changed the agent's command at the gate.
+    edited_from = requested_command if command != requested_command else None
+
     if run.ssh is None or not run.ssh.connected:
-        return ExecResult(command, None, "[no SSH connection]", reason="not connected")
+        return ExecResult(
+            command, None, "[no SSH connection]", reason="not connected", edited_from=edited_from
+        )
 
     run.emit(EventType.TERM, data=f"$ {command}\r\n")
     result = await run.ssh.run_command(command)
@@ -112,6 +131,7 @@ async def execute_command(
         timed_out=result.timed_out,
         output=result.combined,  # AuditLog redacts before persist
         purpose=purpose,
+        edited_from=edited_from,
     )
     run.emit(
         EventType.COMMAND,
@@ -122,6 +142,7 @@ async def execute_command(
         timed_out=result.timed_out,
         output_redacted=redacted_output,
         purpose=purpose,
+        edited_from=edited_from,
     )
     if redacted_output:
         run.emit(EventType.TERM, data=redacted_output.replace("\n", "\r\n") + "\r\n")
@@ -131,6 +152,7 @@ async def execute_command(
         exit_code=result.exit_code,
         output=redacted_output,
         timed_out=result.timed_out,
+        edited_from=edited_from,
     )
 
 

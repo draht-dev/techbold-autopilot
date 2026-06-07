@@ -70,7 +70,12 @@ async def _handle(run: Any, msg: dict[str, Any]) -> None:
     elif msg_type == "comment_hypothesis":
         run.comment_hypothesis(msg.get("id"), msg.get("text"))
     elif msg_type == "approval.decision":
-        run.resolve_approval(msg.get("id"), bool(msg.get("approved")), msg.get("edited"))
+        run.resolve_approval(
+            msg.get("id"),
+            bool(msg.get("approved")),
+            msg.get("edited"),
+            msg.get("reason"),
+        )
     elif msg_type == "decision":
         # Technician answers an agent RequestDecision (e.g. how to proceed when the
         # reported bug cannot be reproduced).
