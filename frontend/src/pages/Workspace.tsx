@@ -375,11 +375,7 @@ function ActivityLine({ ev }: { ev: RunEvent }) {
             borderLeft: "2px solid var(--border)",
           }}
         >
-          {reasoning && (
-            <div className="muted" style={{ fontStyle: "italic", whiteSpace: "pre-wrap" }}>
-              🧠 {reasoning}
-            </div>
-          )}
+          {reasoning && <ThinkingBlock reasoning={reasoning} />}
           {text && <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>}
         </div>
       );
@@ -408,6 +404,33 @@ function ActivityLine({ ev }: { ev: RunEvent }) {
     default:
       return null;
   }
+}
+
+/**
+ * Agent reasoning, collapsed by default so the activity log stays scannable.
+ * Click the summary line to reveal the full thinking text.
+ */
+function ThinkingBlock({ reasoning }: { reasoning: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="muted" style={{ fontStyle: "italic" }}>
+      <div
+        onClick={() => setOpen((o) => !o)}
+        style={{ cursor: "pointer", userSelect: "none" }}
+        title={open ? "Hide thinking" : "Show thinking"}
+      >
+        <span style={{ display: "inline-block", width: 12, fontStyle: "normal" }}>
+          {open ? "▾" : "▸"}
+        </span>
+        🧠 Thinking
+      </div>
+      {open && (
+        <div style={{ whiteSpace: "pre-wrap", paddingLeft: 12, marginTop: 2 }}>
+          {reasoning}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function phaseHint(phase: string): string {
