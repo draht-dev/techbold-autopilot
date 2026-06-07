@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import { Terminal as XTerm } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
+import { Terminal as XTerm } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
+import { useEffect, useRef } from "react";
 
 interface Props {
   chunks: string[];
@@ -11,7 +11,12 @@ interface Props {
   onResize: (cols: number, rows: number) => void;
 }
 
-export default function TerminalView({ chunks, enabled, onData, onResize }: Props) {
+export default function TerminalView({
+  chunks,
+  enabled,
+  onData,
+  onResize,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const termRef = useRef<XTerm | null>(null);
   const fitRef = useRef<FitAddon | null>(null);
@@ -58,7 +63,9 @@ export default function TerminalView({ chunks, enabled, onData, onResize }: Prop
     const dataSub = term.onData((data) => {
       if (enabledRef.current) onDataRef.current(data);
     });
-    const resizeSub = term.onResize(({ cols, rows }) => onResizeRef.current(cols, rows));
+    const resizeSub = term.onResize(({ cols, rows }) =>
+      onResizeRef.current(cols, rows),
+    );
 
     return () => {
       ro.disconnect();
@@ -96,13 +103,18 @@ export default function TerminalView({ chunks, enabled, onData, onResize }: Prop
       <div className="panel-header">
         <h2>Terminal</h2>
         <span className="muted" style={{ fontSize: 12 }}>
-          {enabled ? "interactive — vim, htop & friends work here" : "agent is working…"}
+          {enabled ? "interactive" : "agent is working…"}
         </span>
       </div>
       <div
         ref={containerRef}
         onClick={() => termRef.current?.focus()}
-        style={{ height: 380, padding: 8, background: "#1e1e1e", opacity: enabled ? 1 : 0.85 }}
+        style={{
+          height: 380,
+          padding: 8,
+          background: "#1e1e1e",
+          opacity: enabled ? 1 : 0.85,
+        }}
       />
     </div>
   );
