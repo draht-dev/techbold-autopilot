@@ -28,3 +28,6 @@ Thumbs.db
 .idea/
 .vscode/
 .env.bak
+
+# sst
+.sst

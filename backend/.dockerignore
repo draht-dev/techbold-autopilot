@@ -6,3 +6,7 @@ __pycache__
 audit_logs
 tests
 *.log
+
+
+# sst
+.sst
