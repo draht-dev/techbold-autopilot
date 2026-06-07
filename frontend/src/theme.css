@@ -144,7 +144,7 @@ td {
   text-align: left;
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
-  vertical-align: top;
+  vertical-align: middle;
 }
 th {
   background: var(--bg-subtle);
@@ -252,9 +252,19 @@ button.ghost {
   }
 }
 .col-action {
-  width: 1%;
+  width: 44px;
+  min-width: 44px;
   white-space: nowrap;
-  text-align: right;
+  text-align: center;
+  padding-left: 4px;
+  padding-right: 8px;
+}
+/* keeps the action column width stable when a row has no resume button */
+.col-action-placeholder {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  visibility: hidden;
 }
 
 /* ---- Status badges (the only colour) ---- */

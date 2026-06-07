@@ -124,7 +124,7 @@ export default function TicketList() {
                       <StatusBadge status={t.status} />
                     </td>
                     <td className="col-action">
-                      {run && (
+                      {run ? (
                         <button
                           className="play-btn live"
                           title={`Resume run — live ${run.phase} session`}
@@ -136,6 +136,8 @@ export default function TicketList() {
                         >
                           <PlayIcon />
                         </button>
+                      ) : (
+                        <span className="col-action-placeholder" aria-hidden="true" />
                       )}
                     </td>
                   </tr>
