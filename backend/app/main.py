@@ -13,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.agent.llm import LLM
 from app.api.routes import router as api_router
+from app.api.voice import router as voice_router
 from app.api.ws import router as ws_router
 from app.config import get_settings
 from app.erp import PhoenixClient
@@ -59,8 +60,10 @@ def health() -> dict[str, object]:
         "status": "ok",
         "phoenix_configured": bool(settings.phoenix_api_token),
         "llm_configured": settings.llm_configured,
+        "voice_configured": settings.voice_configured,
     }
 
 
 app.include_router(api_router)
+app.include_router(voice_router)
 app.include_router(ws_router)

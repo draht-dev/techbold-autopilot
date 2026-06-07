@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     # OpenRouter reasoning effort ("low" | "medium" | "high"); empty disables it.
     agent_reasoning_effort: str = "medium"
 
+    # ---- ElevenLabs voice agent (optional) ----
+    elevenlabs_api_key: str = ""
+    elevenlabs_agent_id: str = ""
+    elevenlabs_base_url: str = "https://api.elevenlabs.io"
+
     # ---- Misc ----
     request_timeout: int = 20
     audit_dir: str = "audit_logs"
@@ -69,6 +74,10 @@ class Settings(BaseSettings):
     @property
     def llm_configured(self) -> bool:
         return bool(self.openrouter_api_key)
+
+    @property
+    def voice_configured(self) -> bool:
+        return bool(self.elevenlabs_api_key and self.elevenlabs_agent_id)
 
     def ssh_key_path_for_ticket(self, ticket_id: int) -> str:
         """Pick the team key for this ticket (case1..case5 per VM).
