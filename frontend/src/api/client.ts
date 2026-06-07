@@ -70,6 +70,14 @@ export interface ActivityDraft {
   description: string;
 }
 
+export type ManualReportOutcome = "fixed" | "pending";
+
+export interface ManualReportResult {
+  activity_id: number | null;
+  status: TicketStatus;
+  outcome: ManualReportOutcome;
+}
+
 export interface RunEvent {
   type: string;
   ts: string;
@@ -179,6 +187,20 @@ export const api = {
     }),
   stopRun: (runId: string) =>
     req<{ ok: boolean }>(`/api/runs/${runId}/stop`, { method: "POST" }),
+  setTicketStatus: (ticketId: number, status: TicketStatus) =>
+    req<Ticket>(`/api/tickets/${ticketId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }),
+  submitManualReport: (
+    runId: string,
+    activity: ActivityDraft,
+    outcome: ManualReportOutcome
+  ) =>
+    req<ManualReportResult>(`/api/runs/${runId}/manual-report`, {
+      method: "POST",
+      body: JSON.stringify({ ...activity, outcome }),
+    }),
 };
 
 export function runSocketUrl(runId: string): string {

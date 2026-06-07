@@ -5,6 +5,7 @@ import {
   AgentDecision,
   FINAL_PHASES,
   Hypothesis,
+  ManualReportOutcome,
   RunEvent,
   Ticket,
   api,
@@ -16,6 +17,7 @@ import ApprovalPrompt, { Approval } from "../components/ApprovalPrompt";
 import RunControls from "../components/RunControls";
 import ActivityReview from "../components/ActivityReview";
 import DecisionPrompt from "../components/DecisionPrompt";
+import ManualReportModal from "../components/ManualReportModal";
 
 const BUSY_PHASES = [
   "CONNECTING",
@@ -48,6 +50,7 @@ export default function Workspace() {
   const [activityDraft, setActivityDraft] = useState<ActivityDraft | null>(null);
   const [submittedId, setSubmittedId] = useState<number | null>(null);
   const [connError, setConnError] = useState<string | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
 
   function send(message: object) {
     wsRef.current?.send(JSON.stringify(message));
@@ -183,6 +186,15 @@ export default function Workspace() {
     send({ type: "submit_activity", activity: edited });
   }
 
+  async function submitManualReport(fields: ActivityDraft, outcome: ManualReportOutcome) {
+    if (!runId) return;
+    const res = await api.submitManualReport(runId, fields, outcome);
+    setSubmittedId(res.activity_id ?? -1);
+    setActivityDraft(fields);
+    setPhase("DONE");
+    if (ticket) setTicket({ ...ticket, status: res.status });
+  }
+
   const busy = BUSY_PHASES.includes(phase);
   const terminalEnabled = !!approval || !busy;
   const runActive = !FINAL_PHASES.includes(phase);
@@ -232,8 +244,17 @@ export default function Workspace() {
         phase={phase}
         autoApproveReads={autoApproveReads}
         active={runActive}
+        reportDisabled={submittedId !== null}
         onToggleReads={toggleReads}
         onStop={() => send({ type: "stop" })}
+        onReport={() => setReportOpen(true)}
+      />
+
+      <ManualReportModal
+        open={reportOpen}
+        ticketTitle={ticket ? `#${ticket.id} · ${ticket.title}` : undefined}
+        onClose={() => setReportOpen(false)}
+        onSubmit={submitManualReport}
       />
 
       <div className="workspace-grid">
@@ -265,6 +286,7 @@ export default function Workspace() {
             <ActivityReview
               draft={activityDraft}
               submittedId={submittedId}
+              submittedStatus={ticket?.status}
               onSubmit={submitActivity}
             />
           )}

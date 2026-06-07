@@ -507,3 +507,66 @@ textarea {
 .markdown a {
   color: var(--accent);
 }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(50, 54, 58, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 16px;
+  overflow: auto;
+  z-index: 1000;
+}
+.modal {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 {
+  margin: 0;
+}
+.modal-close {
+  font-size: 22px;
+  line-height: 1;
+  padding: 0 6px;
+}
+.modal-body {
+  padding: 16px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+/* Inline status dropdown in ticket table */
+.status-select {
+  width: auto;
+  min-width: 96px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.status-select.open {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.status-select.pending {
+  color: var(--warning);
+  border-color: var(--warning);
+}
+.status-select.done {
+  color: var(--success);
+  border-color: var(--success);
+}
