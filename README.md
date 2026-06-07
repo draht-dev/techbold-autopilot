@@ -64,6 +64,7 @@ One continuous autonomous agent (tool-calling loop), not a fixed pipeline!:
 ```
 New Ticket:
 -> Start: SSH connection
+-> Automatically collect context with a standartised set of commands
 -> AI tries to reproduce the issue
 -> AI creates different ranked hypotheses
 -> Technician picks what hypothesis to verify
