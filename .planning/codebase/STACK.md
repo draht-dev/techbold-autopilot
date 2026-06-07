@@ -2,146 +2,96 @@
 
 Generated: 2026-06-07
 
-## Runtime Surfaces
+## Product
 
-- Backend: Python FastAPI service under `backend/`.
-- Frontend: React/Vite/TypeScript app under `frontend/`.
-- External systems:
-  - Phoenix ERP REST API.
-  - Customer Linux VMs over SSH.
-  - OpenRouter/OpenAI-compatible chat API via LangChain.
-- Local development substitute: in-process Phoenix mock at
-  `backend/app/mock/phoenix.py`.
+AI Service Desk Autopilot: a technician-controlled incident workspace. It reads
+Phoenix ERP tickets, connects to customer Linux systems over SSH, runs an
+LLM-assisted diagnostic loop through a deterministic safety gate, and writes a
+reviewed activity back to Phoenix.
 
-## Backend Stack
+## Runtime Components
 
-- Python: intended local range is Python 3.11 to 3.13; `dev.sh` prefers
-  `python3.12`.
-- Web framework: `fastapi==0.115.6`.
-- ASGI server: `uvicorn[standard]==0.34.0`.
-- Settings: `pydantic-settings==2.7.1`.
-- HTTP client: `httpx==0.28.1`.
-- SSH: `asyncssh==2.18.0`.
-- LLM integration:
-  - `langchain-core==0.3.29`
-  - `langchain-openai==0.2.14`
-  - OpenRouter base URL defaults to `https://openrouter.ai/api/v1`.
-- WebSocket support: FastAPI/Starlette plus `websockets==14.1`.
-- Tests:
-  - `pytest==8.3.4`
-  - `pytest-asyncio==0.25.2`
+### Backend
 
-## Frontend Stack
+- Language: Python 3.11-3.13 recommended by `dev.sh`; local venv currently under
+  `backend/.venv`.
+- Framework: FastAPI with Uvicorn.
+- Async/network dependencies: `httpx`, `asyncssh`, `websockets`.
+- Config: `pydantic-settings`, with `.env` and environment variables.
+- LLM integration: OpenRouter through OpenAI-compatible LangChain clients.
+- Tests: `pytest` and `pytest-asyncio`.
 
-- Node package manager: npm with `frontend/package-lock.json`.
-- Build tool: `vite`.
-- TypeScript: `typescript`.
-- UI framework: React 18.
+Important backend paths:
+
+- `backend/app/main.py` - FastAPI app and lifespan wiring.
+- `backend/app/api/routes.py` - REST API for tickets and runs.
+- `backend/app/api/ws.py` - WebSocket API for run events and technician input.
+- `backend/app/models.py` - Pydantic contracts for Phoenix entities and run/event
+  state.
+- `backend/app/runs/manager.py` - run aggregate and run registry.
+- `backend/app/agent/loop.py` - autonomous troubleshooting loop.
+- `backend/app/agent/tools.py` - command execution choke point.
+- `backend/app/safety/rules.py` - deterministic command classifier and redaction.
+- `backend/app/erp/client.py` - Phoenix ERP client.
+- `backend/app/ssh/runner.py` - SSH command runner and interactive PTY.
+- `backend/app/audit/log.py` - append-only per-run JSONL audit log.
+- `backend/app/mock/phoenix.py` - offline Phoenix ERP mock.
+
+### Frontend
+
+- Language: TypeScript with React 18.
+- Build tool: Vite 5.
 - Routing: `react-router-dom`.
-- Markdown: `react-markdown` with `remark-gfm`.
-- Terminal: `@xterm/xterm` plus `@xterm/addon-fit`.
-- No frontend test framework is configured today.
+- Markdown rendering: `react-markdown` and `remark-gfm`.
+- Terminal: `@xterm/xterm` and `@xterm/addon-fit`.
+
+Important frontend paths:
+
+- `frontend/src/api/client.ts` - REST/WebSocket client and TypeScript contract
+  mirror.
+- `frontend/src/pages/TicketList.tsx` - ticket queue.
+- `frontend/src/pages/TicketDetail.tsx` - ticket details, run start/resume, shell.
+- `frontend/src/pages/Workspace.tsx` - live run workspace.
+- `frontend/src/components/*` - terminal, hypotheses, approvals, decisions,
+  activity review, agent stream, and resolution views.
+
+## External Systems
+
+- Phoenix ERP API: upstream ticket/customer/activity system, documented in
+  `docs/phoenix-openapi.yaml`.
+- Customer Linux VM: reached over SSH using private keys from `keys/`.
+- OpenRouter: LLM gateway for the autonomous agent and activity drafting.
+
+## Persistence
+
+- Phoenix ERP is the source of truth for tickets and submitted activities.
+- `backend/audit_logs/<run_id>.jsonl` stores per-run audit evidence.
+- `backend/audit_logs/resolutions/<ticket_id>.json` stores ticket-keyed
+  submitted resolution snapshots for display after a run is finished.
+- Run state is otherwise in-memory and bounded by `max_retained_runs`.
+
+## Entry Points
+
+From `.planning/codebase/MAP.json`:
+
+- `backend/app/main.py` - HTTP `/health` plus mounted backend API.
+- `backend/app/api/routes.py` - REST `/api/*` run and ticket operations.
+- `backend/app/mock/phoenix.py` - mock Phoenix HTTP API.
+- `frontend/src/main.tsx` / `frontend/index.html` - browser application.
+- `dev.sh`, `Makefile`, and `docker-compose.yml` - local and container runners.
 
 ## Build And Run
 
-- Install all local dependencies:
-  - `make install`
-- Run backend and frontend against configured Phoenix:
-  - `make dev`
-  - `./dev.sh`
-- Run backend, frontend, and mock Phoenix:
-  - `make mock`
-  - `./dev.sh --mock`
-- Run backend tests:
-  - `make test`
-  - `cd backend && .venv/bin/python -m pytest -q`
-- Build/run with Docker:
-  - `docker compose up --build`
+- Local install: `make install`.
+- Local backend + frontend: `make dev` or `./dev.sh`.
+- Local backend + frontend + mock Phoenix: `make mock` or `./dev.sh --mock`.
+- Docker stack: `docker compose up --build` or `make build`.
+- Backend tests: `make test`.
+- Frontend production build/typecheck: `cd frontend && npm run build`.
 
-## Docker
+## Tooling Gaps
 
-- `backend/Dockerfile`: backend service image.
-- `frontend/Dockerfile`: frontend service image.
-- `docker-compose.yml` exposes:
-  - Backend on `localhost:8000`.
-  - Frontend on `localhost:5173`.
-- Compose mounts:
-  - `./keys:/keys:ro` for SSH keys.
-  - `./backend/audit_logs:/app/audit_logs` for audit/resolution persistence.
-
-## Configuration
-
-Backend settings come from environment variables and `.env` files via
-`SettingsConfigDict(env_file=(".env", "../.env"))`.
-
-Important variables:
-
-- `PHOENIX_API_BASE_URL`
-- `PHOENIX_API_TOKEN`
-- `SSH_PRIVATE_KEY_PATH`
-- `SSH_USERNAME`
-- `OPENROUTER_API_KEY`
-- `OPENROUTER_BASE_URL`
-- `AGENT_MODEL`
-- `FAST_MODEL`
-- `AGENT_CONTEXT_MAX_TOKENS`
-- `AGENT_CONTEXT_COMPACT_THRESHOLD`
-- `AGENT_CONTEXT_KEEP_RECENT_MESSAGES`
-- `AGENT_MAX_ITERATIONS`
-- `AGENT_REASONING_EFFORT`
-- `AUTO_APPROVE_READS_DEFAULT`
-- `VITE_API_BASE`
-
-## Source Tree
-
-Relevant tracked source and docs:
-
-```text
-.
-├── README.md
-├── Makefile
-├── dev.sh
-├── docker-compose.yml
-├── docs/
-│   ├── phoenix-openapi.yaml
-│   └── scoring.md
-├── backend/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── pytest.ini
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── config.py
-│   │   ├── models.py
-│   │   ├── api/
-│   │   ├── agent/
-│   │   ├── audit/
-│   │   ├── erp/
-│   │   ├── mock/
-│   │   ├── runs/
-│   │   ├── safety/
-│   │   └── ssh/
-│   └── tests/
-└── frontend/
-    ├── Dockerfile
-    ├── package.json
-    ├── package-lock.json
-    ├── tsconfig.json
-    ├── vite.config.ts
-    └── src/
-        ├── App.tsx
-        ├── main.tsx
-        ├── api/
-        ├── components/
-        └── pages/
-```
-
-Local/generated artifacts observed but not part of the architectural source:
-
-- `.env`, `.env.bak`
-- `backend/.venv`
-- `frontend/node_modules`
-- `frontend/dist`
-- `backend/.pytest_cache`
-- Python `__pycache__` directories
-- runtime audit logs under `backend/audit_logs` and `backend/data/audit`
+- No CI workflow was found.
+- No coverage tooling or threshold is configured.
+- No lint script or backend type checker is configured.
+- No frontend test framework is configured.

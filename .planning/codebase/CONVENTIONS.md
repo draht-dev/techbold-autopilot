@@ -2,51 +2,66 @@
 
 Generated: 2026-06-07
 
-## Code Style
+## Python Backend
 
-- Python backend modules use typed functions, Pydantic models, async FastAPI
-  handlers, and small adapter modules by infrastructure boundary.
-- Backend domain/event shapes are centralized in `backend/app/models.py`.
-- Long-running run state is coordinated with explicit async primitives on `Run`
-  instead of global queues.
-- Commands that touch customer VMs must route through `app.agent.tools.execute_command`;
-  direct SSH execution is reserved for the `SSHRunner` adapter.
-- Frontend code uses React function components, local `useState`/`useEffect`
-  state, and a typed API client in `frontend/src/api/client.ts`.
-- Frontend routes are page-oriented: ticket list, ticket detail, and run workspace.
+- Modules use descriptive docstrings that explain architectural responsibility.
+- Async I/O is the default for routes, run lifecycle, ERP calls, SSH operations,
+  and LLM calls.
+- Pydantic models in `backend/app/models.py` define cross-boundary payloads.
+- Settings are loaded through `pydantic-settings` in `backend/app/config.py`.
+- FastAPI state (`app.state.erp`, `app.state.llm`, `app.state.manager`) wires
+  infrastructure into routes.
+- Run lifecycle state is represented by the `RunPhase` enum.
+- Events use string names from `EventType` and are emitted through `Run.emit()`.
+- Human gates use futures owned by `Run`: approvals, hypothesis selection,
+  decisions, and activity submission.
 
-## Testing Patterns
+## Safety And Command Execution
 
-- Backend tests live under `backend/tests/test_*.py`.
-- Async tests rely on `pytest-asyncio` with `asyncio_mode = auto`.
-- External services are faked for deterministic offline tests:
-  - Phoenix via `backend/app/mock/phoenix.py` and `httpx.ASGITransport`.
-  - SSH via fake `SSHRunner`/`CommandResult` classes.
-  - LLM via scripted fake tool-call responses.
-- Run lifecycle tests use `tmp_path` for audit/resolution persistence.
-- FastAPI route tests use `TestClient` and monkeypatch the agent/shell loops so
-  tests do not open real SSH sessions or call an LLM.
-- Frontend has no configured test runner yet.
+- Agent commands must use `execute_command()`; the agent loop should not call SSH
+  directly.
+- DENY decisions are hard-fails and cannot be overridden by a human.
+- Mutating or unknown commands require confirmation.
+- Safe reads can auto-run only when the run's `auto_approve_reads` setting allows
+  it.
+- Output is redacted before it is logged, streamed, shown to the LLM, or written
+  into activity text.
+- Agent-run commands are echoed into the terminal stream so there are no hidden
+  command cells.
+
+## Frontend
+
+- The frontend is a typed React/Vite SPA using function components and hooks.
+- `frontend/src/api/client.ts` centralizes REST calls, WebSocket URL construction,
+  TypeScript DTOs, and final phase constants.
+- Workspace state is driven by WebSocket events.
+- Terminal UI uses xterm and sends raw PTY keystrokes/resizes over WebSocket.
+- Ticket descriptions and resolution text render markdown through the dedicated
+  Markdown component.
+
+## Testing
+
+- Backend tests live in `backend/tests/test_*.py`.
+- Async tests rely on `pytest-asyncio` auto mode.
+- External dependencies are faked for default tests: SSH, ERP, and LLM.
+- FastAPI route tests use `TestClient`.
+- Phoenix integration tests use `httpx.ASGITransport` against the in-process mock.
+- No frontend test convention exists yet.
 
 ## Error Handling
 
-- Phoenix adapter maps auth, not-found, validation, 5xx, timeout, and connection
-  errors into `PhoenixError`; REST routes convert those to HTTP errors.
-- SSH connect errors raise `SSHError`; command execution returns `CommandResult`
-  with timeout/error text instead of throwing where possible.
-- Agent loop catches `RunStopped`, `SSHError`, `LLMError`, and unexpected
-  exceptions, then emits visible run states/errors and closes SSH/PTY resources.
-- Audit and resolution persistence are best-effort: write failures are suppressed
-  or logged so a live run is not crashed by local disk issues.
-- STOP unblocks pending approvals/decisions/activity waits by setting the run's
-  stop event.
+- Phoenix API failures become `PhoenixError` and are translated to HTTP errors in
+  routes.
+- SSH connection errors become `SSHError` and move runs to `ERROR`.
+- LLM failures become `LLMError` and move runs to `ERROR`.
+- STOP raises `RunStopped` inside run waits and moves the run to `STOPPED`.
+- Audit and resolution persistence failures are intentionally non-fatal to the
+  active run.
 
-## Contract Conventions
+## Secrets And Local Files
 
-- Backend event names are defined in `EventType`.
-- Frontend event and DTO names mirror backend names manually in
-  `frontend/src/api/client.ts`.
-- The Phoenix external API contract is documented in `docs/phoenix-openapi.yaml`
-  and represented locally by Pydantic DTOs plus the mock ERP.
-- Command output must be redacted before UI display, audit persistence, LLM
-  visibility, or activity generation.
+- `.env` and `keys/` are local runtime inputs and must stay out of source control.
+- Private keys are mounted read-only into Docker at `/keys`.
+- Audit output is redacted, but audit/resolution files are runtime artifacts.
+- The graph generator can index local ignored file paths; do not treat generated
+  path listings as proof that the file should be tracked.

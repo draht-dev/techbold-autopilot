@@ -18,6 +18,19 @@ Primary modules:
 - `backend/app/mock/phoenix.py`
 - `docs/phoenix-openapi.yaml`
 
+### Phoenix Mock
+
+Owns the offline development/test substitute for the upstream Phoenix API: seed
+tickets, customer systems, activity creation, status updates, reset behavior, and
+auth simulation.
+
+Primary modules:
+
+- `backend/app/mock/phoenix.py`
+
+Boundary note: this should remain a substitute for Phoenix, not a second source of
+business rules.
+
 ### Incident Run Lifecycle
 
 Owns one troubleshooting run per ticket: run registration, supersede behavior,
@@ -140,6 +153,8 @@ per-run audit JSONL. Mock persistence terms are `tickets`, `activities`, `_SYSTE
   activities/statuses back upstream.
 - Phoenix ERP Integration supplies ticket and customer-system context to Incident
   Run Lifecycle.
+- Phoenix Mock substitutes for the external Phoenix upstream in dev and tests; it
+  should match Phoenix's API semantics rather than define new product behavior.
 - Incident Run Lifecycle is the central application context. It coordinates Agent
   Investigation, Command Safety/Execution/Audit, Customer System Access, Phoenix
   status/activity writes, and Technician Console event contracts.
@@ -158,7 +173,9 @@ per-run audit JSONL. Mock persistence terms are `tickets`, `activities`, `_SYSTE
   vocabulary.
 - Boundary concerns: `Run` is a large aggregate, `agent/loop.py` mutates `Run`
   directly, `api/routes.py` contains orchestration logic, and frontend/backend
-  contracts can drift because schemas are manually mirrored.
+  contracts can drift because schemas are manually mirrored. `agent/tools.py`
+  contains command safety/execution infrastructure while living under the agent
+  package.
 
 ## Aggregates
 

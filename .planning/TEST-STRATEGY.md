@@ -141,13 +141,18 @@ Evidence from the verifier subagent:
 
 - `cd backend && .venv/bin/python -m pytest -q -p no:cacheprovider`
   - Result: `113 passed in 1.14s`
+- `cd frontend && npm run build`
+  - Result: passed; Vite warned that the main JavaScript chunk is larger than
+    500 kB after minification.
 
 Local commands to keep:
 
 - `make test`
   - Runs backend pytest only.
+- `cd frontend && npm run build`
+  - Runs frontend TypeScript project build and Vite production build.
 - `cd frontend && npx tsc --noEmit --pretty false`
-  - Runs frontend TypeScript checking.
+  - Runs TypeScript checking only.
 
 ## Excluded
 
@@ -161,6 +166,8 @@ Local commands to keep:
   `frontend/dist`.
 - Runtime audit logs and local secrets are intentionally excluded from source
   control.
+- README test-count statements are documentation, not a verification gate; current
+  observed backend collection is 113 tests, while `README.md` still mentions 81.
 
 ## Recommended Next Gates
 

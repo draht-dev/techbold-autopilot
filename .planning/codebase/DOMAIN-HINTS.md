@@ -2,78 +2,129 @@
 
 Generated: 2026-06-07
 
+Extracted from code, generated graph output, and Draht subagent analysis.
+
 ## Candidate Bounded Contexts
 
-- Phoenix ERP Integration: `backend/app/erp`, `backend/app/mock`,
-  `docs/phoenix-openapi.yaml`.
-- Incident Run Lifecycle: `backend/app/runs`, `backend/app/api/routes.py`,
-  `backend/app/api/ws.py`.
-- Agent Investigation: `backend/app/agent`.
-- Command Safety, Execution, and Audit: `backend/app/safety`,
-  `backend/app/agent/tools.py`, `backend/app/audit`.
-- Customer System Access: `backend/app/ssh`.
-- Technician Console: `frontend/src/api`, `frontend/src/pages`,
-  `frontend/src/components`.
+- Phoenix ERP Integration: external ticket, customer, system, activity, and status
+  contract.
+- Incident Run Lifecycle: run aggregate, phases, gates, replay, STOP, retention,
+  and resolution lookup.
+- Agent Investigation: continuous LLM session, tool calls, hypotheses, fix plan,
+  validation, and activity drafting.
+- Command Safety, Execution, And Audit: command classification, approvals,
+  redaction, audit, and terminal echo.
+- Customer System Access: SSH command runner and interactive PTY.
+- Technician Console: browser workflow and state projection.
+- Phoenix Mock: offline substitute for Phoenix during dev/tests.
+
+## Key Domain Terms
+
+- Ticket
+- Ticket Status
+- Employee
+- Customer
+- Customer System
+- System Info
+- Activity
+- Activity Draft
+- Run
+- Run Phase
+- Approval
+- Decision Request
+- Hypothesis
+- Hypothesis Comment
+- Check
+- Proposed Fix
+- Validation
+- Event / Run Event
+- Agent Message
+- Auto-Approve Reads
+- Safety Decision
+- DENY / CONFIRM / ALLOW
+- Audit Log
+- Resolution
+- SSH Runner
+- Interactive Shell
+- Phoenix Client
+- Phoenix Mock
+- LLM
+- Agent Session
+- Tool Call
 
 ## Entity And Value Object Candidates
 
-### Phoenix / Ticketing
+### Backend Pydantic / Python
 
-- `Ticket`
 - `TicketStatus`
 - `Employee`
-- `Customer`
-- `CustomerSystem`
+- `Ticket`
 - `SystemInfo`
+- `CustomerSystem`
+- `Customer`
+- `StatusUpdate`
 - `ActivityCreate`
 - `Activity`
-- `PhoenixClient`
-- `PhoenixError`
-
-### Run Lifecycle
-
+- `RunPhase`
+- `HypothesisComment`
+- `Hypothesis`
+- `StartRunRequest`
+- `EventType`
+- `ApprovalDecision`
 - `Run`
 - `RunManager`
-- `RunPhase`
-- `RunSnapshot`
-- `RunSummary`
-- `ApprovalDecision`
-- `Hypothesis`
-- `HypothesisComment`
-- `EventType`
-- `RunEvent`
 - `ResolutionStore`
-
-### Agent Investigation
-
+- `ExecResult`
+- `Decision`
+- `Category`
+- `CommandResult`
+- `SSHRunner`
+- `InteractiveShell`
+- `PhoenixClient`
+- `PhoenixError`
+- `LLM`
+- `LLMError`
 - `AgentSession`
 - `RunCommand`
-- `PresentHypotheses`
 - `HypothesisInput`
+- `PresentHypotheses`
 - `ProposeFix`
 - `RequestDecision`
 - `Finish`
-- `HypothesesOutput`
-- `HypothesisItem`
-- `CheckOutput`
-- `ProposedFix`
-- `ValidationOutput`
-- `ActivityOutput`
-- `LLM`
-- `LLMError`
 
-### Command Safety And Execution
+### Frontend TypeScript
 
-- `Decision`
-- `Category`
-- `ExecResult`
-- `AuditLog`
-- `SSHRunner`
-- `InteractiveShell`
-- `CommandResult`
-- `SSHError`
+- `TicketStatus`
+- `Ticket`
+- `SystemInfo`
+- `CustomerSystem`
+- `Employee`
+- `HypothesisComment`
+- `Hypothesis`
+- `ActivityDraft`
+- `RunEvent`
+- `AgentToolCall`
+- `AgentMessage`
+- `AgentDecision`
+- `RunSnapshot`
+- `RunSummary`
 
-## Existing Event Names
+## Aggregate Candidates
+
+- Ticket Aggregate: `Ticket` root with customer system, customer, status, and
+  activity concepts.
+- Run Aggregate: `Run` root with phase, events, approvals, decisions, hypotheses,
+  activity draft/submission, terminal replay, and resolution.
+- Agent Session Aggregate: `AgentSession` root with conversation messages,
+  compaction, and tool-call pairing.
+- Command Execution Aggregate: `ExecResult` root with safety decision, SSH result,
+  audit entry, and terminal output.
+- Remote Execution Aggregate: `SSHRunner` root with command results and
+  interactive shell.
+- Technician Workspace Projection: `Workspace` state derived from run snapshots
+  and WebSocket events.
+
+## Domain Events / Message Names
 
 Outbound WebSocket events:
 
@@ -106,7 +157,7 @@ Inbound WebSocket commands:
 - `terminal.resize`
 - `terminal.input`
 
-Audit record types observed:
+Audit record types:
 
 - `phase`
 - `command`
@@ -118,3 +169,11 @@ Audit record types observed:
 - `validation`
 - `activity_submitted`
 - `shell_open`
+
+## Boundary Flags
+
+- `Run` is large and central.
+- `models.py` mixes external ERP contracts with internal run/event contracts.
+- TypeScript DTOs are manually mirrored.
+- Agent orchestration mutates `Run` directly.
+- Safety/execution infrastructure lives in `backend/app/agent/tools.py`.
