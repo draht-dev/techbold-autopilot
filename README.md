@@ -97,6 +97,31 @@ The agent drives the investigation, but the technician steers at every gate:
 
 ---
 
+## Voice Control
+
+A hands-free co-pilot built on an **ElevenLabs Conversational AI** agent. The
+technician can steer the entire run by voice while keeping their eyes on the
+terminal — every voice action goes through the **same human-in-the-loop gates
+and safety rules** as the UI; voice is just another input, never a bypass.
+
+The agent can:
+
+- **Read run state** — "status" summarises the phase, pending approval/decision, ranked hypotheses, and whether an activity draft is ready
+- **Steer hypotheses** — select, comment on, or dictate a brand-new hypothesis
+- **Approve / reject** — reads the pending command back and asks for explicit verbal confirmation before approving (safety gate)
+- **Answer decision prompts**, toggle auto-approve for safe reads, send a one-shot command (through the normal mutation gate), submit the activity draft, or stop the run
+- **Speak up proactively** — the frontend pushes contextual updates so the agent narrates new approvals, decisions, hypotheses, draft-ready, and phase changes without being asked
+
+**Security**: the backend mints a short-lived signed `wss://` URL from
+`ELEVENLABS_API_KEY` + `ELEVENLABS_AGENT_ID` — the API key never reaches the
+browser. When those vars are unset, voice degrades gracefully and the rest of
+the workspace is unaffected.
+
+Full setup (dashboard agent config, client-tool definitions, system prompt) is
+in [`docs/voice-agent.md`](./docs/voice-agent.md).
+
+---
+
 ## Architecture
 
 ```
