@@ -18,6 +18,8 @@ import RunControls from "../components/RunControls";
 import ActivityReview from "../components/ActivityReview";
 import DecisionPrompt from "../components/DecisionPrompt";
 import ManualReportModal from "../components/ManualReportModal";
+import VoiceControl from "../components/VoiceControl";
+import { useVoiceControl, VoiceController } from "../voice/useVoiceControl";
 
 const BUSY_PHASES = [
   "CONNECTING",
@@ -51,6 +53,15 @@ export default function Workspace() {
   const [submittedId, setSubmittedId] = useState<number | null>(null);
   const [connError, setConnError] = useState<string | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+
+  // controllerRef is updated every render so voice-tool callbacks always close
+  // over the latest state without triggering hook dependency loops.
+  const controllerRef = useRef<VoiceController>({} as VoiceController);
+  const voice = useVoiceControl(controllerRef);
+  // Stable ref to voice.notify so WS event handler never captures a stale copy.
+  const notifyRef = useRef(voice.notify);
+  notifyRef.current = voice.notify;
 
   function send(message: object) {
     wsRef.current?.send(JSON.stringify(message));
@@ -99,6 +110,10 @@ export default function Workspace() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runId]);
 
+  useEffect(() => {
+    api.voiceConfig().then((c) => setVoiceEnabled(c.enabled)).catch(() => setVoiceEnabled(false));
+  }, []);
+
   function handleEvent(ev: RunEvent) {
     switch (ev.type) {
       case "term.data":
@@ -110,15 +125,38 @@ export default function Workspace() {
         // repeats (set_phase re-emits the same phase in some flows).
         setActivity((prev) => {
           const lastPhase = [...prev].reverse().find((e) => e.type === "run.state")?.phase;
-          return lastPhase === ev.phase ? prev : [...prev, ev];
+          if (lastPhase === ev.phase) return prev;
+          // Proactively tell the voice agent about phase changes so it can
+          // narrate milestones without the technician asking.
+          notifyRef.current(`Phase changed to ${ev.phase}.`);
+          return [...prev, ev];
         });
         break;
-      case "hypotheses":
-        setHypotheses(ev.items || []);
+      case "hypotheses": {
+        const items: Hypothesis[] = ev.items || [];
+        setHypotheses(items);
+        if (items.length > 0) {
+          const top = items
+            .slice(0, 3)
+            .map((h: Hypothesis) => `#${h.rank} ${h.title}`)
+            .join("; ");
+          notifyRef.current(
+            `${items.length} ranked hypothesis${items.length > 1 ? "es are" : " is"} ready to choose from: ${top}. You need to pick one.`
+          );
+        }
         break;
-      case "approval.request":
-        setApproval({ id: ev.id, kind: ev.kind, payload: ev.payload, purpose: ev.purpose });
+      }
+      case "approval.request": {
+        const a = { id: ev.id, kind: ev.kind, payload: ev.payload, purpose: ev.purpose };
+        setApproval(a);
+        // Notify voice so it can proactively ask the technician for approval.
+        const cmd = ev.payload?.command ?? (ev.payload?.commands || []).join("; ") ?? "";
+        const isMutation = ev.kind === "command" || ev.kind === "fix";
+        notifyRef.current(
+          `Approval required (${ev.kind}): the agent wants to run: ${cmd || ev.purpose || "(see UI)"}. ${isMutation ? "This is a mutation; please confirm before approving." : ""}`
+        );
         break;
+      }
       case "approval.resolved":
         setApproval((prev) => (prev && prev.id === ev.id ? null : prev));
         break;
@@ -129,12 +167,16 @@ export default function Workspace() {
           options: ev.options || [],
           context: ev.context,
         });
+        notifyRef.current(
+          `Decision needed: ${ev.question} Options are: ${(ev.options || []).join(", ")}.`
+        );
         break;
       case "decision.resolved":
         setDecision((prev) => (prev && prev.id === ev.id ? null : prev));
         break;
       case "activity.draft":
         setActivityDraft(ev.draft);
+        notifyRef.current("An activity draft is ready to review and submit. Say 'submit activity' when ready.");
         break;
       case "activity.submitted":
         setSubmittedId(ev.activity_id ?? -1);
@@ -193,6 +235,115 @@ export default function Workspace() {
     setActivityDraft(fields);
     setPhase("DONE");
     if (ticket) setTicket({ ...ticket, status: res.status });
+  }
+
+  // Rebuild the controller on every render so closures inside voice tools always
+  // see the latest phase/hypotheses/approval/decision/activityDraft values.
+  controllerRef.current = {
+    getStatus: () => {
+      const lines: string[] = [`Phase: ${phase}.`];
+      if (approval) {
+        const cmd = approval.payload?.command ?? approval.payload?.commands?.join("; ") ?? "";
+        lines.push(`Pending approval (${approval.kind}): ${cmd || "(see UI)"}.`);
+      } else {
+        lines.push("No approval pending.");
+      }
+      if (decision) {
+        lines.push(`Decision needed: ${decision.question} Options: ${decision.options.join(", ")}.`);
+      } else {
+        lines.push("No decision pending.");
+      }
+      if (hypotheses.length > 0) {
+        const top = hypotheses
+          .slice(0, 3)
+          .map((h) => `#${h.rank} ${h.title}${h.likelihood != null ? ` (${Math.round(h.likelihood)}%)` : ""}`)
+          .join("; ");
+        lines.push(`${hypotheses.length} hypotheses: ${top}.`);
+      } else {
+        lines.push("No hypotheses yet.");
+      }
+      lines.push(activityDraft ? "Activity draft is ready to submit." : "No activity draft yet.");
+      lines.push(`Auto-approve reads: ${autoApproveReads ? "on" : "off"}.`);
+      return lines.join(" ");
+    },
+
+    approve: (edited?: string) => {
+      if (!approval) return "No approval is pending.";
+      decideApproval(true, edited);
+      return `Approved${edited ? ` with edited command: ${edited}` : ""}.`;
+    },
+
+    reject: (reason?: string) => {
+      if (!approval) return "No approval is pending.";
+      decideApproval(false);
+      return `Rejected.${reason ? ` Reason noted: ${reason}` : ""}`;
+    },
+
+    selectHypothesis: (rankOrTitle: string) => {
+      const resolved = resolveHypothesis(rankOrTitle);
+      if (!resolved) return `No hypothesis found matching "${rankOrTitle}".`;
+      selectHypothesis(resolved.id);
+      return `Selected hypothesis #${resolved.rank}: ${resolved.title}.`;
+    },
+
+    commentHypothesis: (rankOrTitle: string, text: string) => {
+      const resolved = resolveHypothesis(rankOrTitle);
+      if (!resolved) return `No hypothesis found matching "${rankOrTitle}".`;
+      commentHypothesis(resolved.id, text);
+      return `Comment added to hypothesis #${resolved.rank}.`;
+    },
+
+    submitHypothesis: (title: string, reasoning: string, checks: string[]) => {
+      submitOwnHypothesis({ title, reasoning, checks });
+      return `Hypothesis "${title}" submitted for checking.`;
+    },
+
+    answerDecision: (choice: string) => {
+      if (!decision) return "No decision is pending.";
+      const lower = choice.toLowerCase();
+      // Prefer an exact case-insensitive match; fall back to substring match.
+      const matched =
+        decision.options.find((o) => o.toLowerCase() === lower) ??
+        decision.options.find((o) => o.toLowerCase().includes(lower));
+      if (!matched) {
+        return `Option "${choice}" not found. Available: ${decision.options.join(", ")}.`;
+      }
+      chooseDecision(matched);
+      return `Chose: ${matched}.`;
+    },
+
+    setAutoApproveReads: (value: boolean) => {
+      toggleReads(value);
+      return `Auto-approve reads set to ${value ? "on" : "off"}.`;
+    },
+
+    runCommand: (command: string) => {
+      send({ type: "terminal.input", command });
+      return `Sent \`${command}\` through the safety gate.`;
+    },
+
+    submitActivity: () => {
+      if (!activityDraft) return "No activity draft to submit yet.";
+      submitActivity(activityDraft);
+      return "Activity draft submitted.";
+    },
+
+    stopRun: () => {
+      send({ type: "stop" });
+      return "Stop signal sent.";
+    },
+  };
+
+  // Helper: resolve a hypothesis by 1-based rank number or case-insensitive title
+  // substring — used by the voice approve/comment tools.
+  function resolveHypothesis(rankOrTitle: string): Hypothesis | undefined {
+    const trimmed = rankOrTitle.trim();
+    const asNum = parseInt(trimmed, 10);
+    if (!isNaN(asNum)) {
+      return hypotheses.find((h) => h.rank === asNum);
+    }
+    const lower = trimmed.toLowerCase();
+    return hypotheses.find((h) => h.title.toLowerCase().includes(lower));
   }
 
   const busy = BUSY_PHASES.includes(phase);
@@ -256,6 +407,9 @@ export default function Workspace() {
         onClose={() => setReportOpen(false)}
         onSubmit={submitManualReport}
       />
+      {/* Voice panel: additive hands-free mode. Only rendered when the backend
+          reports voice is configured (voiceEnabled flag). */}
+      {voiceEnabled && <VoiceControl {...voice} />}
 
       <div className="workspace-grid">
         <div>

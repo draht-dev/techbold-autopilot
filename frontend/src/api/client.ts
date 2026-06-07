@@ -156,6 +156,8 @@ export const FINAL_PHASES = ["DONE", "STOPPED", "ERROR"];
 
 export const api = {
   getMe: () => req<Employee>("/api/me"),
+  voiceConfig: () => req<{ enabled: boolean; agent_id: string }>("/api/voice/config"),
+  voiceSignedUrl: () => req<{ signed_url: string }>("/api/voice/signed-url"),
   getRun: (runId: string) => req<RunSnapshot>(`/api/runs/${runId}`),
   listRuns: () => req<RunSummary[]>("/api/runs"),
   /** The in-flight run for a ticket (resume target), or null. Lightweight summary. */
