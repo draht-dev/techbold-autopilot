@@ -140,6 +140,10 @@ async def run_shell(run: Run) -> None:
         run.set_phase(RunPhase.CONNECTING)
         await _open_ssh(run)
         run.set_phase(RunPhase.SHELL)
+        # Open the PTY immediately so the login banner streams to the UI without
+        # waiting for the technician's first keystroke (which used to leave a blank
+        # terminal until they typed).
+        await run.ensure_shell()
         run.info("Plain SSH session ready — the agent is NOT running. Use the terminal below.")
         await run.stop_event.wait()  # idle until the technician closes the session
     except RunStopped:

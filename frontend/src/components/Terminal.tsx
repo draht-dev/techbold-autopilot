@@ -44,18 +44,24 @@ export default function TerminalView({ chunks, enabled, onData, onResize }: Prop
         /* ignore */
       }
     };
-    safeFit();
     termRef.current = term;
     fitRef.current = fit;
+
+    // Fit once the panel has its final layout (new tabs / grid columns often report
+    // zero width on the first paint, which leaves a blank-looking terminal).
+    const ro = new ResizeObserver(() => safeFit());
+    ro.observe(containerRef.current!);
+    requestAnimationFrame(() => requestAnimationFrame(safeFit));
+    window.addEventListener("resize", safeFit);
 
     // Raw keystrokes -> backend PTY (only when it is the technician's turn).
     const dataSub = term.onData((data) => {
       if (enabledRef.current) onDataRef.current(data);
     });
     const resizeSub = term.onResize(({ cols, rows }) => onResizeRef.current(cols, rows));
-    window.addEventListener("resize", safeFit);
 
     return () => {
+      ro.disconnect();
       window.removeEventListener("resize", safeFit);
       dataSub.dispose();
       resizeSub.dispose();
@@ -69,11 +75,20 @@ export default function TerminalView({ chunks, enabled, onData, onResize }: Prop
   // Stream agent command echoes + live PTY output into the terminal.
   useEffect(() => {
     const term = termRef.current;
+    const fit = fitRef.current;
     if (!term) return;
-    for (let i = writtenRef.current; i < chunks.length; i++) {
+    const prev = writtenRef.current;
+    for (let i = prev; i < chunks.length; i++) {
       term.write(chunks[i]);
     }
     writtenRef.current = chunks.length;
+    if (chunks.length > prev) {
+      try {
+        fit?.fit();
+      } catch {
+        /* ignore */
+      }
+    }
   }, [chunks]);
 
   return (

@@ -12,6 +12,14 @@ function StatusBadge({ status }: { status: TicketStatus }) {
   return <span className={`badge ${status.toLowerCase()}`}>{status}</span>;
 }
 
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 10 12" aria-hidden="true">
+      <path d="M0 0l10 6-10 6z" />
+    </svg>
+  );
+}
+
 export default function TicketList() {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -45,50 +53,14 @@ export default function TicketList() {
     return () => clearInterval(t);
   }, []);
 
+  // Map each ticket to its in-flight run (if any) so we can offer an inline
+  // "resume" play button on the right of that ticket's row.
+  const runByTicket = new Map(activeRuns.map((r) => [r.ticket_id, r]));
+
   return (
     <div>
       <h1>My Open Tickets</h1>
 
-      {activeRuns.length > 0 && (
-        <div className="panel" style={{ marginBottom: 16 }}>
-          <div className="panel-header">
-            <h2>In-progress runs</h2>
-            <span className="muted" style={{ fontSize: 12 }}>
-              live SSH sessions you can resume
-            </span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Ticket</th>
-                <th>Phase</th>
-                <th>Run</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {activeRuns.map((r) => (
-                <tr key={r.id} onClick={() => navigate(`/runs/${r.id}`)}>
-                  <td className="mono">#{r.ticket_id}</td>
-                  <td>{r.phase}</td>
-                  <td className="mono">{r.id}</td>
-                  <td>
-                    <button
-                      className="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/runs/${r.id}`);
-                      }}
-                    >
-                      Resume →
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
       <div className="toolbar">
         <div>
           <label>Sort by</label>
@@ -136,20 +108,41 @@ export default function TicketList() {
                 <th>Customer</th>
                 <th>Priority</th>
                 <th>Status</th>
+                <th className="col-action" />
               </tr>
             </thead>
             <tbody>
-              {tickets.map((t) => (
-                <tr key={t.id} onClick={() => navigate(`/tickets/${t.id}`)}>
-                  <td className="mono">#{t.id}</td>
-                  <td>{t.title}</td>
-                  <td>{t.customer_name}</td>
-                  <td className={`prio-${t.priority}`}>{t.priority}</td>
-                  <td>
-                    <StatusBadge status={t.status} />
-                  </td>
-                </tr>
-              ))}
+              {tickets.map((t) => {
+                const run = runByTicket.get(t.id);
+                return (
+                  <tr key={t.id} onClick={() => navigate(`/tickets/${t.id}`)}>
+                    <td className="mono">#{t.id}</td>
+                    <td>{t.title}</td>
+                    <td>{t.customer_name}</td>
+                    <td className={`prio-${t.priority}`}>{t.priority}</td>
+                    <td>
+                      <StatusBadge status={t.status} />
+                    </td>
+                    <td className="col-action">
+                      {run ? (
+                        <button
+                          className="play-btn live"
+                          title={`Resume run — live ${run.phase} session`}
+                          aria-label={`Resume run for ticket ${t.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/runs/${run.id}`);
+                          }}
+                        >
+                          <PlayIcon />
+                        </button>
+                      ) : (
+                        <span className="col-action-placeholder" aria-hidden="true" />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
