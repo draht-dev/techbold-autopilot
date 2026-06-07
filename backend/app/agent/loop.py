@@ -279,10 +279,21 @@ def _format_exec(res: ExecResult) -> str:
     if res.blocked:
         status = f"BLOCKED ({res.reason})"
     elif res.rejected:
+        # Carry the technician's optional reason so the agent can adapt its plan
+        # rather than blindly retrying the same command.
         status = "REJECTED by technician"
+        if res.reason:
+            status += f' (reason: "{res.reason}")'
     elif res.timed_out:
         status = "timed out"
     header = f"$ {res.command}\n[exit={res.exit_code} status={status}]"
+    # The technician edited the command before it ran: tell the agent so it knows
+    # the result reflects the technician's version, not the one it requested.
+    if res.edited_from and res.edited_from != res.command:
+        header += (
+            f"\n[NOTE: the technician CHANGED your command before running it. "
+            f"You requested: {res.edited_from}]"
+        )
     body = res.output.strip()
     return f"{header}\n{body}".strip()
 
@@ -445,27 +456,50 @@ async def _propose_fix(run: Run, args: dict[str, Any]) -> str:
         "Apply the proposed fix",
     )
     if not decision.approved:
-        run.info("Fix rejected by technician.")
+        reason = (decision.reason or "").strip()
+        run.info("Fix rejected by technician" + (f": {reason}" if reason else "."))
         run.set_phase(RunPhase.INVESTIGATING)
-        return (
-            "The technician rejected the proposed fix. Reconsider the root cause or "
-            "propose a different, more minimal plan."
+        msg = "The technician rejected the proposed fix."
+        if reason:
+            msg += f' Their stated reason: "{reason}".'
+        msg += (
+            " Reconsider the root cause or propose a different, more minimal plan"
+            + (" that addresses their concern." if reason else ".")
         )
+        return msg
+
+    proposed_commands = list(commands)
     if decision.edited:
         commands = [c.strip() for c in decision.edited.splitlines() if c.strip()]
+    # Tell the agent when the technician reshaped the plan before it was applied.
+    edit_note = (
+        "\n\nNOTE: the technician CHANGED your fix plan before applying it; the "
+        "commands listed above are what actually ran (not your original proposal)."
+        if commands != proposed_commands
+        else ""
+    )
+    # Map each applied command back to what the agent proposed so the per-command
+    # "edited by you" marker shows in the UI and the agent is told (same as a gate
+    # edit). Only a 1:1 map is reliable; if lines were added/removed, the
+    # plan-level edit_note above carries the signal instead.
+    same_length = len(commands) == len(proposed_commands)
 
     run.audit.record("fix_approved", text=explanation, commands=commands)
     results: list[str] = []
 
     run.set_phase(RunPhase.APPLY)
-    for cmd in commands:
-        res = await execute_command(run, cmd, actor="agent", purpose="apply fix", require_confirm=False)
+    for i, cmd in enumerate(commands):
+        original = proposed_commands[i] if same_length else None
+        res = await execute_command(
+            run, cmd, actor="agent", purpose="apply fix",
+            require_confirm=False, original_command=original,
+        )
         results.append(_format_exec(res))
         if res.blocked:
             run.set_phase(RunPhase.INVESTIGATING)
             return (
                 "A fix command was blocked by the safety layer; the fix was not fully "
-                "applied:\n\n" + "\n\n".join(results)
+                "applied." + edit_note + "\n\n" + "\n\n".join(results)
             )
 
     if validation_command:
@@ -491,7 +525,7 @@ async def _propose_fix(run: Run, args: dict[str, Any]) -> str:
 
     run.set_phase(RunPhase.INVESTIGATING)
     return (
-        "The fix plan was approved and applied. Results:\n\n"
+        "The fix plan was approved and applied." + edit_note + " Results:\n\n"
         + "\n\n".join(results)
         + "\n\nReview the validation output. If the customer benefit is genuinely "
         "restored, call Finish with outcome 'fixed'; otherwise keep investigating."

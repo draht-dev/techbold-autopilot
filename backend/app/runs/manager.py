@@ -40,6 +40,9 @@ class RunStopped(Exception):
 class ApprovalDecision:
     approved: bool
     edited: Optional[str] = None
+    # Optional free-text the technician can attach when rejecting (e.g. "too risky"
+    # or "wrong direction"). Surfaced to the agent so it can adapt; never required.
+    reason: Optional[str] = None
 
 
 class Run:
@@ -232,13 +235,22 @@ class Run:
             id=approval_id,
             approved=decision.approved,
             edited=decision.edited,
+            reason=decision.reason,
         )
         return decision
 
-    def resolve_approval(self, approval_id: str, approved: bool, edited: Optional[str]) -> bool:
+    def resolve_approval(
+        self,
+        approval_id: str,
+        approved: bool,
+        edited: Optional[str],
+        reason: Optional[str] = None,
+    ) -> bool:
         fut = self.pending_approvals.get(approval_id)
         if fut is not None and not fut.done():
-            fut.set_result(ApprovalDecision(approved=approved, edited=edited))
+            fut.set_result(
+                ApprovalDecision(approved=approved, edited=edited, reason=reason)
+            )
             return True
         return False
 

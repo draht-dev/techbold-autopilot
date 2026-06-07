@@ -43,7 +43,7 @@ export interface Approval {
 
 interface Props {
   approval: Approval;
-  onDecide: (approved: boolean, edited?: string) => void;
+  onDecide: (approved: boolean, edited?: string, reason?: string) => void;
 }
 
 export default function ApprovalPrompt({ approval, onDecide }: Props) {
@@ -52,6 +52,15 @@ export default function ApprovalPrompt({ approval, onDecide }: Props) {
   const [editedFix, setEditedFix] = useState<string>(
     (payload?.commands || []).join("\n")
   );
+  // Optional, opt-in reason the technician can attach when rejecting. Hidden behind
+  // a subtle toggle so the default card stays clean and never demands an extra step.
+  const [reason, setReason] = useState<string>("");
+  const [showReason, setShowReason] = useState<boolean>(false);
+  const canReason = kind === "command" || kind === "fix";
+
+  function reject() {
+    onDecide(false, undefined, reason.trim() || undefined);
+  }
 
   return (
     <div className="panel" style={{ borderColor: "var(--accent)" }}>
@@ -110,6 +119,34 @@ export default function ApprovalPrompt({ approval, onDecide }: Props) {
           </div>
         )}
 
+        {canReason &&
+          (showReason ? (
+            <div className="field" style={{ marginTop: 10, marginBottom: 0 }}>
+              <input
+                autoFocus
+                type="text"
+                value={reason}
+                placeholder="Optional reason for rejecting…"
+                onChange={(e) => setReason(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") reject();
+                }}
+                style={{ fontSize: 12 }}
+              />
+              <div className="muted" style={{ fontSize: 11, marginTop: 4 }}>
+                Shared with the agent so it can adjust — leave blank to skip.
+              </div>
+            </div>
+          ) : (
+            <button
+              className="ghost"
+              style={{ marginTop: 10, fontSize: 12, padding: "2px 8px" }}
+              onClick={() => setShowReason(true)}
+            >
+              + add a reason for rejecting
+            </button>
+          ))}
+
         <div className="btn-row" style={{ marginTop: 12 }}>
           <button
             className="primary"
@@ -121,7 +158,7 @@ export default function ApprovalPrompt({ approval, onDecide }: Props) {
           >
             Approve
           </button>
-          <button className="danger" onClick={() => onDecide(false)}>
+          <button className="danger" onClick={reject}>
             Reject
           </button>
         </div>
