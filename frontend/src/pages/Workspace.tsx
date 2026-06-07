@@ -407,9 +407,6 @@ export default function Workspace() {
         onClose={() => setReportOpen(false)}
         onSubmit={submitManualReport}
       />
-      {/* Voice panel: additive hands-free mode. Only rendered when the backend
-          reports voice is configured (voiceEnabled flag). */}
-      {voiceEnabled && <VoiceControl {...voice} />}
 
       <div className="workspace-grid">
         <div>
@@ -449,6 +446,10 @@ export default function Workspace() {
           )}
         </div>
       </div>
+
+      {/* Hands-free voice control: a floating action button in the bottom-right.
+          Only mounted when the backend reports voice is configured. */}
+      {voiceEnabled && <VoiceControl {...voice} />}
     </div>
   );
 }

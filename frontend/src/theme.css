@@ -570,3 +570,64 @@ textarea {
   color: var(--success);
   border-color: var(--success);
 }
+
+/* ---- Voice control floating action button (bottom-right) ---- */
+.voice-fab-root {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.voice-fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  color: var(--text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.2s ease;
+  padding: 0;
+}
+.voice-fab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+.voice-fab:active {
+  transform: translateY(0);
+}
+.voice-fab-popover {
+  width: 240px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 12px;
+}
+.voice-fab-popover-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.voice-fab-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+@keyframes voicePulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(16, 126, 62, 0.5);
+  }
+  50% {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 10px rgba(16, 126, 62, 0);
+  }
+}

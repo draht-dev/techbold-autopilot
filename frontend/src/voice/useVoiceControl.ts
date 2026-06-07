@@ -53,6 +53,18 @@ export interface UseVoiceControlReturn {
 
 // The system prompt explains the agent's role concisely — instruct it to use
 // tools rather than invent information, and to confirm destructive actions.
+// Conversation overrides (custom system prompt) are REJECTED at runtime unless the
+// agent has that field enabled under Security → Overrides in the ElevenLabs
+// dashboard — sending an unauthorized override closes the socket immediately
+// ("Override for field 'prompt' is not allowed by config"), after which the SDK
+// spams "WebSocket is already in CLOSING or CLOSED state" streaming mic audio into
+// the dead socket. So by DEFAULT we send no overrides and rely on the agent's own
+// dashboard config (system prompt is in docs/voice-agent.md to paste there). Opt in
+// with VITE_VOICE_SEND_OVERRIDES=true ONLY if you've enabled the System prompt
+// override toggle on the agent.
+const SEND_OVERRIDES =
+  (import.meta as any).env?.VITE_VOICE_SEND_OVERRIDES === "true";
+
 const SYSTEM_PROMPT = `You are a calm, efficient co-pilot voice assistant for a Linux service-desk technician running an autonomous AI troubleshooting session.
 You can read the current run state at any time using the get_run_status tool.
 You can steer the run using the other available tools: approve/reject commands, pick or comment on hypotheses, answer decision prompts, toggle auto-approve, send commands, submit the activity report, or stop the run.
@@ -63,10 +75,44 @@ Rules:
 - Keep responses concise and actionable.
 - When you receive a contextual update about a pending approval or decision, proactively inform the technician and offer to help.`.trim();
 
+// Best-effort extraction of a human-readable reason from the SDK's onDisconnect
+// payload. The SDK shape is roughly { reason: "error"|"agent"|"user", message?,
+// context? } where `reason` is only the CATEGORY ("error") and the real cause
+// lives in `message` or the nested `context` (a CloseEvent or Error). We dig past
+// the category and, for a WebSocket CloseEvent, report its code + reason.
+function extractReason(details: unknown): string {
+  if (!details) return "";
+  if (typeof details === "string") return details;
+  if (typeof details !== "object") return "";
+  const d = details as Record<string, unknown>;
+
+  // Direct message on the payload.
+  if (typeof d.message === "string" && d.message) return d.message;
+
+  // Nested context: a CloseEvent ({ code, reason }) or an Error ({ message }).
+  const ctx = d.context as Record<string, unknown> | undefined;
+  if (ctx && typeof ctx === "object") {
+    if (typeof ctx.reason === "string" && ctx.reason) {
+      return ctx.code ? `${ctx.reason} (code ${ctx.code})` : ctx.reason;
+    }
+    if (typeof ctx.message === "string" && ctx.message) return ctx.message;
+    if (typeof ctx.code === "number") return `close code ${ctx.code}`;
+  }
+
+  // Fall back to the category only if nothing better is available.
+  if (typeof d.reason === "string" && d.reason && d.reason !== "error") {
+    return d.reason;
+  }
+  return "";
+}
+
 export function useVoiceControl(
   controllerRef: React.MutableRefObject<VoiceController>
 ): UseVoiceControlReturn {
   const [error, setError] = useState<string | null>(null);
+  // True while a stop() is in progress, so the resulting onDisconnect is treated
+  // as intentional (not surfaced as an error).
+  const intentionalStopRef = useRef(false);
 
   const conversation = useConversation({
     clientTools: {
@@ -82,12 +128,20 @@ export function useVoiceControl(
       submit_hypothesis: (params: {
         title: string;
         reasoning: string;
-        checks: string[];
+        // The agent tool declares `checks` as a single delimited string (primitive
+        // types are the most portable for ElevenLabs tool params); split it here
+        // into the list the controller expects. Tolerate an array too.
+        checks?: string | string[];
       }) =>
         controllerRef.current.submitHypothesis(
           params.title,
           params.reasoning,
-          params.checks ?? []
+          Array.isArray(params.checks)
+            ? params.checks
+            : (params.checks ?? "")
+                .split(/[;\n]/)
+                .map((c) => c.trim())
+                .filter(Boolean)
         ),
       answer_decision: (params: { choice: string }) =>
         controllerRef.current.answerDecision(params.choice),
@@ -98,16 +152,38 @@ export function useVoiceControl(
       submit_activity: () => controllerRef.current.submitActivity(),
       stop_run: () => controllerRef.current.stopRun(),
     },
-    overrides: {
-      agent: {
-        prompt: { prompt: SYSTEM_PROMPT },
-        firstMessage:
-          "Voice control connected. Say 'status' any time to hear where the run stands.",
-        language: "en",
-      },
-    },
+    // Only override the system prompt — the valuable part. We deliberately do NOT
+    // override firstMessage / language: each overridden field must be separately
+    // enabled under the agent's Security → Overrides, and sending one that isn't
+    // authorized closes the socket ("Override for field 'X' is not allowed"). Set
+    // the first message + language on the agent in the dashboard instead.
+    ...(SEND_OVERRIDES
+      ? { overrides: { agent: { prompt: { prompt: SYSTEM_PROMPT } } } }
+      : {}),
     onError: (message: unknown) => {
       setError(typeof message === "string" ? message : "Voice agent error");
+    },
+    onDisconnect: (details?: unknown) => {
+      // Surface why the server hung up. The most common cause is sending overrides
+      // the agent hasn't authorized (Security → Overrides), which closes the socket
+      // immediately after it opens. An intentional stop() is not an error.
+      if (intentionalStopRef.current) {
+        intentionalStopRef.current = false;
+        return;
+      }
+      // Dump the full payload so the true close cause is visible in the console
+      // (the in-UI banner only gets a short summary).
+      try {
+        console.error("[voice] disconnected:", JSON.stringify(details, Object.getOwnPropertyNames(details ?? {})), details);
+      } catch {
+        console.error("[voice] disconnected:", details);
+      }
+      const reason = extractReason(details);
+      setError(
+        reason
+          ? `Voice disconnected: ${reason}`
+          : "Voice disconnected unexpectedly. If this happened right after connecting, enable System prompt / First message / Language under your agent's Security → Overrides settings (or set VITE_VOICE_SEND_OVERRIDES=false)."
+      );
     },
   });
 
@@ -145,6 +221,7 @@ export function useVoiceControl(
   }, [conversation]);
 
   const stop = useCallback(() => {
+    intentionalStopRef.current = true;
     conversation.endSession();
   }, [conversation]);
 
