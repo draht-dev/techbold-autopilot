@@ -7,6 +7,16 @@ Cursor-Debug-Mode-style loop, then writes a clean activity back to the ERP.
 
 ---
 
+## Look
+
+<p align="center">
+  <img src="./pictures/Tickets-List.png" alt="Tickets list" width="30%" />
+  <img src="./pictures/Ticket.png" alt="Ticket detail" width="30%" />
+  <img src="./pictures/accept_command.png" alt="Command approval" width="30%" />
+</p>
+
+---
+
 ## Setup
 
 Requires Docker and Docker Compose.
@@ -40,8 +50,8 @@ ticket.
 docker compose up --build
 ```
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:8000/health
+- Frontend: [http://localhost:5173](http://localhost:5173)
+- Backend: [http://localhost:8000/health](http://localhost:8000/health)
 
 ---
 
@@ -50,6 +60,7 @@ docker compose up --build
 One continuous autonomous agent (tool-calling loop), not a fixed pipeline!:
 
 ### Optimized Workflow
+
 ```
 New Ticket:
 -> Start: SSH connection
@@ -76,6 +87,7 @@ The agent drives the investigation, but the technician steers at every gate:
 - **STOP / manual shell** — STOP aborts the run immediately; the technician can also drop into a plain SSH terminal alongside the agent
 
 ### Safeguards
+
 - all requests are sorted into the Following categories
   - **Safe Reads** - a whitelist of commands that are recognized as "safe" and autoapproved when "autoapproving safe reads" is on
   - **Deny** — destructive operations (recursive rm, DB drops, firewall off, secret reads) are blacklisted and cannot be run such that even the technician cannot approve it
@@ -83,7 +95,6 @@ The agent drives the investigation, but the technician steers at every gate:
   - **Redact** - if a command redacting secrets is confirmed nevertheless the redaction feature delets all exposed features
 
 ---
-
 
 ## Architecture
 
