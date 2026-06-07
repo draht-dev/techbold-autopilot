@@ -30,6 +30,15 @@ class Settings(BaseSettings):
     ssh_connect_timeout: int = 15
     ssh_command_timeout: int = 45
 
+    # ---- S3 fallback for uploaded SSH keys (all optional) ----
+    # When a bucket is set, keys uploaded via POST /api/dev/keys are mirrored to
+    # S3, and a key missing from the local keys dir is pulled back from S3 on
+    # demand. Leave the bucket empty (the default) to run purely off local disk —
+    # the S3 path then short-circuits and never touches boto3.
+    s3_keys_bucket: str = ""
+    s3_keys_prefix: str = "ssh-keys/"
+    aws_region: str = ""
+
     # ---- LLM via OpenRouter (OpenAI-compatible) ----
     openrouter_api_key: str = ""
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
@@ -79,17 +88,35 @@ class Settings(BaseSettings):
     def voice_configured(self) -> bool:
         return bool(self.elevenlabs_api_key and self.elevenlabs_agent_id)
 
+    @property
+    def s3_keys_configured(self) -> bool:
+        return bool(self.s3_keys_bucket)
+
+    @property
+    def keys_dir(self) -> Path:
+        """Directory that holds the SSH keys (parent of SSH_PRIVATE_KEY_PATH)."""
+        return Path(self.ssh_private_key_path).parent
+
     def ssh_key_path_for_ticket(self, ticket_id: int) -> str:
         """Pick the team key for this ticket (case1..case5 per VM).
 
         Phoenix tickets 7001–7005 each have their own VM and matching
         ``case{N}_key.pem`` in the keys directory. ``SSH_PRIVATE_KEY_PATH`` points
         at any key in that directory; we swap in the right sibling file.
+
+        If the sibling key is not on local disk but an S3 bucket is configured,
+        we pull it down from S3 first (keys uploaded on another replica land
+        there). The S3 path is skipped entirely when no bucket is set.
         """
-        keys_dir = Path(self.ssh_private_key_path).parent
+        keys_dir = self.keys_dir
         case_num = ticket_id - 7000
         if 1 <= case_num <= 9:
-            candidate = keys_dir / f"case{case_num}_key.pem"
+            name = f"case{case_num}_key.pem"
+            candidate = keys_dir / name
+            if not candidate.is_file() and self.s3_keys_configured:
+                from app.keys import KeyStore
+
+                KeyStore(self).fetch_from_s3(name)
             if candidate.is_file():
                 return str(candidate)
         return self.ssh_private_key_path

@@ -154,8 +154,36 @@ export interface RunSummary {
 /** Phases in which a run is over: SSH released, no longer resumable. */
 export const FINAL_PHASES = ["DONE", "STOPPED", "ERROR"];
 
+export interface KeyUploadResult {
+  saved: { name: string; bytes: number; s3: boolean }[];
+  keys_dir: string;
+  s3: boolean;
+}
+
+/** Multipart upload (the JSON `req` helper can't carry a file body). */
+async function uploadFiles<T>(path: string, files: File[]): Promise<T> {
+  const form = new FormData();
+  for (const f of files) form.append("files", f, f.name);
+  const res = await fetch(`${API_BASE}${path}`, { method: "POST", body: form });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail || detail;
+    } catch {
+      /* ignore */
+    }
+    throw new Error(`${res.status}: ${detail}`);
+  }
+  return (await res.json()) as T;
+}
+
 export const api = {
   getMe: () => req<Employee>("/api/me"),
+  /** Dev: reset the team's ERP state (clears activities, reboots VMs). */
+  resetMe: () => req<Record<string, unknown>>("/api/me/reset", { method: "POST" }),
+  /** Dev: upload fresh SSH keys so runs work with newly-issued keys. */
+  uploadKeys: (files: File[]) => uploadFiles<KeyUploadResult>("/api/dev/keys", files),
   voiceConfig: () => req<{ enabled: boolean; agent_id: string }>("/api/voice/config"),
   voiceSignedUrl: () => req<{ signed_url: string }>("/api/voice/signed-url"),
   getRun: (runId: string) => req<RunSnapshot>(`/api/runs/${runId}`),

@@ -332,6 +332,52 @@ textarea {
   margin-bottom: 12px;
 }
 
+/* ---- Page header (title + dev menu) ---- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ---- Dev menu (developer-only test setup actions) ---- */
+.dev-menu {
+  position: relative;
+}
+.dev-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+.dev-menu-dropdown button {
+  border-color: transparent;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+}
+.dev-menu-dropdown button:hover {
+  background: var(--bg-subtle);
+}
+.dev-menu-notice {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  min-width: 260px;
+  max-width: 360px;
+  margin-bottom: 0;
+}
+
 /* ---- Layout helpers ---- */
 .muted {
   color: var(--text-secondary);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, RunSummary, Ticket, TicketStatus } from "../api/client";
 
@@ -17,6 +17,104 @@ function PlayIcon() {
     <svg viewBox="0 0 10 12" aria-hidden="true">
       <path d="M0 0l10 6-10 6z" />
     </svg>
+  );
+}
+
+type DevNotice = { kind: "success" | "error"; text: string } | null;
+
+/**
+ * Developer-only actions for setting up a fresh test run: reset the team's ERP
+ * state, and upload new SSH keys so runs work with freshly-issued credentials.
+ */
+function DevMenu() {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<DevNotice>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  // Close the dropdown when clicking outside it.
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [open]);
+
+  const handleReset = async () => {
+    setOpen(false);
+    setBusy(true);
+    setNotice(null);
+    try {
+      await api.resetMe();
+      setNotice({ kind: "success", text: "Account reset — activities cleared, VMs rebooting." });
+    } catch (e: any) {
+      setNotice({ kind: "error", text: `Reset failed — ${String(e.message || e)}` });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = ""; // allow re-selecting the same file later
+    if (files.length === 0) return;
+    setBusy(true);
+    setNotice(null);
+    try {
+      const res = await api.uploadKeys(files);
+      const names = res.saved.map((k) => k.name).join(", ");
+      const where = res.s3 ? "saved locally + mirrored to S3" : "saved locally (S3 not configured)";
+      setNotice({
+        kind: "success",
+        text: `Uploaded ${res.saved.length} key${res.saved.length === 1 ? "" : "s"} (${names}) — ${where}.`,
+      });
+    } catch (err: any) {
+      setNotice({ kind: "error", text: `Key upload failed — ${String(err.message || err)}` });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="dev-menu" ref={containerRef}>
+      <button
+        className="ghost"
+        disabled={busy}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        {busy ? "Working…" : "Dev ▾"}
+      </button>
+      {open && (
+        <div className="dev-menu-dropdown" role="menu">
+          <button role="menuitem" onClick={handleReset}>
+            Reset account
+          </button>
+          <button role="menuitem" onClick={() => fileRef.current?.click()}>
+            Upload keys
+          </button>
+        </div>
+      )}
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".pem,.key"
+        multiple
+        hidden
+        onChange={handleFiles}
+      />
+      {notice && (
+        <div className={`dev-menu-notice notice ${notice.kind}`} role="status">
+          {notice.text}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -59,7 +157,10 @@ export default function TicketList() {
 
   return (
     <div>
-      <h1>My Open Tickets</h1>
+      <div className="page-header">
+        <h1>My Open Tickets</h1>
+        <DevMenu />
+      </div>
 
       <div className="toolbar">
         <div>

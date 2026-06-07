@@ -9,10 +9,11 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, File, HTTPException, Query, Request, UploadFile
 
 from app.agent.loop import run_agent, run_shell
 from app.erp import PhoenixError
+from app.keys import KeyStore
 from app.models import (
     ActivityCreate,
     EventType,
@@ -50,6 +51,42 @@ async def get_me(request: Request) -> Any:
         return await _erp(request).get_me()
     except PhoenixError as exc:
         _raise(exc)
+
+
+@router.post("/me/reset")
+async def reset_me(request: Request) -> Any:
+    """Dev helper: reset the team's ERP state (clears activities, reboots VMs).
+
+    Surfaced from the frontend dev menu so a test run can start from a clean
+    slate. Proxies Phoenix's POST /api/v1/me/reset.
+    """
+    try:
+        return await _erp(request).reset()
+    except PhoenixError as exc:
+        _raise(exc)
+
+
+@router.post("/dev/keys")
+async def upload_keys(request: Request, files: list[UploadFile] = File(...)) -> Any:
+    """Dev helper: upload SSH private keys so runs work with freshly-issued keys.
+
+    Keys land in the backend keys directory (``case{N}_key.pem`` etc.) and, when
+    an S3 bucket is configured, are mirrored there as a fallback for other
+    replicas. The bytes never leave the backend afterwards.
+    """
+    settings = request.app.state.settings
+    payloads: list[tuple[str, bytes]] = []
+    for f in files:
+        payloads.append((f.filename or "", await f.read()))
+    try:
+        saved = KeyStore(settings).save_uploads(payloads)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {
+        "saved": [{"name": k.name, "bytes": k.bytes, "s3": k.s3} for k in saved],
+        "keys_dir": str(settings.keys_dir),
+        "s3": settings.s3_keys_configured,
+    }
 
 
 @router.get("/tickets")
