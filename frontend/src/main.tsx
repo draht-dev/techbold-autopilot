@@ -7,7 +7,7 @@ import "./theme.css";
 // StrictMode is intentionally omitted: its dev double-invoke would open the run
 // WebSocket twice (the app runs on the Vite dev server during the demo).
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
+  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <App />
   </BrowserRouter>
 );
