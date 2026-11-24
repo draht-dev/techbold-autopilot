@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router";
 import { ConversationProvider } from "@elevenlabs/react";
 import TicketList from "./pages/TicketList";
 import TicketDetail from "./pages/TicketDetail";
