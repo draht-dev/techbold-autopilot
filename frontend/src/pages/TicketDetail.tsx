@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { api, CustomerSystem, RunSnapshot, RunSummary, Ticket, TicketStatus } from "../api/client";
 import Markdown from "../components/Markdown";
 import Resolution from "../components/Resolution";

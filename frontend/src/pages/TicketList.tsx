@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { api, RunSummary, Ticket, TicketStatus } from "../api/client";
 
 const SORTS = [
